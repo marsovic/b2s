@@ -1,0 +1,47 @@
+.Toolbar {
+    height: 56px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    /*background-color: #ffffff;*/
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    background-origin: border-box;
+    z-index: 90;
+    
+
+    /* BUG corrigé en soumsoum */
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox */
+    box-sizing: border-box;
+}
+
+.Toolbar::after {
+    content : "";
+    position: absolute;
+    bottom: 0;
+    left: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 90%;  /* or 100px */
+    border-bottom: 2px solid rgb(148, 78, 140);
+  }
+
+.Toolbar nav {
+    height: 100%;
+}
+
+.Logo {
+    padding-top: 11px;
+    height: 100%;
+}
+
+@media (max-width:499px) {
+    .DesktopOnly {
+        display: none;
+    }
+}
