@@ -21,21 +21,35 @@ class Connection extends Component {
 
     loggedHandler = (loginState) => {
         this.setState({isUserLogged: loginState})
+        console.log(this.state.isUserLogged)
+
     }
 
     render() {
-        return (
-            <div>
-                {
-                    this.state.isUserLogged? 
-                        <Account login={this.loggedHandler}/> : 
+      
+        if(this.state.isUserLogged === true){
+            return (
+                <div>
+                    {
+                        <Account login={this.loggedHandler}/> 
+                    }
+                </div>
+            );
+
+        }
+        else{
+            return (
+                <div>
+                    {
                         <div>
                             <Auth login={this.loggedHandler} mode="connection" />
                             <Auth login={this.loggedHandler} mode="signIn" /> 
                         </div>
-                }
-            </div>
-        );
+                    }
+                </div>
+            );
+        }
+        
     }
 }
 
