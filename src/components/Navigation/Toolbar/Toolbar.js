@@ -7,7 +7,7 @@ import NavigationItems from "../NavigationItems/NavigationItems";
 const toolbar = (props) => (
     <header className={styles.Toolbar}>
         <div className={styles.Logo}>
-        <NavLink to="/auth" exact> Logo </NavLink>
+        <NavLink to="/" exact> Logo </NavLink>
         </div>
         <nav className={styles.DesktopOnly}>
             <NavigationItems />

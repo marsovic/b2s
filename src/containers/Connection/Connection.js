@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 
 import Auth from "../../components/Auth/Auth";
-import MyAccount from "../../components/MyAccount/myAccount";
+import Account from "../Account/Account";
 
 
 class Connection extends Component {
@@ -28,8 +28,11 @@ class Connection extends Component {
             <div>
                 {
                     this.state.isUserLogged? 
-                        <MyAccount /> :
-                        <Auth login={this.loggedHandler} />
+                        <Account login={this.loggedHandler}/> : 
+                        <div>
+                            <Auth login={this.loggedHandler} mode="connection" />
+                            <Auth login={this.loggedHandler} mode="signIn" /> 
+                        </div>
                 }
             </div>
         );

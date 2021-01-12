@@ -9,7 +9,7 @@ class NavigationItems extends Component {
         return (
             <div>
                 <ul className={styles.NavigationItems}>
-                    <NavigationItem link="/auth">Compte</NavigationItem>
+                    <NavigationItem link="/">Compte</NavigationItem>
                 </ul>
             </div>
 

@@ -58,7 +58,18 @@ class Auth extends Component {
         this.setState({ loading: true });
 
         // Requete de connexion
-        axios.post("https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDphOaprVVu7Ji_g_UYD4A5so1Y4n-qZnk", authData)
+
+        // Props définissant si connexion ou inscription
+        let url = "";
+        if(this.props.mode === "connection") {
+            url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=";
+        }
+
+        if(this.props.mode === "signIn") {
+            url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=";
+        }
+
+        axios.post(url + "AIzaSyBIdwOfPXkIPi0gfzsxxQJXuy9iGUGncoI", authData)
             .then(res => {
                 console.log(res);
                 sessionStorage.setItem("isUserLogged", true);
@@ -130,11 +141,14 @@ class Auth extends Component {
             <div className={styles.Auth}>
                 {
                     this.state.loading ? <Spinner /> :
+                    <div>
+                        <p style={{textTransform: "capitalize"}}> {this.props.mode} </p>
                         <form onSubmit={this.getDataFire}>
                             {form}
                             <p style={{ color: "red" }}><strong>{this.state.errorMessage}</strong></p>
                             <Button btnType="Success">Se connecter</Button>
                         </form>
+                    </div>
                 }
             </div>
         )
