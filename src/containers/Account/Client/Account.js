@@ -3,7 +3,7 @@ import React, { Component } from "react";
 import Logout from "../../../components/MyAccount/Logout/Logout";
 import MyAccount from "../../../components/MyAccount/MyAccount";
 
-// Page affichée lorsqu'on est connecté
+// Page affichée lorsqu'on est connecté  en tant que client
 class Account extends Component {
     render() {
         return (

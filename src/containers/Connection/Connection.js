@@ -18,7 +18,7 @@ class Connection extends Component {
         },
         errorMessage: "",
         mode: "",
-        loading: false
+        loading: true
     }
 
     // Verification à chaque render du stockage de session
