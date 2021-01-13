@@ -8,7 +8,8 @@ function App() {
   return (
     <div className="App">
       <Layout>
-        <Route path="/" exact component={Connection} />
+        <Route path="/home" exact render={() =>  <Connection />} />
+        <Route path="/internal" exact render={() => <Connection />} />
       </Layout>
     </div>
   );

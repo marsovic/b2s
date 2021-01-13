@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import axios from 'axios';
 
-import Input from "../UI/Input/Input";
-import Button from "../UI/Button/Button";
-import styles from "./Auth.module.css";
-import Spinner from "../UI/Spinner/Spinner";
+import Input from "../../UI/Input/Input";
+import Button from "../../UI/Button/Button";
+import styles from "../Auth.module.css";
+import Spinner from "../../UI/Spinner/Spinner";
 
-class Auth extends Component {
+class AuthClient extends Component {
     state = {
         controls: {
             userName: {
@@ -35,20 +35,7 @@ class Auth extends Component {
                 },
                 valid: false,
                 touched: false
-            }/*, 
-            right: {
-                elementType: 'select',
-                elementConfig: {
-                    options: [
-                        { value: '@admin', displayValue: 'Administrateur' },
-                        { value: '@batisphere', displayValue: 'Batisphere' },
-                        { value: '@client', displayValue: 'Client' }
-                    ]
-                },
-                value: 'client',
-                validation: {},
-                valid: true
-            }*/
+            }
         },
         loading: false,
         errorMessage: ""
@@ -178,4 +165,4 @@ class Auth extends Component {
     }
 }
 
-export default Auth;
+export default AuthClient;

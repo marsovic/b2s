@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import axios from 'axios';
 
-import Input from "../UI/Input/Input";
-import Button from "../UI/Button/Button";
-import styles from "./Auth.module.css";
-import Spinner from "../UI/Spinner/Spinner";
+import Input from "../../UI/Input/Input";
+import Button from "../../UI/Button/Button";
+import styles from "../Auth.module.css";
+import Spinner from "../../UI/Spinner/Spinner";
 
-class Auth extends Component {
+class AuthOthers extends Component {
     state = {
         controls: {
             userName: {
@@ -61,7 +61,7 @@ class Auth extends Component {
 
         // Propre à firebase ces 3 paramètres
         const authData = {
-            email: this.state.controls.userName.value.concat("@client.com"),
+            email: this.state.controls.userName.value /*.concat("@client.com")*/,
             password: this.state.controls.password.value,
             returnSecureToken: true
         }
@@ -178,4 +178,4 @@ class Auth extends Component {
     }
 }
 
-export default Auth;
+export default AuthOthers;

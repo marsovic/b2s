@@ -10,9 +10,9 @@ class Logout extends Component {
         if(sessionStorage.getItem("isUserLogged")) {
             sessionStorage.removeItem("localId");
             sessionStorage.removeItem("token");
-            sessionStorage.setItem("isUserLogged", false)
+            sessionStorage.removeItem("isUserLogged")
 
-            this.props.loginOut(false);
+            this.props.loginOut(false, "");
         }
     }
 

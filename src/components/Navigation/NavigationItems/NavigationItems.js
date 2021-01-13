@@ -9,7 +9,7 @@ class NavigationItems extends Component {
         return (
             <div>
                 <ul className={styles.NavigationItems}>
-                    <NavigationItem link="/">Compte</NavigationItem>
+                    <NavigationItem link={"/"+ this.props.main }>Compte</NavigationItem>
                 </ul>
             </div>
 
