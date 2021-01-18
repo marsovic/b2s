@@ -59,13 +59,6 @@ class AuthOthers extends Component {
         // Interdire le rechargement de la page 
         event.preventDefault();
 
-        // Propre à firebase ces 3 paramètres
-        const authData = {
-            email: this.state.controls.userName.value,
-            password: this.state.controls.password.value,
-            returnSecureToken: true
-        }
-
         //lancement Spinnner
         this.setState({ loading: true });
 
@@ -160,7 +153,7 @@ class AuthOthers extends Component {
             })
         }
 
-        const form = formElementsArray.map(formElement => (
+        const form = formElementsArray.map(formElement =>  (
             <Input
                 key={formElement.id}
                 elementType={formElement.config.elementType}

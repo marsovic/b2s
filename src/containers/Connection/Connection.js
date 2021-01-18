@@ -36,10 +36,6 @@ class Connection extends Component {
         if (sessionStorage.getItem("token") !== null) {
             this.setState({ loading: true });
 
-            const userData = {
-                idToken: sessionStorage.getItem("token")
-            }
-
             // X-Parse-Session-Token: 
             const options = {
                 headers: {

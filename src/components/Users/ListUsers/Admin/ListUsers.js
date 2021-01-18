@@ -51,7 +51,6 @@ class ListUsers extends Component {
                                 this.state.users[key].right === "admin")
                                 return (
                                     <li key={key + 1} onClick={(event) => {
-                                        event.preventDefault()
                                         this.props.modal(true, this.state.users[key]) 
                                     }
                                     }>

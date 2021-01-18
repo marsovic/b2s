@@ -5,14 +5,14 @@ import Aux from "../../../../../hoc/Aux/Aux"
 import Modal from "../../../../../components/UI/Modal/Modal"
 
 class EditUsers extends Component {
-    state= {
-        showModal: false,
-        user: "yo"
+    state = {
+        showModal: null,
+        user: null
     }
 
-    modalHandler = (newState, user) => {
-        this.setState({user: user, showModal: newState})
-        console.log(user)
+    modalHandler = (newState, userSelected) => {
+        this.setState({ showModal: newState})
+        this.setState({ user: userSelected})
     }
 
     cancelModalHandler = () => {
@@ -20,14 +20,27 @@ class EditUsers extends Component {
     }
 
     render() {
+
+        let userSelected = null;
+
+        if(this.state.user !== null){
+        userSelected = (
+            <div>
+                <p> Name: {this.state.user.objectId}</p>
+                <p> Right: {this.state.user.right} </p>
+                <p> Entreprise: {this.state.user.username}</p>
+            </div>
+        )
+        }
+
         return(
             <Aux >
                 <Modal 
-                    show={this.state.showModal} 
-                    modalClose={this.cancelModalHandler}>
-                        <p>{this.state.user}</p>
+                   modalClose={this.cancelModalHandler}
+                   show={this.state.showModal}>
+                        {userSelected}
                 </Modal>
-
+                <p> c'est moi</p>
                 <ListUsers modal={this.modalHandler}/>
             </Aux>
         )

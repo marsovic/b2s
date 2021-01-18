@@ -5,11 +5,12 @@
     background-color: white;
     width: 70%;
     border: 1px solid #ccc;
-    box-shadow: 1px 1px 1px black;
+    box-shadow: 1px 2px 2px black;
     padding: 16px;
     left: 15%;
     top: 30%;
     box-sizing: border-box;
+    border-radius: 25px;
     transition: all 0.3s ease-out;
 }
 
