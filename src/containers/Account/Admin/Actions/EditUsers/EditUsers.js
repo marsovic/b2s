@@ -1,53 +1,36 @@
 import React, { Component } from "react";
-import axios from "axios";
 
-import Spinner from "../../../../../components/UI/Spinner/Spinner";
+import ListUsers from "../../../../../components/Users/ListUsers/Admin/ListUsers"
+import Aux from "../../../../../hoc/Aux/Aux"
+import Modal from "../../../../../components/UI/Modal/Modal"
 
 class EditUsers extends Component {
-    state = {
-        loading: true,
-        customers: null
+    state= {
+        showModal: false,
+        user: "yo"
     }
 
-    componentDidMount() {
-        axios.get("https://batisphere-services-default-rtdb.europe-west1.firebasedatabase.app/customers.json")
-            .then(res => {
-                this.setState({ customers: res.data })
-                console.log(res.data)
-                this.setState({loading: false})
-            })
-            .catch( err => {
-                console.log(err);
-                this.setState({loading: false})
-            })
+    modalHandler = (newState, user) => {
+        this.setState({user: user, showModal: newState})
+        console.log(user)
+    }
+
+    cancelModalHandler = () => {
+        this.setState({showModal: false});
     }
 
     render() {
+        return(
+            <Aux >
+                <Modal 
+                    show={this.state.showModal} 
+                    modalClose={this.cancelModalHandler}>
+                        <p>{this.state.user}</p>
+                </Modal>
 
-        let listCustomers = null;
-
-        if (this.state.loading === false) {
-            if (this.state.customers !== null) {
-                listCustomers = Object.keys(this.state.customers)
-                    .map(igKey => {
-                        return [...Array(this.state.customers[igKey])].map((_, i) => {
-                            return <p key={igKey + 1}> {igKey} {i} </p>
-                        });
-                    })
-            }
-        } else {
-            listCustomers = <Spinner />
-        }
-        return (
-
-            <div>
-                <ul>
-                    {listCustomers}
-                </ul>
-            </div>
-
-
-        );
+                <ListUsers modal={this.modalHandler}/>
+            </Aux>
+        )
     }
 }
 

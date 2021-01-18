@@ -33,25 +33,32 @@ class Connection extends Component {
     }
 
     componentDidMount() {
-        console.log(sessionStorage.getItem("token"))
-
         if (sessionStorage.getItem("token") !== null) {
-            // this.setState({ loading: true });
+            this.setState({ loading: true });
 
             const userData = {
                 idToken: sessionStorage.getItem("token")
             }
 
-            let url = "https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=";
-            axios.post(url + "AIzaSyBIdwOfPXkIPi0gfzsxxQJXuy9iGUGncoI", userData)
-                .then(res => {
+            // X-Parse-Session-Token: 
+            const options = {
+                headers: {
+                    "X-Parse-Application-Id": process.env.REACT_APP_APP_ID,
+                    "X-Parse-REST-API-Key": process.env.REACT_APP_API_KEY,
+                    "X-Parse-Session-Token": sessionStorage.getItem("token")
+                }
+            };
+            
+            axios
+                .get("https://parseapi.back4app.com/users/me", options)
+                .then((res) => {
                     this.setState({ loading: false });;
-                    this.setState({ mode: res.data.users[0].email.split("@")[1].slice(0, -4) })
+                    this.setState({ mode: res.data.right })
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                     this.setState({ loading: false });;
-                })
+                });
         } else {
             console.log("coucou");
             this.setState({mode:"", isUserLogged: false, loading: false})
@@ -65,12 +72,13 @@ class Connection extends Component {
             let secondLevelLocation = pathArray[1];
 
             let containerShowed = null;
-            console.log(this.state.mode);
 
             if (this.state.isUserLogged === true) {
                 if (this.state.mode === "client" && secondLevelLocation === "home") {
                     containerShowed =
                         <AccountClient
+                            spec1={this.props.spec1}
+                            spec2={this.props.spec2}
                             mode={this.state.mode}
                             login={this.loggedHandler} />;
                 }
@@ -78,6 +86,8 @@ class Connection extends Component {
                 if (this.state.mode === "admin" && secondLevelLocation === "internal") {
                     containerShowed =
                         <AccountAdmin
+                            spec1={this.props.spec1}
+                            spec2={this.props.spec2}
                             mode={this.state.mode}
                             login={this.loggedHandler} />;
                 }
@@ -85,6 +95,8 @@ class Connection extends Component {
                 if (this.state.mode === "batisphere" && secondLevelLocation === "internal") {
                     containerShowed =
                         <AccountBatisphere
+                            spec1={this.props.spec1}
+                            spec2={this.props.spec2}
                             mode={this.state.mode}
                             login={this.loggedHandler} />;
                 }

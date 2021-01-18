@@ -1,0 +1,64 @@
+.List {
+  display: flex;
+
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  padding-top: 0;
+  margin: auto;
+  width: 60%;
+  overflow: scroll;
+  height: 250px;
+}
+
+.List ul {
+  margin: 0;
+  padding: 0;
+}
+
+.List li {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  margin: auto;
+
+  padding: 0;
+  text-indent: 10px;
+  color: white;
+  font-weight: bold;
+
+  box-sizing: border-box;
+
+  width: 100%;
+
+  flex: 1 1 auto;
+}
+
+.List li:nth-child(2n) {
+  background-color: rgb(158, 200, 93);
+}
+
+.List li:nth-child(2n + 1) {
+  background-color: rgb(139, 83, 137);
+}
+
+.List li:nth-child(2n):hover {
+  background-color: rgb(175, 220, 105);
+  cursor: pointer;
+}
+
+.List li:nth-child(2n + 1):hover {
+  background-color: rgb(182, 120, 179);
+  cursor: pointer;
+}
+
+.List p {
+  flex: 1 1 auto;
+  width: 50%;
+}
+
+.Spinner {
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}

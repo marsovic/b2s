@@ -61,7 +61,7 @@ class AuthOthers extends Component {
 
         // Propre à firebase ces 3 paramètres
         const authData = {
-            email: this.state.controls.userName.value /*.concat("@client.com")*/,
+            email: this.state.controls.userName.value,
             password: this.state.controls.password.value,
             returnSecureToken: true
         }
@@ -69,36 +69,57 @@ class AuthOthers extends Component {
         //lancement Spinnner
         this.setState({ loading: true });
 
-        // Separation du 'client' de '[nom]@client.com'
-        const userMode = authData.email.split("@")[1].slice(0, -4);
+        // Separation du 'admin' de '[nom]@admin.com'
+        const userMode = this.state.controls.userName.value.split("@")[1].slice(0, -4);
         // Requete de connexion
 
-        // Props définissant si connexion ou inscription
+        let user = null;
+
         let url = "";
-        if(this.props.mode === "connection") {
-            url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=";
+        if (this.props.mode === "connection") {
+            url = "https://parseapi.back4app.com/login";
+            user = {
+                username: this.state.controls.userName.value.split("@")[0],
+                password: this.state.controls.password.value,
+            }
         }
 
-        if(this.props.mode === "signIn") {
-            url = "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=";
+        if (this.props.mode === "signIn") {
+            url = "https://parseapi.back4app.com/users";
+            user = {
+                username: this.state.controls.userName.value.split("@")[0],
+                email: this.state.controls.userName.value,
+                password: this.state.controls.password.value,
+                right: "client"
+            }
         }
 
-        axios.post(url + "AIzaSyBIdwOfPXkIPi0gfzsxxQJXuy9iGUGncoI", authData)
-            .then(res => {
-                console.log(res);
+        const options = {
+            headers: {
+                "X-Parse-Application-Id": process.env.REACT_APP_APP_ID,
+                "X-Parse-REST-API-Key":  process.env.REACT_APP_API_KEY,
+                "X-Parse-Revocable-Session": 1,
+                "Content-Type": "application/json",
+            }
+        };
+
+        axios
+            .post(url, user, options)
+            .then((res) => {
+                console.log(res.data.sessionToken);
                 sessionStorage.setItem("isUserLogged", true);
-                sessionStorage.setItem("token", res.data.idToken);
-                sessionStorage.setItem("localId", res.data.localId);
+                sessionStorage.setItem("token", res.data.sessionToken);
+                sessionStorage.setItem("objectId", res.data.objectId);
 
                 this.setState({ loading: false, errorMessage: "" });
                 this.props.login(true, userMode);
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
                 this.setState({ loading: false });
                 this.setState({ errorMessage: "Email ou mot de passe invalide" });
                 this.props.login(false, userMode);
-            })
+            });
         
     }
 

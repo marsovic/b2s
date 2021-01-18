@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 class MyAccount extends Component {
     render() {
-        console.log(this.props.mode)
         return (
             <div>
                 <p>
