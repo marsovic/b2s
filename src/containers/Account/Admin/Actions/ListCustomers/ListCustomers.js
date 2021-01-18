@@ -8,7 +8,7 @@ class EditCustomers extends Component {
     render() {
         return (
             <Aux >
-                <ListUsers />
+                <ListUsers spec={this.props.spec}/>
             </Aux>
         )
     }

@@ -40,8 +40,7 @@ class EditUsers extends Component {
                    show={this.state.showModal}>
                         {userSelected}
                 </Modal>
-                <p> c'est moi</p>
-                <ListUsers modal={this.modalHandler}/>
+                <ListUsers spec={this.props.spec} modal={this.modalHandler}/>
             </Aux>
         )
     }

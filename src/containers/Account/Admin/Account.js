@@ -20,17 +20,17 @@ class Account extends Component {
 
         if(this.props.spec1 === "users") {
             if(this.props.spec2 === "list"){
-                compToShow = <ListUsers />
+                compToShow = <ListUsers spec={this.props.spec2}/>
             }
 
             if(this.props.spec2 === "edit"){
-                compToShow = <EditUsers />
+                compToShow = <EditUsers spec={this.props.spec2}/>
             }
         }
 
         if(this.props.spec1 === "customer") {
             if(this.props.spec2 === "list"){
-                compToShow = <ListCustomers />
+                compToShow = <ListCustomers spec={this.props.spec2} />
             }
         }
 

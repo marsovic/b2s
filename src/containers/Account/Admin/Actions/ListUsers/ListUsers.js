@@ -7,7 +7,7 @@ class Users extends Component {
     render() {
         return(
             <Aux >
-                {<ListUsers />}
+                {<ListUsers spec={this.props.spec}/>}
             </Aux>
         )
     }
