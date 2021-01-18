@@ -91,7 +91,7 @@ class AuthOthers extends Component {
             headers: {
                 "X-Parse-Application-Id": process.env.REACT_APP_APP_ID,
                 "X-Parse-REST-API-Key":  process.env.REACT_APP_API_KEY,
-                "X-Parse-Revocable-Session": 1,
+                // "X-Parse-Revocable-Session": 1,
                 "Content-Type": "application/json",
             }
         };
