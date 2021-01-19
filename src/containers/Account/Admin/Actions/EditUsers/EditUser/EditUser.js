@@ -76,7 +76,6 @@ class EditUsers extends Component {
         axios
             .put(url, updatedUser ,options)
             .then((res) => {
-                console.log(res.data);
                 this.setState({ 
                     oading: false, 
                     errorMessage: "",
@@ -86,7 +85,7 @@ class EditUsers extends Component {
                 console.log(err);
                 this.setState({ loading: false });
                 this.setState({ 
-                    errorMessage: "Email ou mot de passe invalide",
+                    errorMessage: "Erreur dans un des champs",
                     successMessage:"" });
             });
     }
@@ -105,8 +104,6 @@ class EditUsers extends Component {
         if (rules.maxLength) {
             isValid = value.length <= rules.maxLength && isValid;
         }
-
-        console.log(isValid)
 
         return isValid;
     }
@@ -145,6 +142,7 @@ class EditUsers extends Component {
 
         let form = (
             <div>
+                <h2> Fiche utilisateur </h2>
                 {formElementsArray.map(formElement => (
                     <Input
                         key={formElement.id}
