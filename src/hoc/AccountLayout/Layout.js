@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import Aux from "../Aux/Aux";
 import styles from './Layout.module.css';
-import Toolbar from "../../components/Navigation/AccountToolbar/Toolbar";
+import Toolbar from "../../components/Navigation/Toolbar/Toolbar";
 
 class layout  extends Component {
     render () {

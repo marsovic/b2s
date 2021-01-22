@@ -1,0 +1,17 @@
+.Chart {
+    width: 350px;
+    height: 350px;
+    margin: 0 10% 0 10%;
+}
+
+.Chart h2 {
+    left: 0;
+    text-align: left;
+    height: 30px;
+    padding-left: 20px ;
+}
+
+.Draw {
+    margin-left: 70px;
+    position: absolute;
+}

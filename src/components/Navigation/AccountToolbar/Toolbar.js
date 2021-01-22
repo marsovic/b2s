@@ -1,12 +1,12 @@
 import React from 'react';
 
 import styles from "./Toolbar.module.css";
-import NavigationItems from "../NavigationItems/InternalNavigationItems";
+import NavigationItems from "../NavigationItems/SecondNavigationItems";
 
 const toolbar = (props) => (
     <header className={styles.Toolbar}>
-        <nav className={styles.DesktopOnly}>
-            <NavigationItems/>
+        <nav>
+            <NavigationItems mode={props.mode}/>
         </nav>
     </header>
 );
