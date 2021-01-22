@@ -91,9 +91,7 @@ class AddUser extends Component {
             street: this.state.orderForm.street.value,
             city: this.state.orderForm.city.value,
             password: crypto.createHash('sha1').update(this.state.orderForm.username.value).digest('hex'),
-            right: this.state.orderForm.right.value,
-            emailVerified: true,
-            
+            right: this.state.orderForm.right.value
         }
 
         if (this.checkUnicity(user.username) === true && this.state.formIsValid === true) {
@@ -163,7 +161,6 @@ class AddUser extends Component {
             .get(url, options)
             .then((res) => {
                 listUser = res.data.results;
-
                 for (let elem in listUser) {
                     valid = username !== listUser[elem].username && valid
                 }
@@ -173,6 +170,10 @@ class AddUser extends Component {
                 console.log(err);
                 this.setState({ loading: false });
             });
+
+            if(valid) {
+                console.log("unique")
+            }
 
         return valid;
     }

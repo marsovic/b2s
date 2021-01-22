@@ -46,7 +46,7 @@ class ListUsers extends Component {
                 listUsers = Object.keys(this.state.users)
                     .map(key => {
                         return [...Array(this.state.users[key])].map((_, i) => {
-                            if (this.state.users[key].right === "admin" ||
+                            if (this.state.users[key].right === "batisphere" ||
                                 this.state.users[key].right === "client" ||
                                 this.state.users[key].right === "admin") {
                                 if (this.props.spec === "edit") {
