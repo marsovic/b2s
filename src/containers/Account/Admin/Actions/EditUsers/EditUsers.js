@@ -5,7 +5,7 @@ import Aux from "../../../../../hoc/Aux/Aux"
 import Modal from "../../../../../components/UI/Modal/Modal"
 import Button from "../../../../../components/UI/Button/Button"
 import EditUser from "./EditUser/EditUser";
-import AddUser from "./AddUSer/AddUser";
+import AddUser from "./AddUser/AddUser";
 
 class EditUsers extends Component {
     state = {
