@@ -124,7 +124,6 @@ class Connection extends Component {
                 </div>
             );
         } else {
-
             return (
                 <div>
                     <Spinner />
