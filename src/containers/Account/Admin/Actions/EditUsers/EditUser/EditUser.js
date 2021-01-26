@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 
+import styles from "./EditUser.module.css"
 import Input from "../../../../../../components/UI/Input/Input"
 import Button from "../../../../../../components/UI/Button/Button"
 
@@ -42,6 +43,32 @@ class EditUsers extends Component {
                     placeholder: "Ville",
                 },
                 value: (this.props.user === null) ? "" : this.props.user.city,
+                validation: {
+                    required: true,
+                },
+                valid: true,
+                touched: false,
+            },
+            meter: {
+                elementType: "input",
+                elementConfig: {
+                    type: "meter",
+                    placeholder: "N° de compteur",
+                },
+                value: (this.props.user === null) ? "" : this.props.user.meter,
+                validation: {
+                    required: true,
+                },
+                valid: true,
+                touched: false,
+            },
+            RAE: {
+                elementType: "input",
+                elementConfig: {
+                    type: "RAE",
+                    placeholder: "RAE",
+                },
+                value: (this.props.user === null) ? "" : this.props.user.RAE,
                 validation: {
                     required: true,
                 },
@@ -141,9 +168,13 @@ class EditUsers extends Component {
         }
 
         let form = (
-            <div>
+            <div className={styles.EditUser}>
                 <h2> Fiche utilisateur </h2>
+                <ul>
                 {formElementsArray.map(formElement => (
+                    <li>
+                    <p>{formElement.config.elementConfig.placeholder}</p>
+                    <div className={styles.Input}>
                     <Input
                         key={formElement.id}
                         elementType={formElement.config.elementType}
@@ -153,7 +184,10 @@ class EditUsers extends Component {
                         shouldValidate={formElement.config.validation}
                         touched={formElement.config.touched}
                         changed={(event) => this.inputChangedHandler(event, formElement.id)} />
+                    </div>
+                    </li>
                 ))}
+                </ul>
 
                 <div>
                     <div> {this.state.errorMessage}</div>

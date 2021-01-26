@@ -31,8 +31,13 @@ class EditUsers extends Component {
     }
 
     updateByModal = () => {
-        this.setState({updated: !this.state.updated})
-    } 
+        this.setState({ updated: !this.state.updated })
+    }
+
+    consoleLogJSON(data1, data2) {
+        console.log(data1)
+        console.log(data2)
+    }
 
     render() {
         let userData = null;
@@ -45,6 +50,7 @@ class EditUsers extends Component {
             userData = <AddUser modal={this.modalAddHandler} />
         }
 
+
         return (
             <Aux >
                 <Modal
@@ -56,8 +62,8 @@ class EditUsers extends Component {
                 <ListUsers
                     spec={this.props.spec}
                     modal={this.modalEditHandler} />
-                <Button btnType="Success" clicked={this.modalAddHandler}> 
-                    Créer un utilisateur 
+                <Button btnType="Success" clicked={this.modalAddHandler}>
+                    Créer un utilisateur
                 </Button>
             </Aux>
         )

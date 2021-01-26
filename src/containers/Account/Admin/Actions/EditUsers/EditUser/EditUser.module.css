@@ -1,0 +1,24 @@
+.EditUser {
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.EditUser li {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  margin: auto;
+  flex: 1 1 auto;
+}
+
+.EditUser p {
+  flex: 1 1 auto;
+  text-align: left;
+  width: 50%;
+}
+
+.Input {
+  width: 75%;
+  flex: 1 1 auto;
+}
