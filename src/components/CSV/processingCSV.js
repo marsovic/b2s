@@ -100,7 +100,7 @@ class ParseCSV extends Component {
             <div >
                 <input
                     type="file"
-                    accept=".csv,.xlsx,.xls"
+                    accept=".csv"
                     onChange={this.handleFileUpload}
                 />
             </div>

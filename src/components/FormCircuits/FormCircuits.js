@@ -1,16 +1,24 @@
 import React, { Component } from "react";
 
-import Button from "../UI/Button/Button"
-import Input from "../UI/Input/Input"
 import CSV from "../CSV/processingCSV"
 import Rooms from "./Rooms/Rooms"
 import Circuits from "./Circuits/Circuits"
 
+/*
+
+// HOW TO USE 
+
+- in render:
+    <Circuits />
+
+*/
+
 class FormCircuits extends Component {
     state = {
         rooms: null,
-        loading: false,
         circuits: null,
+        physics: null,
+        loading: false,
         areCircuitsSelected: false,
         areRoomsSelected: false
     }
@@ -18,23 +26,25 @@ class FormCircuits extends Component {
     handleFile = (data1, data2) => {
         var listRoom = data1;
 
-        for(var key of Object.keys(listRoom)) {
+        for (var key of Object.keys(listRoom)) {
             listRoom[key]['isCircuit'] = false;
             listRoom[key]['isRoom'] = false;
         }
-
-        console.log(data1)
-        console.log(data2)
 
         this.setState({ rooms: listRoom });
     }
 
     handleCircuits = (newState, circ) => {
-        this.setState({areCircuitsSelected: newState, circuits: circ})
+        this.setState({ areCircuitsSelected: newState, circuits: circ })
     }
 
-    handleRooms = (newState) => {
-        this.setState({areRoomsSelected: newState})
+    handleRooms = (newState, rooms, circuits, physics) => {
+        this.setState({
+            areRoomsSelected: newState,
+            rooms: rooms,
+            circuits: circuits,
+            physics: physics
+        })
     }
 
     render() {
@@ -52,40 +62,27 @@ class FormCircuits extends Component {
                         })
                     }
 
-                    toShow = (
-                        <div>
-                            <h2> Paramétrages des Circuits et des Salles</h2>
-                            {this.state.rooms.map(formElement => (
-                                <Input
-                                    key={formElement.id}
-                                    elementType={formElement.config.elementType}
-                                    elementConfig={formElement.config.elementConfig}
-                                    value={formElement.config.value}
-                                    invalid={!formElement.config.valid}
-                                    shouldValidate={formElement.config.validation}
-                                    touched={formElement.config.touched}
-                                    changed={(event) => this.inputChangedHandler(event, formElement.id)} />
-                            ))}
+                    // Create the future text file with all data
+                    let toPassToTheAlgorithm = [];
+                    for (let item in this.state.rooms) {
+                        let tempItem =
+                            this.state.rooms[item].name + " @#@ " +
+                            this.state.circuits[item] + " @#@ " +
+                            this.state.physics[item];
 
-                            <div>
-                                <div> {this.state.errorMessage}</div>
-                                <div style={{ color: "green" }}> {this.state.successMessage}</div>
-                            </div>
+                        toPassToTheAlgorithm.push(tempItem);
+                    }
 
-                            <Button
-                                btnType="Success"
-                                value="Submit"
-                                disabled={!this.state.formIsValid}
-                                clicked={this.requestAdd}> Suivant </Button>
-                        </div>
-                    );
+                    toShow = toPassToTheAlgorithm.map(items => {
+                        return <p> {items} </p>
+                    });
                 } else {
                     // Rooms does not all have a circuit
-                    toShow= <Rooms rooms={this.state.rooms} circuits={this.state.circuits} />
+                    toShow = <Rooms rooms={this.state.rooms} circuits={this.state.circuits} handleRooms={this.handleRooms} />
                 }
             } else {
                 // Circuits are not selectionned yet
-                toShow= <Circuits rooms={this.state.rooms} handleCircuits={this.handleCircuits}/>
+                toShow = <Circuits rooms={this.state.rooms} handleCircuits={this.handleCircuits} />
             }
         } else {
             toShow =

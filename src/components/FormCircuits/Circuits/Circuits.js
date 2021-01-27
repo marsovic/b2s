@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 
-import Button from "../../UI/Button/Button"
-import Input from "../../UI/Input/Input"
 import styles from "./Circuits.module.css"
-
 
 class Circuits extends Component {
     state = {
@@ -29,8 +26,17 @@ class Circuits extends Component {
         const toShow = this.props.rooms.map(room => {
             return (
                 <li>
-                    <input name="room" type="checkbox" id={room['name']} value={room['name']} />
-                    <label for={room['name']}>{room['name']}</label>
+                    <div className={styles.Label}>
+                        <label for={room['name']} class="css-label" >{room['name']}</label>
+                    </div>
+                    <div className={styles.Input}>
+                        <input 
+                            class="css-checkbox" 
+                            name="room" 
+                            type="checkbox" 
+                            id={room['name']} 
+                            value={room['name']} />
+                    </div>
                 </li>
             )
         })
@@ -41,7 +47,7 @@ class Circuits extends Component {
                 <form onSubmit={this.handleSubmit}>
                 {toShow}
                 </form>
-                <button type="submit" onClick={this.handleSubmit}>Suivant</button>
+                <button type="submit" onClick={this.handleSubmit}> <span>Suivant</span></button>
             </div>
         )
 

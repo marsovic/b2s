@@ -7,8 +7,6 @@ import Button from "../../../../../components/UI/Button/Button"
 import EditUser from "./EditUser/EditUser";
 import AddUser from "./AddUser/AddUser";
 
-import Circuits from "../../../../../components/FormCircuits/FormCircuits"
-
 class EditUsers extends Component {
     state = {
         showModal: false,
@@ -41,11 +39,6 @@ class EditUsers extends Component {
         console.log(data2)
     }
 
-    consoleLogJSON(data1, data2) {
-        console.log(data1); // Show the names of the columns
-        console.log(data2); // Show data on each row 
-    }
-
     render() {
         let userData = null;
 
@@ -72,8 +65,6 @@ class EditUsers extends Component {
                 <Button btnType="Success" clicked={this.modalAddHandler}>
                     Créer un utilisateur
                 </Button>
-
-                <Circuits sendJSON={this.consoleLogJSON}/>
             </Aux>
         )
     }

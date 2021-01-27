@@ -1,51 +1,122 @@
 .Circuits {
+  list-style: none;
+  margin: auto;
+  padding: 0;
+  text-indent: 10px;
+  box-sizing: border-box;
+  width: 50%;
+}
+
+.Circuits form {
+  flex-direction: column;
+  height: 300px;
+  overflow: scroll;
   flex-direction: row;
   list-style: none;
   margin: auto;
-
   padding: 0;
   text-indent: 10px;
-
   box-sizing: border-box;
-
-  width: 80%;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-y: auto;
+  line-height: 1em;
 }
 
-.Circuits form{
-    height: 300px;
-    overflow: scroll;
-    flex-direction: row;
-    list-style: none;
-    margin: auto;
+.Circuits form::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
 
-    border: 1px solid rosybrown;
-  
-    padding: 0;
-    text-indent: 10px;
-  
-    box-sizing: border-box;
-  
-    width: 100%;
-  }
+.Circuits form::-webkit-scrollbar:vertical {
+  width: 11px;
+}
+
+.Circuits form::-webkit-scrollbar:horizontal {
+  height: 11px;
+}
+
+.Circuits form::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: 2px solid white; /* should match background, can't be transparent */
+  background-color: rgba(0, 0, 0, 0.5);
+}
 
 .Circuits li {
+  border-top: 1px solid gray;
   text-align: left;
-  height: 30px;
+  display: flex;
+  flex-direction: row;
+  height: 40px;
   font-weight: bold;
+  flex: 1 1 auto;
 }
 
-
-.Circuit input + label {
-    left: -60vw;
-    background: #4285F4;
-    animation-delay: 0s;
+.Circuits li:last-child {
+  border-bottom: 1px solid gray;
 }
 
-.Circuit input + label:before {
-    transform: scale(0);
+.Circuits input {
+  height: 20px;
+  width: 20px;
 }
 
-.Circuit input:checked + label:before {
-    transform: scale(1);
-    transition: all .4s;
+.Label {
+  flex: 1 1 auto;
+  text-align: right;
+  width: 40%;
+  margin-top: 10px;
+}
+
+.Label label {
+  margin-right: 15px;
+}
+
+.Input {
+  flex: 1 1 auto;
+  text-align: left;
+  width: 40%;
+  vertical-align: middle;
+  margin-top: 7px;
+}
+
+.Circuits button {
+  padding-top: 40px;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: rgb(142, 192, 75);
+  font-weight: bold;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 15px;
+  padding: 10px;
+  width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 20px;
+}
+
+.Circuits button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.Circuits button span:after {
+  content: "\00bb";
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.Circuits button:hover span {
+  padding-right: 25px;
+}
+
+.Circuits button:hover span:after {
+  opacity: 1;
+  right: 0;
 }

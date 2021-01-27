@@ -82,7 +82,7 @@ class AddUser extends Component {
         };
 
         //Returns the names of supported hash algorithms
-        const hash = crypto.getHashes();
+        // const hash = crypto.getHashes();
 
         const url = "https://parseapi.back4app.com/users";
         const user = {
