@@ -49,7 +49,8 @@ class Rooms extends Component {
             return (
                 <li>
                     <label for={room['name']}>{room['name']}</label>
-                    <select id={room['name']} name={room['name']}>
+                    {/* DROPDOWN */}
+                    <select id={room['name']} name={room['name']}> 
                         {this.state.circuits.map(circuit =>{
                             return <option value={circuit}> {circuit}</option>
                         } )}
