@@ -1,0 +1,50 @@
+.Rooms {
+  flex-direction: row;
+  list-style: none;
+  margin: auto;
+
+  padding: 0;
+  text-indent: 10px;
+
+  box-sizing: border-box;
+
+  width: 80%;
+}
+
+.Rooms form {
+  height: 300px;
+  overflow: scroll;
+  flex-direction: row;
+  list-style: none;
+  margin: auto;
+
+  border: 1px solid rosybrown;
+
+  padding: 0;
+  text-indent: 10px;
+
+  box-sizing: border-box;
+
+  width: 100%;
+}
+
+.Rooms li {
+  text-align: left;
+  height: 30px;
+  font-weight: bold;
+}
+
+.Circuit input + label {
+  left: -60vw;
+  background: #4285f4;
+  animation-delay: 0s;
+}
+
+.Circuit input + label:before {
+  transform: scale(0);
+}
+
+.Circuit input:checked + label:before {
+  transform: scale(1);
+  transition: all 0.4s;
+}
