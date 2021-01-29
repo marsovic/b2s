@@ -3,6 +3,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button';
 import React, { Component, useState } from "react";
+import Form from 'react-bootstrap/Form'
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <Button
@@ -57,6 +58,7 @@ const CustomMenu = React.forwardRef(
         super(props);
         this.state = {
           selected: "Changer donnée",
+          data : this.props.data,
         };
   
         this.handleChange = this.handleChange.bind(this);
@@ -70,22 +72,58 @@ const CustomMenu = React.forwardRef(
       });
     }
 
+    handleChangeCheckbox = (event) => {
+      console.log("TARGET NAME",event.target.id.toString())
+      this.props.updateLinesFuntion(event.target.id.toString(), event.target.checked)
+    
+    }
+
     render(){
+      let data = null;
+      let items = null;
+
+      items = Object.keys(this.state.data)
+                .map(key => { 
+                  for(let i in this.props.displayedLines){
+                    if(this.state.data[key].name !== null){
+                      if(this.state.data[key].name === this.props.displayedLines[i].name){
+                        return (
+                          <Form.Check id={this.state.data[key].name} label={this.state.data[key].name} onChange={this.handleChangeCheckbox} checked={this.props.displayedLines[i].displayed}/>    
+                            )
+                      }
+
+                      
+                    }
+                  }
+                   
+                    
+                })
+      /*data = Object.keys(this.state.data)
+                .map(key => {
+
+                    if(this.state.data[key].name !== null){
+                        return (
+
+                          <Dropdown.Item id = {this.state.data[key].name} onClick={this.handleChange}>{this.state.data[key].name}</Dropdown.Item> 
+    
+                            )
+            
+                    }
+                    
+                })*/
+    
         return(
           <Dropdown>
-          <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components" >
-            {this.state.selected}
-          </Dropdown.Toggle>
-      
-          <Dropdown.Menu as={CustomMenu} >
-            <Dropdown.Item id = {ColumnName1} onClick={this.handleChange}>{ColumnName1}</Dropdown.Item>
-            <Dropdown.Item id = {ColumnName2} onClick={this.handleChange}>{ColumnName2}</Dropdown.Item>
-            <Dropdown.Item onClick={this.handleChange}>
-              Orange
-            </Dropdown.Item>
-            <Dropdown.Item eventKey="1">Red-Orange</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
+              {this.state.selected}
+            </Dropdown.Toggle>
+
+            <Dropdown.Menu as={CustomMenu}>
+            
+                {items}
+            
+            </Dropdown.Menu>
+          </Dropdown>
       );
     }
 

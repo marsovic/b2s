@@ -1,6 +1,6 @@
 import React, { Component,useState,PureComponent} from "react";
 import {
-  Label, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceArea,Legend
+  Label, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceArea,Legend,ResponsiveContainer
 } from 'recharts';
 
 import Button from 'react-bootstrap/Button';
@@ -11,14 +11,15 @@ import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 import "bootstrap/dist/css/bootstrap.min.css";
 import Settings from '../ChartSettings/LinearChartSettings';
-import CSV from '../../../../../components/CSV/processingCSV'
+import CSV from '../../../../../components/CSV/processingCSV';
+import Colors from '../../../../../components/UI/colors'
 
 //import Data from '../data'
 
 //const data = Data.importCsv("/Users/louiscauquelin/Downloads/data.csv");
 
 //const data = null;
-
+/*
 const data = [
     { name: 1, cost: 4.11, impression: 100 },
     { name: 2, cost: 2.39, impression: 120 },
@@ -40,13 +41,13 @@ const data = [
     { name: 18, cost: 2, impression: 50 },
     { name: 19, cost: 3, impression: 100 },
     { name: 20, cost: 7, impression: 100 }
-];
+];*/
 
 
 
 //fonction pour zoom
 
-class LinearChart extends PureComponent{
+class LinearChart extends Component{
     static jsfiddleUrl = 'https://jsfiddle.net/alidingling/nhpemhgs/';
 
     constructor(props) {
@@ -54,18 +55,10 @@ class LinearChart extends PureComponent{
       this.state = {
         data: this.props.data,
         columns : this.props.columns,
-        left: 'dataMin',
-        right: 'dataMax',
-        refAreaLeft: '',
-        refAreaRight: '',
-        top: 'dataMax+1',
-        bottom: 'dataMin-1',
-        top2: 'dataMax+20',
-        bottom2: 'dataMin-20',
-        animation: true,
-        dropDownLeft : "15 min",
-        dropDownRight : "1 mois",
-         //Variables pour otpions des graphiques
+        displayedColumns : [],
+
+        
+        //Variables pour otpions des graphiques
     
         //Distance pointillés grille
         dashArrayXSpace : 3,
@@ -81,171 +74,142 @@ class LinearChart extends PureComponent{
         
         //Nom axe ordonnée (mettre le nom du keyword dans le tableau de données)
         YAxisName : "",
+        lines : null,
       }
-  
-  
+
+      //Lines initialisation
+      this.state.lines = Object.keys(this.state.columns)
+      .map(key => {
+
+          switch(parseInt(key)){
+              case 0:
+              console.log("case 0", this.state.columns[key].name)
+              this.state.XAxisName = this.state.columns[key].name.toString()
+               
+              break;
+
+              case 1 :
+              break;
+
+              default:
+              /*console.log("this.state.columns[key].name = ")
+              console.log(this.state.columns[key].name)
+              console.log("cpt")
+              console.log(key)*/
+
+              if(this.state.columns[key].name !== null){
+                this.state.displayedColumns.push({"name":this.state.columns[key].name.toString(), "displayed":true})
+                  return (
+                      <Line key={key} type="natural" dataKey={this.state.columns[key].name.toString()} stroke={Colors[key-2].code} dot={false} />
+                      )
+              }
+
+              break;
+
+
+          }
+          
+      })
+
+this.state.lines.splice(0,1);
+//console.log("before update", tab);
+
+this.updateDisplayedLines = this.updateDisplayedLines.bind(this);
+
+
     }
 
-    getAxisYDomain = (from, to, ref, offset) => {
-        const refData = this.state.data.slice(from - 1, to);
-        let [bottom, top] = [refData[0][ref], refData[0][ref]];
-        refData.forEach((d) => {
-          if (d[ref] > top) top = d[ref];
-          if (d[ref] < bottom) bottom = d[ref];
-        });
-      
-        return [(bottom | 0) - offset, (top | 0) + offset];
-      };
-      
-    
-   
-    
 
-    zoom() {
-        let { refAreaLeft, refAreaRight, data } = this.state;
 
-        if (refAreaLeft === refAreaRight || refAreaRight === '') {
-        this.setState(() => ({
-            refAreaLeft: '',
-            refAreaRight: '',
-        }));
-        return;
+updateDisplayedLines(name,displayed){
+
+    console.log("name",name)
+    console.log("displayed",displayed)
+    //Variable pour savoir si une ligne marquée comme affichée est absente des lignes affichée (auquel cas on la créée)
+    let toDisplay = true;
+    let tab = this.state.displayedColumns;
+    let tabLines = this.state.lines;
+//On rempli d'abord le tableau des lignes affichées
+        for(let i = 0; i<tab.length; i++){
+            if(tab[i].name === name ){
+                tab[i].displayed = displayed
+            }
+
         }
+//Puis on update les lignes affichées avec le tableau
+        for(let i = 0; i<tab.length; i++){
 
-        // xAxis domain
-        if (refAreaLeft > refAreaRight) [refAreaLeft, refAreaRight] = [refAreaRight, refAreaLeft];
+            //Si la ligne n'est pas affichée, on supprime la ligne qui a le même nom si elle est présente dans le tableau
+            if(tab[i].displayed === false ){
+                for(let j = 0; j<tabLines.length; j++){
+                if(typeof(tabLines[j]) !== 'undefined' && typeof(tab[i]) !== 'undefined'){
+                    if(tab[i].name === tabLines[j].props.dataKey ){
+                        tabLines.splice(j,1);
+                    }
+                }
+                    
+                }
+            }
+            //Si la ligne marquée pour l'affichage , on vérifie si si elle l'est déjà, sinon on l'ajoute aux lignes
+            if(tab[i].displayed === true ){
+                for(let j = 0; j<tabLines.length; j++){
+                    if(typeof(tabLines[j]) !== 'undefined' && typeof(tab[i]) !== 'undefined'){
 
-        // yAxis domain
-        const [bottom, top] = this.getAxisYDomain(refAreaLeft, refAreaRight, 'C', 1);
-        const [bottom2, top2] = this.getAxisYDomain(refAreaLeft, refAreaRight, 'D', 50);
+                        if(tab[i].name === tabLines[j].props.dataKey ){
+                            toDisplay = false;
+                        }
+                    }
+                }
 
-        this.setState(() => ({
-        refAreaLeft: '',
-        refAreaRight: '',
-        data: data.slice(),
-        left: refAreaLeft,
-        right: refAreaRight,
-        bottom,
-        top,
-        bottom2,
-        top2,
-        }));
+                if(toDisplay===true){
+                    console.log("tab[i].name.toString()",tab[i].name.toString())
+                    console.log("KEY",parseInt(tabLines.length)+i)
+                    tabLines.push(<Line key={parseInt(tabLines.length)+i} type="natural" dataKey={tab[i].name.toString()} stroke={Colors[2].code} dot={false} />)
+                }
+
+                if(toDisplay === false){
+                    toDisplay = true;
+                }
+
+            }
+        }
+        const { data } = this.state;
+        this.setState({
+            displayedColumns: tab,
+            lines: tabLines,
+            data: data.slice(),
+        });
+
+    
+        
+
     }
 
-    zoomOut() {
-        const { data } = this.state;
-        this.setState(() => ({
-          data: data.slice(),
-          refAreaLeft: '',
-          refAreaRight: '',
-          left: 'dataMin',
-          right: 'dataMax',
-          top: 'dataMax+1',
-          bottom: 'dataMin',
-          top2: 'dataMax+50',
-          bottom2: 'dataMin+50',
-        }));
-      }
+    render() {
 
-
-      
-  
-    //Line type --> courbes (monotone) ou traits droits (rien)
-  render() {
-
-    let lines = null;
-    console.log(this.state.data);
-    lines = Object.keys(this.state.columns)
-                .map(key => {
-
-                    switch(parseInt(key)){
-                        case 0:
-                        console.log("case 0", this.state.columns[key].name)
-
-                        this.setState({
-                            XAxisName: this.state.columns[key].name
-                          });
-                        break;
-
-                        case 1 :
-                        break;
-
-                        default:
-                        console.log("this.state.columns[key].name = ")
-                        console.log(this.state.columns[key].name)
-                        console.log("cpt")
-                        console.log(key)
-
-                        if(this.state.columns[key].name !== null){
-                            return (
-
-                                <Line key={key + 1} type="natural" dataKey={this.state.columns[key].name} stroke="#8884d8" animationDuration={300} />
-        
-                                )
-                        }
-
-                        break;
-
-
-                    }
-                    
-                })
-
-  
-    return(
     
-    <Container fluid>
-        <Row>
-            <Col>
-            <div className="highlight-bar-charts" style={{ userSelect: 'none' }}>
-        
-                <Button variant="secondary" onClick={this.zoomOut.bind(this)}>
-                    Dézoomer
-                </Button>
-                
-                </div>
-            </Col>
-        <Col>
-            <Settings data = {this.state.columns} /></Col>
-        </Row>
-        
-        <Row style={{marginTop: 15}}>
+    //this.updateDisplayedLines("Cpt_gaz",true)
+console.log(this.state.lines)
+    return(
+   
+    <div style={{ width: '90%', height: 600 }}>
+     
+    <Settings data = {this.state.columns} updateLinesFuntion = {this.updateDisplayedLines} displayedLines = {this.state.displayedColumns}/>
+    <ResponsiveContainer>
         <LineChart 
+                
                 width={this.state.graphWidth} 
                 height={this.state.graphHeight} 
-                data={this.state.data}
-                onMouseDown={e => this.setState({ refAreaLeft: e.activeLabel })}
-                onMouseMove={e => this.state.refAreaLeft && this.setState({ refAreaRight: e.activeLabel })}
-                onMouseUp={this.zoom.bind(this)}>
+                data={this.state.data}>
                     <CartesianGrid strokeDasharray={this.state.dashArray} />
-                    <XAxis allowDataOverflow dataKey={this.state.XAxisName} domain={[this.state.left, this.state.right]} type="number"/>
-                    <YAxis orientation="left" allowDataOverflow domain={[this.state.bottom, this.state.top]} type="number" yAxisId="1"/>
-                    <YAxis
-                        orientation="right"
-                        allowDataOverflow
-                        domain={[this.state.bottom2, this.state.top2]}
-                        type="number"
-                        yAxisId="2"
-                    />
+                    <XAxis  dataKey={this.state.XAxisName}/>
+                    <YAxis />
+                    {this.state.lines}
                     <Tooltip />
-                    <Legend />
-                    {lines}
-                    {
-                        (this.state.refAreaLeft && this.state.refAreaRight) ? (
-                        <ReferenceArea yAxisId="1" x1={this.state.refAreaLeft} x2={this.state.refAreaRight} strokeOpacity={0.3} />) : null
-                        }
+                    <Legend height={60} />
                 </LineChart>
-                </Row>
-
-
-                <Row style={{marginTop: 15}}>
-
-                
-
-                </Row>
-
-    </Container>    
-   
+    </ResponsiveContainer>    
+   </div>
     );
     
   }

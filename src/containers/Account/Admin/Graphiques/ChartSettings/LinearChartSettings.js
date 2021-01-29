@@ -8,6 +8,9 @@ import DropDownlist from '../LayoutComponent/DropDownList'
 
 
 function LinearSettings(props) {
+  console.log("settings props data", props.data)
+  console.log("props.displayedLines", props.displayedLines)
+
   return (
     <Modal
       {...props}
@@ -23,21 +26,13 @@ function LinearSettings(props) {
       <Modal.Body>
       <Container>
           <Row>
-            <Col xs={12} md={8}>
-              .col-xs-12 .col-md-8
-            </Col>
-            <Col xs={6} md={4}>
-              .col-xs-6 .col-md-4
-            </Col>
-          </Row>
-
-          <Row>
-            <DropDownlist data = {this.props.data} />
+            <DropDownlist data={props.data} updateLinesFuntion = {props.updateLinesFuntion} displayedLines = {props.displayedLines}/>
           </Row>
         </Container>
       </Modal.Body>
       <Modal.Footer>
         <Button onClick={props.onHide}>Close</Button>
+        
       </Modal.Footer>
     </Modal>
   );
@@ -74,8 +69,12 @@ class Settings extends Component{
       <Button variant="primary" onClick={() => this.showModal()}>
         Launch vertically centered modal
       </Button>
+     
 
-      <LinearSettings
+      <LinearSettings 
+        data={this.props.data}
+        updateLinesFuntion = {this.props.updateLinesFuntion} 
+        displayedLines = {this.props.displayedLines}
         show={this.state.modalShow}
         onHide={() => this.hideModal()}
       />
