@@ -9,7 +9,6 @@ function App() {
   return (
     <div className="App">
       <Layout>
-        <Route path="/home" exact render={() => <Connection />} />
         <Route path="/internal" exact render={() => <Connection />} />
         <Route path="/internal/users" exact render={() => <Account />} />
 
