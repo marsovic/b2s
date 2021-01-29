@@ -95,7 +95,6 @@ class AddUser extends Component {
         }
 
         if (this.checkUnicity(user.username) === true && this.state.formIsValid === true) {
-            console.log("yolo")
 
             // Requete de création de compte
             axios
@@ -124,7 +123,6 @@ class AddUser extends Component {
                 axios
                     .post(urlToResetPassword, userEmail , options)
                     .then((res) => {
-                        console.log(res)
                         this.setState({
                             loading: false,
                             errorMessage: "",
@@ -170,10 +168,6 @@ class AddUser extends Component {
                 console.log(err);
                 this.setState({ loading: false });
             });
-
-            if(valid) {
-                console.log("unique")
-            }
 
         return valid;
     }

@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from 'axios';
+import crypto from "crypto";
 
 import Input from "../UI/Input/Input";
 import Button from "../UI/Button/Button";
@@ -35,20 +36,7 @@ class AuthOthers extends Component {
                 },
                 valid: false,
                 touched: false
-            }/*, 
-            right: {
-                elementType: 'select',
-                elementConfig: {
-                    options: [
-                        { value: '@admin', displayValue: 'Administrateur' },
-                        { value: '@batisphere', displayValue: 'Batisphere' },
-                        { value: '@client', displayValue: 'Client' }
-                    ]
-                },
-                value: 'client',
-                validation: {},
-                valid: true
-            }*/
+            }
         },
         loading: false,
         errorMessage: ""
@@ -73,7 +61,7 @@ class AuthOthers extends Component {
             url = "https://parseapi.back4app.com/login";
             user = {
                 username: this.state.controls.userName.value.split("@")[0],
-                password: this.state.controls.password.value,
+                password: crypto.createHash('sha1').update(this.state.controls.password.value).digest('hex'),
             }
         }
 
@@ -82,8 +70,8 @@ class AuthOthers extends Component {
             user = {
                 username: this.state.controls.userName.value.split("@")[0],
                 email: this.state.controls.userName.value,
-                password: this.state.controls.password.value,
-                right: "client"
+                password: crypto.createHash('sha1').update(this.state.controls.password.value).digest('hex'),
+                right: "admin"
             }
         }
 
@@ -99,7 +87,6 @@ class AuthOthers extends Component {
         axios
             .post(url, user, options)
             .then((res) => {
-                console.log(res.data.sessionToken);
                 sessionStorage.setItem("isUserLogged", true);
                 sessionStorage.setItem("token", res.data.sessionToken);
                 sessionStorage.setItem("objectId", res.data.objectId);

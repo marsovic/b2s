@@ -39,11 +39,6 @@ class EditUsers extends Component {
         this.setState({ updated: !this.state.updated })
     }
 
-    consoleLogJSON(data1, data2) {
-        console.log(data1)
-        console.log(data2)
-    }
-
     setCurrentTime(data) {
         this.setState({ time: data })
     }

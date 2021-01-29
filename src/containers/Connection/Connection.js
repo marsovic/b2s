@@ -55,7 +55,6 @@ class Connection extends Component {
                     this.setState({ loading: false });;
                 });
         } else {
-            console.log("coucou");
             this.setState({mode:"", isUserLogged: false, loading: false})
         }
     }
