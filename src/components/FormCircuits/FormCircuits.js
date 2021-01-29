@@ -64,15 +64,24 @@ class FormCircuits extends Component {
 
                     // Create the future text file with all data
                     let toPassToTheAlgorithm = [];
+                    let toPassToLouis = [];
                     for (let item in this.state.rooms) {
                         let tempItem =
                             this.state.rooms[item].name + " @#@ " +
                             this.state.circuits[item] + " @#@ " +
                             this.state.physics[item];
+                        
+                        let tempItemLouis = {
+                            "Circuit": this.state.circuits[item],
+                            "Room": this.state.rooms[item].name,
+                            "Physic": this.state.physics[item]
+                        }
 
                         toPassToTheAlgorithm.push(tempItem);
+                        toPassToLouis.push(tempItemLouis);
                     }
 
+                    console.log(JSON.stringify(toPassToLouis) )
                     toShow = toPassToTheAlgorithm.map(items => {
                         return <p> {items} </p>
                     });

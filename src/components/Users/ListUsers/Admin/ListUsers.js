@@ -46,11 +46,12 @@ class ListUsers extends Component {
                 listUsers = Object.keys(this.state.users)
                     .map(key => {
                         return [...Array(this.state.users[key])].map((_, i) => {
+                            var temp = null;
                             if (this.state.users[key].right === "batisphere" ||
                                 this.state.users[key].right === "client" ||
                                 this.state.users[key].right === "admin") {
                                 if (this.props.spec === "edit") {
-                                    return (
+                                    temp = (
 
                                         <li key={key + 1} onClick={(event) => {
                                             this.props.modal(true, this.state.users[key])
@@ -62,7 +63,7 @@ class ListUsers extends Component {
                                     )
                                 }
                                 if (this.props.spec === "list") {
-                                    return (
+                                    temp = (
                                         <li key={key + 1}>
                                             <p>{this.state.users[key].username}</p>
                                             <p> {this.state.users[key].right}</p>
@@ -70,6 +71,7 @@ class ListUsers extends Component {
                                     )
                                 }
                             }
+                            return temp;
                         })
                     })
             }

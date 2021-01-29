@@ -7,12 +7,17 @@ import Button from "../../../../../components/UI/Button/Button"
 import EditUser from "./EditUser/EditUser";
 import AddUser from "./AddUser/AddUser";
 
+import Circuit from "../../../../../components/FormCircuits/FormCircuits"
+
 class EditUsers extends Component {
     state = {
         showModal: false,
         user: null,
         updated: true,
-        addUser: false
+        addUser: false,
+
+        //TO delete
+        time: ""
     }
 
     modalEditHandler = (newState, userSelected) => {
@@ -39,6 +44,10 @@ class EditUsers extends Component {
         console.log(data2)
     }
 
+    setCurrentTime(data) {
+        this.setState({ time: data })
+    }
+
     render() {
         let userData = null;
 
@@ -49,6 +58,15 @@ class EditUsers extends Component {
         if (this.state.showModal && this.state.addUser === true) {
             userData = <AddUser modal={this.modalAddHandler} />
         }
+
+        // Premier test pour l'appel de l'algorithme
+
+        fetch('/time')
+            .then(res => res.json())
+            .then(data => {
+                console.log("yolo", JSON.parse(data.time) )
+                // this.setCurrentTime(data.time);
+            });
 
 
         return (
@@ -65,6 +83,9 @@ class EditUsers extends Component {
                 <Button btnType="Success" clicked={this.modalAddHandler}>
                     Créer un utilisateur
                 </Button>
+
+                <p>Time: {this.state.time} </p>
+                <Circuit />
             </Aux>
         )
     }

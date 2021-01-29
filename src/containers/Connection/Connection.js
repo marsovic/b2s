@@ -22,9 +22,10 @@ class Connection extends Component {
     }
 
     // Verification à chaque render du stockage de session
+
+    /* TODO */
     componentWillMount() {
         this.setState({ isUserLogged: Boolean(sessionStorage.getItem("isUserLogged")) });
-
     }
 
     loggedHandler = (loginState, userMode) => {
