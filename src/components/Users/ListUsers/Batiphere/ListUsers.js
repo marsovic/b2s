@@ -44,14 +44,16 @@ class ListUsers extends Component {
                 listUsers = Object.keys(this.state.users)
                     .map(key => {
                         return [...Array(this.state.users[key])].map((_, i) => {
+                            var temp = null;
                             if (this.state.users[key].right === "client") { // Affichage uniquement des clients
-                                return (
+                                temp =  (
                                     <li key={key + 1}>
                                         <p>{this.state.users[key].username}</p>
                                         <p> {this.state.users[key].right}</p>
                                     </li>
                                 )
                             }
+                            return temp;
                         })
                     })
             }
