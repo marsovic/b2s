@@ -60,6 +60,32 @@ class AddUser extends Component {
                 value: 'client',
                 validation: {},
                 valid: true
+            },
+            RAE: {
+                elementType: "input",
+                elementConfig: {
+                    type: "RAE",
+                    placeholder: "RAE",
+                },
+                value: "",
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false,
+            },
+            compteur: {
+                elementType: "input",
+                elementConfig: {
+                    type: "compteur",
+                    placeholder: "N° de compteur",
+                },
+                value: "",
+                validation: {
+                    required: true,
+                },
+                valid: false,
+                touched: false,
             }
         },
         loading: true,
@@ -198,6 +224,17 @@ class AddUser extends Component {
         const updatedFormElement = {
             ...updatedOrderForm[inputIdentifier]
         };
+
+        if(updatedOrderForm["right"].value === "client") {
+            updatedOrderForm["RAE"].validation.required = true;
+            updatedOrderForm["compteur"].validation.required = true;
+        } else {
+            updatedOrderForm["RAE"].validation.required = false;
+            updatedOrderForm["compteur"].validation.required = false;
+
+            updatedOrderForm["RAE"].valid = true;
+            updatedOrderForm["compteur"].valid = true;
+        }
 
         updatedFormElement.value = event.target.value;
         updatedFormElement.touched = true;

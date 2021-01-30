@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import ListUsers from "../../../../../components/Users/ListUsers/Admin/ListUsers"
+import ListUsers from "../../../../../components/Users/ListUsers/ListUsers"
 import Aux from "../../../../../hoc/Aux/Aux"
 
 class Users extends Component {

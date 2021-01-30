@@ -4,6 +4,7 @@ import './App.css';
 import Layout from "./hoc/Layout/Layout"
 import Connection from "./containers/Connection/Connection";
 import Account from "./containers/Account/Admin/Account";
+import Customer from "./containers/Account/Admin/Actions/ListCustomers/Customer/Customer"
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/internal/customers/list" exact render={() => <Connection spec1="customer" spec2="list" />} />
         <Route path="/internal/users/list" exact render={() => <Connection spec1="users" spec2="list" />} />
         <Route path="/internal/users/edit" exact render={() => <Connection spec1="users" spec2="edit" />} />
+        <Route path="/internal/customers/list/:username" render={() => <Customer />} />
       </Layout>
     </div>
   );

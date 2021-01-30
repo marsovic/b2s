@@ -1,14 +1,17 @@
 import React, { Component } from "react";
 import axios from "axios";
 
-import Spinner from "../../../UI/Spinner/Spinner";
+import { NavLink } from 'react-router-dom';
+
+import Spinner from "../../UI/Spinner/Spinner";
 import styles from '../Users.module.css';
 
-class ListUsers extends Component {
+class ListCustomers extends Component {
 
     state = {
         loading: true,
-        users: null
+        users: null,
+        redirect: false
     }
 
 
@@ -47,29 +50,16 @@ class ListUsers extends Component {
                     .map(key => {
                         return [...Array(this.state.users[key])].map((_, i) => {
                             var temp = null;
-                            if (this.state.users[key].right === "batisphere" ||
-                                this.state.users[key].right === "client" ||
-                                this.state.users[key].right === "admin") {
-                                if (this.props.spec === "edit") {
-                                    temp = (
+                            if (this.state.users[key].right === "client") {
+                                temp = (
+                                    <NavLink tag="li" to={window.location.pathname + "/" + this.state.users[key].username}>
+                                        <li key={key + 1} >
+                                            <p>{this.state.users[key].username}</p>
+                                            <p> {this.state.users[key].right}</p>
+                                        </li>
+                                    </NavLink>
+                                )
 
-                                        <li key={key + 1} onClick={(event) => {
-                                            this.props.modal(true, this.state.users[key])
-                                        }
-                                        }>
-                                            <p>{this.state.users[key].username}</p>
-                                            <p> {this.state.users[key].right}</p>
-                                        </li>
-                                    )
-                                }
-                                if (this.props.spec === "list") {
-                                    temp = (
-                                        <li key={key + 1}>
-                                            <p>{this.state.users[key].username}</p>
-                                            <p> {this.state.users[key].right}</p>
-                                        </li>
-                                    )
-                                }
                             }
                             return temp;
                         })
@@ -89,4 +79,4 @@ class ListUsers extends Component {
     }
 }
 
-export default ListUsers;
+export default ListCustomers;

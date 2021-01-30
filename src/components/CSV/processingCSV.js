@@ -52,7 +52,7 @@ class ParseCSV extends Component {
                     }
                     if (headers[j]) {
                         if (this.isNumber(d)) {
-                            obj[headers[j]] = parseInt(d)
+                            obj[headers[j]] = parseFloat(d.replace(',', '.'))
                         } else {
                             obj[headers[j]] = d
                         }
@@ -70,6 +70,8 @@ class ParseCSV extends Component {
             name: c,
             selector: c,
         }));
+
+        //console.log(list)
 
         this.handleStateColumnsData(columns, list);
         this.props.sendJSON(columns, list);
@@ -90,6 +92,7 @@ class ParseCSV extends Component {
             const ws = wb.Sheets[wsname];
             /* Convert array of arrays */
             const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
+            // console.log(data)
             this.processData(data);
         };
         reader.readAsBinaryString(file);

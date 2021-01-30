@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 
-import ListUsers from "../../../../../components/Users/ListUsers/Admin/ListUsers"
+import ListUsers from "../../../../../components/Users/ListUsers/ListUsers"
 import Aux from "../../../../../hoc/Aux/Aux"
 import Modal from "../../../../../components/UI/Modal/Modal"
 import Button from "../../../../../components/UI/Button/Button"
 import EditUser from "./EditUser/EditUser";
 import AddUser from "./AddUser/AddUser";
 
-import Circuit from "../../../../../components/FormCircuits/FormCircuits"
+import CSV from "../../../../../components/CSV/processingCSV"
 
 class EditUsers extends Component {
     state = {
@@ -15,9 +15,6 @@ class EditUsers extends Component {
         user: null,
         updated: true,
         addUser: false,
-
-        //TO delete
-        time: ""
     }
 
     modalEditHandler = (newState, userSelected) => {
@@ -39,9 +36,6 @@ class EditUsers extends Component {
         this.setState({ updated: !this.state.updated })
     }
 
-    setCurrentTime(data) {
-        this.setState({ time: data })
-    }
 
     render() {
         let userData = null;
@@ -54,14 +48,15 @@ class EditUsers extends Component {
             userData = <AddUser modal={this.modalAddHandler} />
         }
 
-        // Premier test pour l'appel de l'algorithme
-
+        // Premier test pour l'appel de l'algorithme python
+        /*
         fetch('/time')
             .then(res => res.json())
             .then(data => {
                 console.log("yolo", JSON.parse(data.time) )
                 // this.setCurrentTime(data.time);
             });
+        */
 
 
         return (
@@ -79,8 +74,7 @@ class EditUsers extends Component {
                     Créer un utilisateur
                 </Button>
 
-                <p>Time: {this.state.time} </p>
-                <Circuit />
+                <CSV sendJSON={this.consoleLogJSON}/>
             </Aux>
         )
     }
