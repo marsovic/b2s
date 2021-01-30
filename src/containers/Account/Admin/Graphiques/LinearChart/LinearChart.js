@@ -56,6 +56,23 @@ class LinearChart extends Component{
         data: this.props.data,
         columns : this.props.columns,
         displayedColumns : [],
+        keys : [],
+        maxLine: 150,
+        colors: Colors,
+
+
+        //VARIBALES ZOOM
+        left: 'dataMin',
+        right: 'dataMax',
+        refAreaLeft: '',
+        refAreaRight: '',
+        top: 'dataMax+1',
+        bottom: 'dataMin-1',
+        top2: 'dataMax+20',
+        bottom2: 'dataMin-20',
+        animation: true,
+        dropDownLeft : "15 min",
+        dropDownRight : "1 mois",
 
         
         //Variables pour otpions des graphiques
@@ -80,6 +97,7 @@ class LinearChart extends Component{
       //Lines initialisation
       this.state.lines = Object.keys(this.state.columns)
       .map(key => {
+        console.log("BACK TO INITIALISATION");
 
           switch(parseInt(key)){
               case 0:
@@ -98,10 +116,33 @@ class LinearChart extends Component{
               console.log(key)*/
 
               if(this.state.columns[key].name !== null){
+
+                let color;
+                let colorsCopy = this.state.colors;
+                let iterator = 0;
+                let found = false;
+                
+                while (iterator<colorsCopy.length && found === false)  {
+                    
+                    console.log("iterator", iterator)
+                    console.log("Colors[iterator].used", colorsCopy[iterator].used)
+                    if(colorsCopy[iterator].used === false){
+            
+                        colorsCopy[iterator].used = true;
+                        colorsCopy[iterator].line = this.state.columns[key].name;
+                        found = true;
+                        color = colorsCopy[iterator].code;
+                    }
+            
+                    iterator++;
+                }
+
                 this.state.displayedColumns.push({"name":this.state.columns[key].name.toString(), "displayed":true})
                   return (
-                      <Line key={key} type="natural" dataKey={this.state.columns[key].name.toString()} stroke={Colors[key-2].code} dot={false} />
+                      <Line key={this.state.columns[key].name.toString()} type="natural" dataKey={this.state.columns[key].name.toString()} stroke={color} dot={false} />
                       )
+
+                this.state.colors = colorsCopy;
               }
 
               break;
@@ -110,16 +151,117 @@ class LinearChart extends Component{
           }
           
       })
-
 this.state.lines.splice(0,1);
-//console.log("before update", tab);
 
 this.updateDisplayedLines = this.updateDisplayedLines.bind(this);
 
+}
 
+
+/*
+zoom() {
+    let { refAreaLeft, refAreaRight, data } = this.state;
+
+    if (refAreaLeft === refAreaRight || refAreaRight === '') {
+    this.setState(() => ({
+        refAreaLeft: '',
+        refAreaRight: '',
+    }));
+    return;
     }
 
+    // xAxis domain
+    if (refAreaLeft > refAreaRight) [refAreaLeft, refAreaRight] = [refAreaRight, refAreaLeft];
 
+    // yAxis domain
+    const [bottom, top] = this.getAxisYDomain(refAreaLeft, refAreaRight, 'C', 1);
+    const [bottom2, top2] = this.getAxisYDomain(refAreaLeft, refAreaRight, 'D', 50);
+
+    this.setState(() => ({
+    refAreaLeft: '',
+    refAreaRight: '',
+    data: data.slice(),
+    left: refAreaLeft,
+    right: refAreaRight,
+    bottom,
+    top,
+    bottom2,
+    top2,
+    }));
+}
+
+zoomOut() {
+    const { data } = this.state;
+    this.setState(() => ({
+      data: data.slice(),
+      refAreaLeft: '',
+      refAreaRight: '',
+      left: 'dataMin',
+      right: 'dataMax',
+      top: 'dataMax+1',
+      bottom: 'dataMin',
+      top2: 'dataMax+50',
+      bottom2: 'dataMin+50',
+    }));
+
+
+    //A AJOUTER DANS LE RENDER
+
+                    onMouseDown={e => this.setState({ refAreaLeft: e.activeTooltipIndex })}
+                onMouseMove={e => this.state.refAreaLeft && this.setState({ refAreaRight: e.activeTooltipIndex })}
+                onMouseUp={this.zoom.bind(this)}
+
+
+     
+                    {
+                        (this.state.refAreaLeft && this.state.refAreaRight) ? (
+                        <ReferenceArea x1={this.state.refAreaLeft} x2={this.state.refAreaRight} strokeOpacity={0.3} />) : null
+                    }
+}*/
+
+deleteColor(name){
+    let colorsCopy = this.state.colors;
+
+    for(let iterator in colorsCopy)
+    {
+        if(name === colorsCopy[iterator].line){
+            colorsCopy[iterator].used = false;
+            colorsCopy[iterator].line = "";
+        }
+    }
+
+    console.log("color DELETE", this.state.colors)
+
+
+}
+
+generateColor(name){
+
+    let color;
+    let colorsCopy = this.state.colors;
+    let iterator = 0;
+    let found = false;
+    
+    while (iterator<colorsCopy.length && found === false)  {
+        
+        console.log("iterator", iterator)
+        console.log("Colors[iterator].used", colorsCopy[iterator].used)
+        if(colorsCopy[iterator].used === false){
+
+            colorsCopy[iterator].used = true;
+            colorsCopy[iterator].line = name;
+            found = true;
+            color = colorsCopy[iterator].code;
+        }
+
+        iterator++;
+    }
+    this.setState({
+        colors: colorsCopy
+    });
+console.log("color CREATE", this.state.colors)
+    return color;
+}
 
 updateDisplayedLines(name,displayed){
 
@@ -129,27 +271,35 @@ updateDisplayedLines(name,displayed){
     let toDisplay = true;
     let tab = this.state.displayedColumns;
     let tabLines = this.state.lines;
-//On rempli d'abord le tableau des lignes affichées
+    //On rempli d'abord le tableau des lignes affichées
         for(let i = 0; i<tab.length; i++){
             if(tab[i].name === name ){
                 tab[i].displayed = displayed
             }
 
         }
-//Puis on update les lignes affichées avec le tableau
+    //Puis on update les lignes affichées avec le tableau
         for(let i = 0; i<tab.length; i++){
 
+            //SUPPRESSION
             //Si la ligne n'est pas affichée, on supprime la ligne qui a le même nom si elle est présente dans le tableau
             if(tab[i].displayed === false ){
-                for(let j = 0; j<tabLines.length; j++){
+                let lenghtLines = tabLines.length;
+                for(let j = 0; j < lenghtLines; j++){
+                console.log(" tabLines lenght",lenghtLines)
+
                 if(typeof(tabLines[j]) !== 'undefined' && typeof(tab[i]) !== 'undefined'){
                     if(tab[i].name === tabLines[j].props.dataKey ){
                         tabLines.splice(j,1);
+                        this.deleteColor(tab[i].name);
+
                     }
                 }
                     
                 }
             }
+
+            //AJOUT
             //Si la ligne marquée pour l'affichage , on vérifie si si elle l'est déjà, sinon on l'ajoute aux lignes
             if(tab[i].displayed === true ){
                 for(let j = 0; j<tabLines.length; j++){
@@ -162,14 +312,16 @@ updateDisplayedLines(name,displayed){
                 }
 
                 if(toDisplay===true){
-                    console.log("tab[i].name.toString()",tab[i].name.toString())
-                    console.log("KEY",parseInt(tabLines.length)+i)
-                    tabLines.push(<Line key={parseInt(tabLines.length)+i} type="natural" dataKey={tab[i].name.toString()} stroke={Colors[2].code} dot={false} />)
+
+                    tabLines.push(<Line key={tab[i].name.toString()} type="natural" dataKey={tab[i].name.toString()} stroke={this.generateColor(tab[i].name.toString())} dot={false} />)
+                    console.log("AJOUT tabLines",tabLines)
+
                 }
 
                 if(toDisplay === false){
                     toDisplay = true;
                 }
+
 
             }
         }
@@ -183,13 +335,14 @@ updateDisplayedLines(name,displayed){
     
         
 
-    }
+}
 
     render() {
+    console.log("LINES",this.state.lines);
 
-    
-    //this.updateDisplayedLines("Cpt_gaz",true)
-console.log(this.state.lines)
+    console.log("keys",this.state.keys)
+ 
+
     return(
    
     <div style={{ width: '90%', height: 600 }}>
@@ -197,13 +350,14 @@ console.log(this.state.lines)
     <Settings data = {this.state.columns} updateLinesFuntion = {this.updateDisplayedLines} displayedLines = {this.state.displayedColumns}/>
     <ResponsiveContainer>
         <LineChart 
-                
+
                 width={this.state.graphWidth} 
                 height={this.state.graphHeight} 
                 data={this.state.data}>
                     <CartesianGrid strokeDasharray={this.state.dashArray} />
-                    <XAxis  dataKey={this.state.XAxisName}/>
-                    <YAxis />
+                    <XAxis dataKey={this.state.XAxisName}/>
+                    <YAxis dataKey={this.state.YAxisName}/>
+                    
                     {this.state.lines}
                     <Tooltip />
                     <Legend height={60} />

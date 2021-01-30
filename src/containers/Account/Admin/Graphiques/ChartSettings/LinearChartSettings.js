@@ -8,8 +8,8 @@ import DropDownlist from '../LayoutComponent/DropDownList'
 
 
 function LinearSettings(props) {
-  console.log("settings props data", props.data)
-  console.log("props.displayedLines", props.displayedLines)
+  //console.log("settings props data", props.data)
+  //console.log("props.displayedLines", props.displayedLines)
 
   return (
     <Modal
@@ -67,7 +67,7 @@ class Settings extends Component{
       return (
 <>
       <Button variant="primary" onClick={() => this.showModal()}>
-        Launch vertically centered modal
+        Réglages
       </Button>
      
 

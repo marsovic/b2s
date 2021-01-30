@@ -88,7 +88,7 @@ const CustomMenu = React.forwardRef(
                     if(this.state.data[key].name !== null){
                       if(this.state.data[key].name === this.props.displayedLines[i].name){
                         return (
-                          <Form.Check id={this.state.data[key].name} label={this.state.data[key].name} onChange={this.handleChangeCheckbox} checked={this.props.displayedLines[i].displayed}/>    
+                          <Form.Check key = {this.props.displayedLines[i].name} id={this.state.data[key].name} label={this.state.data[key].name} onChange={this.handleChangeCheckbox} checked={this.props.displayedLines[i].displayed}/>    
                             )
                       }
 

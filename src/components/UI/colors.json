@@ -1,72 +1,100 @@
 [
     {
         "id" :0,
-        "code": "#8884D8"
+        "code": "#8884D8",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :1,
-        "code": "#FE654F"
+        "code": "#FE654F",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :2,
-        "code": "#7E1F86"
+        "code": "#7E1F86",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :3,
-        "code": "#048A81"
+        "code": "#048A81",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :4,
-        "code": "#3772FF"
+        "code": "#3772FF",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :5,
-        "code": "#60AFFF"
+        "code": "#60AFFF",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :6,
-        "code": "#8C1C13"
+        "code": "#8C1C13",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :7,
-        "code": "#533E2D"
+        "code": "#533E2D",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :8,
-        "code": "#96E072"
+        "code": "#96E072",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :9,
-        "code": "#F3A712"
+        "code": "#F3A712",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :10,
-        "code": "#152614"
+        "code": "#152614",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :11,
-        "code": "#FF7B9C"
+        "code": "#FF7B9C",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :12,
-        "code": "#04F06A"
+        "code": "#04F06A",
+        "line":"",
+        "used":false
 
     },
     {
         "id" :13,
-        "code": "#F42C04"
+        "code": "#F42C04",
+        "line":"",
+        "used":false
 
     }
 ]

@@ -64,6 +64,7 @@ class ParseCSV extends Component {
                 }
             }
         }
+        console.log("LIST",list);
 
         // prepare columns list from headers
         const columns = headers.map(c => ({
