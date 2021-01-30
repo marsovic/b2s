@@ -58,6 +58,7 @@ export default class DropDownColors extends Component{
       this.setState({
         selected: event.target.id
       });
+      console.log("WTF",event.target.id)
 
       this.props.changeColor(this.state.activeLine,event.target.id);
 

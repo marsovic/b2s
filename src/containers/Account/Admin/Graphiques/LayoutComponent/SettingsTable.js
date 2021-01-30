@@ -107,10 +107,10 @@ const CustomMenu = React.forwardRef(
                       if(this.state.data[key].name === this.props.displayedLines[i].name){
                         //console.log("get highlight",this.getHighlightedColor(this.state.data[key].name))
                         return (
-                          <tr>
+                          <tr key = {this.props.displayedLines[i].name}>
                             <td> <Form.Check key = {this.props.displayedLines[i].name} id={this.state.data[key].name} onChange={this.handleChangeCheckbox} checked={this.props.displayedLines[i].displayed}/> </td>
                             <td>{this.state.data[key].name}</td>
-                            <td><DropDownColors highlightColor = {this.getHighlightedColor(this.state.data[key].name)} changeColor = { this.props.changeColor} activeLine = {this.state.data[key].name}/></td>
+                            <td><DropDownColors key = {this.props.displayedLines[i].name} highlightColor = {this.getHighlightedColor(this.state.data[key].name)} changeColor = {this.props.changeColor} activeLine = {this.state.data[key].name}/></td>
                           </tr>
                             
                             )

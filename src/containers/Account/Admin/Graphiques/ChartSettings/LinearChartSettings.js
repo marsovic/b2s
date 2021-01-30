@@ -7,38 +7,6 @@ import Modal from 'react-bootstrap/Modal'
 import SettingsTable from '../LayoutComponent/SettingsTable'
 
 
-function LinearSettings(props) {
-  //console.log("settings props data", props.data)
-  //console.log("props.displayedLines", props.displayedLines)
-
-  return (
-    <Modal
-      {...props}
-      size="lg"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Réglages
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-      <Container>
-          <Row>
-            <SettingsTable lines = {props.lines} data={props.data} updateLinesFuntion = {props.updateLinesFuntion} displayedLines = {props.displayedLines} changeColor = {props.changeColor}/>
-          </Row>
-        </Container>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={props.onHide}>Close</Button>
-        
-      </Modal.Footer>
-    </Modal>
-  );
-}
-
-
 
 class Settings extends Component{
     
@@ -70,17 +38,32 @@ class Settings extends Component{
         Réglages
       </Button>
      
+      <Modal
+      size="lg"
+      aria-labelledby="contained-modal-title-vcenter"
+      show={this.state.modalShow}
+      onHide={this.hideModal}
+      centered
+      >
+      <Modal.Header closeButton>
+        <Modal.Title id="contained-modal-title-vcenter">
+          Réglages
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+      <Container>
+          <Row>
+            <SettingsTable lines = {this.props.lines} data={this.props.data} updateLinesFuntion = {this.props.updateLinesFuntion} displayedLines = {this.props.displayedLines} changeColor = {this.props.changeColor}/>
+          </Row>
+        </Container>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button onClick={() => this.hideModal()}>Close</Button>
+      </Modal.Footer>
+    </Modal>
 
-      <LinearSettings 
-        lines = {this.props.lines}
-        data={this.props.data}
-        updateLinesFuntion = {this.props.updateLinesFuntion} 
-        changeColor = {this.props.changeColor}
-        displayedLines = {this.props.displayedLines}
-        show={this.state.modalShow}
-        onHide={() => this.hideModal()}
-      />
-    </>        );
+      
+</>        );
       
     }
 

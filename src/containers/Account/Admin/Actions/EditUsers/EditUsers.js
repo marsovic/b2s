@@ -29,6 +29,8 @@ console.log(data1); // Show the names of the columns
             columnsName : data1,
             data : data2,
           });
+
+          console.log(JSON.stringify(data2))
     }
 
     modalEditHandler = (newState, userSelected) => {

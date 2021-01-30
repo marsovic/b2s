@@ -62,7 +62,7 @@ class LinearChart extends Component{
 
 
         //VARIBALES ZOOM
-        left: 'dataMin',
+        /*left: 'dataMin',
         right: 'dataMax',
         refAreaLeft: '',
         refAreaRight: '',
@@ -72,7 +72,7 @@ class LinearChart extends Component{
         bottom2: 'dataMin-20',
         animation: true,
         dropDownLeft : "15 min",
-        dropDownRight : "1 mois",
+        dropDownRight : "1 mois",*/
 
         
         //Variables pour otpions des graphiques
@@ -446,33 +446,37 @@ updateDisplayedLines(name,displayed){
 }
 
     render() {
-    console.log("LINES",this.state.lines);
+    console.log("DATA",this.state.data);
 
-    console.log("keys",this.state.keys)
+    console.log("columns",this.state.columns)
     
  
 
     return(
-   
-    <div style={{ width: '90%', height: 600 }}>
-     
-    <Settings lines = {this.state.lines} data = {this.state.columns} updateLinesFuntion = {this.updateDisplayedLines} displayedLines = {this.state.displayedColumns} changeColor = {this.changeColor}/>
-    <ResponsiveContainer>
-        <LineChart 
+    
+    <>
+        <div>
+        <Settings lines = {this.state.lines} data = {this.state.columns} updateLinesFuntion = {this.updateDisplayedLines} displayedLines = {this.state.displayedColumns} changeColor = {this.changeColor}/>
+        </div>
 
-                width={this.state.graphWidth} 
-                height={this.state.graphHeight} 
-                data={this.state.data}>
-                    <CartesianGrid strokeDasharray={this.state.dashArray} />
-                    <XAxis dataKey={this.state.XAxisName}/>
-                    <YAxis dataKey={this.state.YAxisName}/>
-                    
-                    {this.state.lines}
-                    <Tooltip />
-                    <Legend height={60} />
-                </LineChart>
-    </ResponsiveContainer>    
-   </div>
+        <div style={{ width: '90%', height: 600, marginTop:15 }}>
+        
+        <ResponsiveContainer>
+            <LineChart 
+
+                    width={this.state.graphWidth} 
+                    height={this.state.graphHeight} 
+                    data={this.state.data}>
+                        <CartesianGrid strokeDasharray={this.state.dashArray} />
+                        <XAxis dataKey={this.state.XAxisName}/>
+                        <YAxis dataKey={this.state.YAxisName}/>
+                        {this.state.lines}
+                        <Tooltip />
+                        <Legend height={60} />
+                    </LineChart>
+        </ResponsiveContainer>    
+    </div>
+   </>
     );
     
   }
