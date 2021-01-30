@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
-import DropDownlist from '../LayoutComponent/DropDownList'
+import SettingsTable from '../LayoutComponent/SettingsTable'
 
 
 function LinearSettings(props) {
@@ -26,7 +26,7 @@ function LinearSettings(props) {
       <Modal.Body>
       <Container>
           <Row>
-            <DropDownlist data={props.data} updateLinesFuntion = {props.updateLinesFuntion} displayedLines = {props.displayedLines}/>
+            <SettingsTable lines = {props.lines} data={props.data} updateLinesFuntion = {props.updateLinesFuntion} displayedLines = {props.displayedLines} changeColor = {props.changeColor}/>
           </Row>
         </Container>
       </Modal.Body>
@@ -72,8 +72,10 @@ class Settings extends Component{
      
 
       <LinearSettings 
+        lines = {this.props.lines}
         data={this.props.data}
         updateLinesFuntion = {this.props.updateLinesFuntion} 
+        changeColor = {this.props.changeColor}
         displayedLines = {this.props.displayedLines}
         show={this.state.modalShow}
         onHide={() => this.hideModal()}

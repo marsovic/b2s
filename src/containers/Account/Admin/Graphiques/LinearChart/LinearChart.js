@@ -124,8 +124,8 @@ class LinearChart extends Component{
                 
                 while (iterator<colorsCopy.length && found === false)  {
                     
-                    console.log("iterator", iterator)
-                    console.log("Colors[iterator].used", colorsCopy[iterator].used)
+                    //console.log("iterator", iterator)
+                    //console.log("Colors[iterator].used", colorsCopy[iterator].used)
                     if(colorsCopy[iterator].used === false){
             
                         colorsCopy[iterator].used = true;
@@ -154,6 +154,7 @@ class LinearChart extends Component{
 this.state.lines.splice(0,1);
 
 this.updateDisplayedLines = this.updateDisplayedLines.bind(this);
+this.changeColor = this.changeColor.bind(this);
 
 }
 
@@ -221,14 +222,46 @@ zoomOut() {
 
 deleteColor(name){
     let colorsCopy = this.state.colors;
+    let colorDeleted;
+    let tabLines = this.state.lines;
+    let secondLine = "";
 
     for(let iterator in colorsCopy)
     {
         if(name === colorsCopy[iterator].line){
             colorsCopy[iterator].used = false;
             colorsCopy[iterator].line = "";
+            colorDeleted = colorsCopy[iterator].code;
         }
     }
+
+    for (let i in tabLines){
+        if(typeof(tabLines[i]) !== 'undefined'){
+        
+            if(tabLines[i].props.stroke === colorDeleted){
+                secondLine = tabLines[i].key;
+            }
+        }
+    }
+
+    if(secondLine !== ""){
+        for(let iterator in colorsCopy)
+        {
+            if(colorDeleted === colorsCopy[iterator].code){
+                colorsCopy[iterator].used = true;
+                colorsCopy[iterator].line = secondLine;
+            }
+        }
+    }
+
+
+    
+    this.setState({
+        colors: colorsCopy,
+        data: this.state.data.slice(),
+    });
+
+
 
     console.log("color DELETE", this.state.colors)
 
@@ -261,6 +294,81 @@ generateColor(name){
     });
 console.log("color CREATE", this.state.colors)
     return color;
+}
+
+changeColor(lineName,color){
+    console.log("lines",this.state.lines );
+    let tabLines = this.state.lines;
+    let colorsCopy = this.state.colors;
+    let colorCode = "#fa4d56"; //couleur par défaut est rouge
+    //let tochange = false;
+
+    //On cherche 
+    for(let iterator in colorsCopy)
+    {
+       /* console.log("lineName",lineName );
+        console.log("colorsCopy[iterator].line",colorsCopy[iterator].line );
+        console.log("color",color);
+        console.log("colorsCopy[iterator].name",colorsCopy[iterator].name );
+        //Si la ligne dont on change la couleur est trouvée et si sa précédente couleur n'est pas la même, on marque la couleur pour être changée 
+        if(lineName === colorsCopy[iterator].line && colorsCopy[iterator].name !== color){
+            tochange = true;
+
+        }*/
+
+        //On récupère le code couleur de la couleur a attribuer
+        if(color === colorsCopy[iterator].name){
+            colorCode = colorsCopy[iterator].code;
+            console.log("colorCode : ", colorCode);
+        }
+        
+
+    }
+
+    //console.log("toChange : ", tochange);
+
+
+    //if(tochange === true){
+
+        //On cherche la ligne, on la supprime et recréée avec la bonne couleur (pas possible de modifier juste la variable stroke)
+        //Suppression de la ligne entrain suppression de la couleur de cette ligne et réattribution de la couleur initiale de la ligne a une autre si elle est utilisée plusieurs fois 
+        //On récrée une ligne avec la bonne couleur
+        for (let i in tabLines){
+            if(typeof(tabLines[i]) !== 'undefined'){
+            
+                if(tabLines[i].key === lineName){
+                    //tabLines[i].props.stroke = color;
+                    tabLines.splice(i,1);
+                    //Delete color va se charger de supprimer la ligne dans les couleurs et de changer de propriétaire la couleur si elle est utilisée par d'autres lignes
+                    this.deleteColor(lineName);
+                    tabLines.push(<Line key={lineName} type="natural" dataKey={lineName} stroke={colorCode} dot={false} />)
+                }
+
+            }
+        }
+        
+        //On change les valeurs dans colors (pour référence des utilisations des couleurs)
+        for(let iterator in colorsCopy)
+        {
+            //Si la nouvelle couleur n'était pas utilisée, on la marque comme tel avec le nom de la ligne associé
+            if(colorsCopy[iterator].name === color && colorsCopy[iterator].used === false){
+                colorsCopy[iterator].used = true;
+                colorsCopy[iterator].line = lineName;
+            }
+        }
+
+    
+
+        this.setState({
+            colors: colorsCopy,
+            lines: tabLines,
+            data: this.state.data.slice(),
+        });
+
+    //}
+    
+    
+
 }
 
 updateDisplayedLines(name,displayed){
@@ -341,13 +449,14 @@ updateDisplayedLines(name,displayed){
     console.log("LINES",this.state.lines);
 
     console.log("keys",this.state.keys)
+    
  
 
     return(
    
     <div style={{ width: '90%', height: 600 }}>
      
-    <Settings data = {this.state.columns} updateLinesFuntion = {this.updateDisplayedLines} displayedLines = {this.state.displayedColumns}/>
+    <Settings lines = {this.state.lines} data = {this.state.columns} updateLinesFuntion = {this.updateDisplayedLines} displayedLines = {this.state.displayedColumns} changeColor = {this.changeColor}/>
     <ResponsiveContainer>
         <LineChart 
 

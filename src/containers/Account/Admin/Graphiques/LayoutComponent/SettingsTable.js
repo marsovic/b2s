@@ -4,6 +4,10 @@ import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button';
 import React, { Component, useState } from "react";
 import Form from 'react-bootstrap/Form'
+import Container from 'react-bootstrap/Container';
+import Table from 'react-bootstrap/Table'
+import DropDownColors from './DropDownColors'
+
 
 const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   <Button
@@ -19,8 +23,7 @@ const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
   </Button>
 ));
 
-const ColumnName1 = "Red";
-const ColumnName2 = "Blue";
+
 // forwardRef again here!
 // Dropdown needs access to the DOM of the Menu to measure it
 const CustomMenu = React.forwardRef(
@@ -52,43 +55,64 @@ const CustomMenu = React.forwardRef(
   },
 );
 
-  export default class DropDownList extends Component{
+  export default class SettingsTable extends Component{
 
     constructor(props) {
         super(props);
         this.state = {
           selected: "Changer donnée",
           data : this.props.data,
+          item : null
         };
-  
-        this.handleChange = this.handleChange.bind(this);
-       
-    }
-  
-    handleChange(event){
-      console.log(event)
-      this.setState({
-        selected: event.target.id
-      });
+         
     }
 
+
     handleChangeCheckbox = (event) => {
-      console.log("TARGET NAME",event.target.id.toString())
+      //console.log("TARGET NAME",event.target.id.toString())
       this.props.updateLinesFuntion(event.target.id.toString(), event.target.checked)
     
     }
 
-    render(){
-      let data = null;
-      let items = null;
+    //Retourne la couleur en hex de la ligne passée en paramètres
+    getHighlightedColor(name){
+      let color="";
+      for(let i in this.props.lines){
 
+        if(typeof(this.props.lines[i]) !== 'undefined'){
+          //console.log(this.props.lines[i].props)
+
+          if(this.props.lines[i].key === name){
+            color = this.props.lines[i].props.stroke;
+          }
+        }
+      }
+
+      return color;
+    }
+
+    render(){
+      let items = null;
+      let highlightColor = "";
+
+      //Création des lignes affichées
+      //Pour chaque colonne
       items = Object.keys(this.state.data)
                 .map(key => { 
+                  //On parcours le tableau de référence d'affichage des lignes pour savoir lesquelles sont déjà affichées et donc lesquelles doivent être cochées 
                   for(let i in this.props.displayedLines){
+                    //Si la valeur du tableau de colonnes n'est pas null
                     if(this.state.data[key].name !== null){
+                      //si on trouve la même ligne dans les deux tableaux, on peut créé l'objet en entrant dans la valeur checked de la checkbox le bolléen d'affichage
                       if(this.state.data[key].name === this.props.displayedLines[i].name){
+                        //console.log("get highlight",this.getHighlightedColor(this.state.data[key].name))
                         return (
-                          <Form.Check key = {this.props.displayedLines[i].name} id={this.state.data[key].name} label={this.state.data[key].name} onChange={this.handleChangeCheckbox} checked={this.props.displayedLines[i].displayed}/>    
+                          <tr>
+                            <td> <Form.Check key = {this.props.displayedLines[i].name} id={this.state.data[key].name} onChange={this.handleChangeCheckbox} checked={this.props.displayedLines[i].displayed}/> </td>
+                            <td>{this.state.data[key].name}</td>
+                            <td><DropDownColors highlightColor = {this.getHighlightedColor(this.state.data[key].name)} changeColor = { this.props.changeColor} activeLine = {this.state.data[key].name}/></td>
+                          </tr>
+                            
                             )
                       }
 
@@ -98,32 +122,22 @@ const CustomMenu = React.forwardRef(
                    
                     
                 })
-      /*data = Object.keys(this.state.data)
-                .map(key => {
-
-                    if(this.state.data[key].name !== null){
-                        return (
-
-                          <Dropdown.Item id = {this.state.data[key].name} onClick={this.handleChange}>{this.state.data[key].name}</Dropdown.Item> 
-    
-                            )
-            
-                    }
-                    
-                })*/
-    
+      
         return(
-          <Dropdown>
-            <Dropdown.Toggle as={CustomToggle} id="dropdown-custom-components">
-              {this.state.selected}
-            </Dropdown.Toggle>
-
-            <Dropdown.Menu as={CustomMenu}>
-            
+          <Table striped bordered hover size="sm">
+            <thead>
+              <tr>
+                <th>Affichée</th>
+                <th>Donnée</th>
+                <th>Couleur</th>
+              </tr>
+            </thead>
+            <tbody>
                 {items}
-            
-            </Dropdown.Menu>
-          </Dropdown>
+            </tbody>
+          </Table>
+              
+          
       );
     }
 
