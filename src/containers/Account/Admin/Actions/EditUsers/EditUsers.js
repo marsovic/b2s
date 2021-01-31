@@ -7,8 +7,6 @@ import Button from "../../../../../components/UI/Button/Button"
 import EditUser from "./EditUser/EditUser";
 import AddUser from "./AddUser/AddUser";
 
-import CSV from "../../../../../components/CSV/processingCSV"
-
 class EditUsers extends Component {
     state = {
         showModal: false,
@@ -48,17 +46,6 @@ class EditUsers extends Component {
             userData = <AddUser modal={this.modalAddHandler} />
         }
 
-        // Premier test pour l'appel de l'algorithme python
-        /*
-        fetch('/time')
-            .then(res => res.json())
-            .then(data => {
-                console.log("yolo", JSON.parse(data.time) )
-                // this.setCurrentTime(data.time);
-            });
-        */
-
-
         return (
             <Aux >
                 <Modal
@@ -73,8 +60,6 @@ class EditUsers extends Component {
                 <Button btnType="Success" clicked={this.modalAddHandler}>
                     Créer un utilisateur
                 </Button>
-
-                <CSV sendJSON={this.consoleLogJSON}/>
             </Aux>
         )
     }
