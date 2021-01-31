@@ -6,9 +6,10 @@ import * as XLSX from 'xlsx';
 // HOW TO USE :
 /*
     - Function to declare to log data in the CSV :
-        consoleLogJSON(data1, data2) {
+        consoleLogJSON(data1, data2, file) {
             console.log(data1); // Show the names of the columns
             console.log(data2); // Show data on each row 
+            console.log(file); // Show file
         }
 
     - In render Method : 
@@ -20,7 +21,8 @@ import * as XLSX from 'xlsx';
 class ParseCSV extends Component {
     state = {
         columns: [],
-        data: []
+        data: [],
+        file: null
     }
 
     handleStateColumnsData(col, dat) {
@@ -33,7 +35,7 @@ class ParseCSV extends Component {
     }
 
     // process CSV data
-    processData = dataString => {
+    processData = (dataString, file) => {
         const dataStringLines = dataString.split(/\r\n|\n/);
         const headers = dataStringLines[0].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
 
@@ -71,8 +73,6 @@ class ParseCSV extends Component {
             selector: c,
         }));
 
-        //console.log(list)
-
         this.handleStateColumnsData(columns, list);
         this.props.sendJSON(columns, list);
 
@@ -93,7 +93,7 @@ class ParseCSV extends Component {
             /* Convert array of arrays */
             const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
             // console.log(data)
-            this.processData(data);
+            this.processData(data, file);
         };
         reader.readAsBinaryString(file);
     }

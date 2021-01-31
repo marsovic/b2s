@@ -2,7 +2,6 @@ import React, { Component } from "react";
 
 import ListCustomers from "../../../../../components/Users/ListCustomers/ListCustomers"
 import Modal from "../../../../../components/UI/Modal/Modal"
-import Button from "../../../../../components/UI/Button/Button"
 import Aux from "../../../../../hoc/Aux/Aux"
 
 class EditCustomers extends Component {
@@ -11,8 +10,7 @@ class EditCustomers extends Component {
         addUser: false,
         showModal: false,
         user: null,
-        updated: true,
-        addUser: false,
+        updated: true
     }
 
     modalAddHandler = () => {

@@ -11,6 +11,7 @@
     "bootstrap": "^4.6.0",
     "csvtojson": "^2.0.10",
     "dotenv": "^8.2.0",
+    "file-saver": "^2.0.5",
     "package.json": "^2.0.1",
     "pandas": "^0.0.3",
     "parse": "^2.19.0",

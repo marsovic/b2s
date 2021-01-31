@@ -3,6 +3,7 @@ import React, { Component } from "react";
 import CSV from "../CSV/processingCSV"
 import Rooms from "./Rooms/Rooms"
 import Circuits from "./Circuits/Circuits"
+import axios from "axios";
 
 /*
 
@@ -31,7 +32,33 @@ class FormCircuits extends Component {
             listRoom[key]['isRoom'] = false;
         }
 
-        this.setState({ rooms: listRoom });
+        this.setState({ rooms: listRoom, loading: true });
+
+        const options = {
+            headers: {
+                "X-Parse-Application-Id": process.env.REACT_APP_APP_ID,
+                "X-Parse-REST-API-Key": process.env.REACT_APP_API_KEY,
+                "X-Parse-Session-Token": sessionStorage.getItem("token")
+            }
+        };
+
+        let url = "https://parseapi.back4app.com/users/" + this.props.userId;
+        console.log(data1);
+
+        const updatedUser = {
+            "columns": JSON.stringify(data1),
+            "data": JSON.stringify(data2)
+        }
+
+        axios
+            .put(url, updatedUser, options)
+            .then((res) => {
+                this.setState({ loading: false });
+            })
+            .catch((err) => {
+                this.setState({ loading: false });
+            });
+
     }
 
     handleCircuits = (newState, circ) => {
@@ -70,7 +97,7 @@ class FormCircuits extends Component {
                             this.state.rooms[item].name + " @#@ " +
                             this.state.circuits[item] + " @#@ " +
                             this.state.physics[item];
-                        
+
                         let tempItemLouis = {
                             "Circuit": this.state.circuits[item],
                             "Room": this.state.rooms[item].name,
@@ -80,8 +107,7 @@ class FormCircuits extends Component {
                         toPassToTheAlgorithm.push(tempItem);
                         toPassToLouis.push(tempItemLouis);
                     }
-
-                    console.log(JSON.stringify(toPassToLouis) )
+                    this.props.handleSchema(toPassToLouis)
                     toShow = toPassToTheAlgorithm.map(items => {
                         return <p> {items} </p>
                     });
