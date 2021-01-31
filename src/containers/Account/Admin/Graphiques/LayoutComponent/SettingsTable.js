@@ -1,14 +1,7 @@
-import DropdownButton from 'react-bootstrap/DropdownButton'
-import Dropdown from 'react-bootstrap/Dropdown'
-import FormControl from 'react-bootstrap/FormControl'
-import Button from 'react-bootstrap/Button';
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import Form from 'react-bootstrap/Form'
-import Container from 'react-bootstrap/Container';
 import Table from 'react-bootstrap/Table'
 import DropDownColors from './DropDownColors'
-
-
 
 
 export default class SettingsTable extends Component {
@@ -43,19 +36,19 @@ export default class SettingsTable extends Component {
 
   render() {
     let items = null;
-    let highlightColor = "";
 
     //Création des lignes affichées
     //Pour chaque colonne
     items = Object.keys(this.state.data)
       .map(key => {
+        let toReturn = null;
         //On parcours le tableau de référence d'affichage des lignes pour savoir lesquelles sont déjà affichées et donc lesquelles doivent être cochées 
         for (let i in this.props.displayedLines) {
           //Si la valeur du tableau de colonnes n'est pas null
           if (this.state.data[key].name !== null) {
             //si on trouve la même ligne dans les deux tableaux, on peut créé l'objet en entrant dans la valeur checked de la checkbox le bolléen d'affichage
             if (this.state.data[key].name === this.props.displayedLines[i].name) {
-              return (
+              toReturn = (
                 <tr key={this.props.displayedLines[i].name}>
                   <td> <Form.Check key={this.props.displayedLines[i].name} id={this.state.data[key].name} onChange={this.handleChangeCheckbox} checked={this.props.displayedLines[i].displayed} /> </td>
                   <td>{this.state.data[key].name}</td>
@@ -65,6 +58,7 @@ export default class SettingsTable extends Component {
             }
           }
         }
+        return toReturn;
       })
 
     return (

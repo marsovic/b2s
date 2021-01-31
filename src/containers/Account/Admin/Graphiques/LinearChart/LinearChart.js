@@ -1,17 +1,10 @@
-import React, { Component, useState, PureComponent } from "react";
+import React, { Component } from "react";
 import {
-    Label, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceArea, Legend, ResponsiveContainer
+    LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import DropdownButton from 'react-bootstrap/DropdownButton'
-import Dropdown from 'react-bootstrap/Dropdown'
 import "bootstrap/dist/css/bootstrap.min.css";
 import Settings from '../ChartSettings/LinearChartSettings';
-import CSV from '../../../../../components/CSV/processingCSV';
 import Colors from '../../../../../components/UI/colors'
 
 //import Data from '../data'
@@ -97,6 +90,7 @@ class LinearChart extends Component {
         //Lines initialisation
         this.state.lines = Object.keys(this.state.columns)
             .map(key => {
+                let toReturn = null;
                 switch (parseInt(key)) {
                     case 0:
                         this.state.XAxisName = this.state.columns[key].name.toString()
@@ -128,16 +122,14 @@ class LinearChart extends Component {
                             }
 
                             this.state.displayedColumns.push({ "name": this.state.columns[key].name.toString(), "displayed": true })
-                            return (
+                            toReturn = (
                                 <Line key={this.state.columns[key].name.toString()} type="natural" dataKey={this.state.columns[key].name.toString()} stroke={color} dot={false} />
                             )
-                            this.state.colors = colorsCopy;
+                            // this.state.colors = colorsCopy;
                         }
                         break;
-
-
                 }
-
+                return toReturn;
             })
         this.state.lines.splice(0, 1);
 

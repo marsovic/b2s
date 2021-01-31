@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 
-import style from "./Advices.module.css"
 import Aux from "../../../../hoc/Aux/Aux"
-import Advice from "./Advice/Advice";
 import LinearChart from '../../Admin/Graphiques/LinearChart/LinearChart';
 import CSV from '../../../../components/CSV/processingCSV'
 

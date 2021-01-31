@@ -1,10 +1,6 @@
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
-import FormControl from 'react-bootstrap/FormControl'
-import Button from 'react-bootstrap/Button';
-import React, { Component, useState } from "react";
-import Form from 'react-bootstrap/Form'
-import ListGroup from 'react-bootstrap/ListGroup'
+import React, { Component } from "react";
 import Colors from '../../../../../components/UI/colors'
 
 
@@ -40,10 +36,11 @@ export default class DropDownColors extends Component {
     //Génération des items du dropdown
     items = Object.keys(this.state.colors)
       .map(key => {
+        let toReturn = null;
         if (this.state.colors[key].name !== null) {
           //Si la couleur qu'on ajoute est celle de la ligne, on la place comme active
           if (this.state.colors[key].code === this.state.highlightColor) {
-            return (
+            toReturn =  (
               <Dropdown.Item key={this.state.colors[key].name} id={this.state.colors[key].name} onClick={this.handleChange} active >
                 {this.state.colors[key].name}
               </Dropdown.Item>
@@ -51,7 +48,7 @@ export default class DropDownColors extends Component {
           }
           //Sinon, on retourne un item par nom de couleur
           else {
-            return (
+            toReturn = (
               <Dropdown.Item key={this.state.colors[key].name} id={this.state.colors[key].name} onClick={this.handleChange}>
                 {this.state.colors[key].name}
               </Dropdown.Item>
@@ -59,8 +56,7 @@ export default class DropDownColors extends Component {
           }
 
         }
-
-
+        return toReturn;
       })
 
     return (
