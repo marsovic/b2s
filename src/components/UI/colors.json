@@ -1,0 +1,113 @@
+[
+    {
+        "id" :0,
+        "code": "#6929c4",
+        "line":"",
+        "used":false,
+        "name":"Violet"
+
+    },
+    {
+        "id" :1,
+        "code": "#1192e8",
+        "line":"",
+        "used":false,
+        "name":"Cyan"
+
+    },
+    {
+        "id" :2,
+        "code": "#005d5d",
+        "line":"",
+        "used":false,
+        "name":"Sarcelle"
+
+    },
+    {
+        "id" :3,
+        "code": "#9f1853",
+        "line":"",
+        "used":false,
+        "name":"Magenta"
+
+    },
+    {
+        "id" :4,
+        "code": "#fa4d56",
+        "line":"",
+        "used":false,
+        "name":"Rouge"
+
+    },
+    {
+        "id" :5,
+        "code": "#570408",
+        "line":"",
+        "used":false,
+        "name":"Rouge foncé"
+
+    },
+    {
+        "id" :6,
+        "code": "#198038",
+        "line":"",
+        "used":false,
+        "name":"Vert"
+
+    },
+    {
+        "id" :7,
+        "code": "#002d9c",
+        "line":"",
+        "used":false,
+        "name":"Bleu"
+
+    },
+    {
+        "id" :8,
+        "code": "#ee538b",
+        "line":"",
+        "used":false,
+        "name":"Rose"
+
+    },
+    {
+        "id" :9,
+        "code": "#b28600",
+        "line":"",
+        "used":false,
+        "name":"Jaune"
+
+    },
+    {
+        "id" :10,
+        "code": "#009d9a",
+        "line":"",
+        "used":false,
+        "name":"Turquoise"
+
+    },
+    {
+        "id" :11,
+        "code": "#012749",
+        "line":"",
+        "used":false,
+        "name":"Bleu nuit"
+
+    },
+    {
+        "id" :12,
+        "code": "#8a3800",
+        "line":"",
+        "used":false,
+        "name":"Marron"
+
+    },
+    {
+        "id" :13,
+        "code": "#a56eff",
+        "line":"",
+        "used":false,
+        "name":"Violet clair"
+    }
+]
