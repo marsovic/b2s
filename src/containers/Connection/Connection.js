@@ -19,13 +19,6 @@ class Connection extends Component {
         loading: true
     }
 
-    // Verification à chaque render du stockage de session
-
-    /* TODO */
-    componentWillMount() {
-        this.setState({ isUserLogged: Boolean(sessionStorage.getItem("isUserLogged")) });
-    }
-
     loggedHandler = (loginState, userMode) => {
         this.setState({ isUserLogged: Boolean(loginState), mode: userMode })
 
@@ -57,6 +50,7 @@ class Connection extends Component {
         } else {
             this.setState({mode:"", isUserLogged: false, loading: false})
         }
+        this.setState({ isUserLogged: Boolean(sessionStorage.getItem("isUserLogged")) });
     }
 
     render() {
