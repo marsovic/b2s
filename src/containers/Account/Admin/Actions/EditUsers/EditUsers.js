@@ -6,8 +6,7 @@ import Modal from "../../../../../components/UI/Modal/Modal"
 import Button from "../../../../../components/UI/Button/Button"
 import EditUser from "./EditUser/EditUser";
 import AddUser from "./AddUser/AddUser";
-import LinearChart from '../../Graphiques/LinearChart/LinearChart';
-import CSV from '../../../../../components/CSV/processingCSV'
+import Advices from "../../Advices/Advices"
 
 
 class EditUsers extends Component {
@@ -16,22 +15,8 @@ class EditUsers extends Component {
         user: null,
         updated: true,
         addUser: false,
-        dataObtained: false,
-        columnsName : null,
-        data : null,
     }
 
-    loadData = (data1, data2) => {
-console.log(data1); // Show the names of the columns
-        //console.log(data2); // Show data on each row 
-        this.setState({
-            dataObtained: true,
-            columnsName : data1,
-            data : data2,
-          });
-
-          console.log(JSON.stringify(data2))
-    }
 
     modalEditHandler = (newState, userSelected) => {
         this.setState({ showModal: newState })
@@ -68,54 +53,28 @@ console.log(data1); // Show the names of the columns
             userData = <AddUser modal={this.modalAddHandler} />
         }
 
-        if(this.state.dataObtained === true){
 
-            return (
 
-           
-                <Aux >
-                    <Modal
-                        modalClose={this.cancelModalHandler}
-                        show={this.state.showModal}
-                        update={this.updateByModal}>
-                        {userData}
-                    </Modal>
-                    <ListUsers
-                        spec={this.props.spec}
-                        modal={this.modalEditHandler} />
-                    <Button btnType="Success" clicked={this.modalAddHandler}>
-                        Créer un utilisateur
-                    </Button>
-                    <LinearChart data = {this.state.data} columns = {this.state.columnsName}/>
+        return (
+            <Aux >
+                <Modal
+                    modalClose={this.cancelModalHandler}
+                    show={this.state.showModal}
+                    update={this.updateByModal}>
+                    {userData}
+                </Modal>
+                <ListUsers
+                    spec={this.props.spec}
+                    modal={this.modalEditHandler} />
+                <Button btnType="Success" clicked={this.modalAddHandler}>
+                    Créer un utilisateur
+                </Button>
+                <Advices />
+            </Aux>
+        )
 
-                </Aux>
-            )
-        }
 
-        else {
 
-            return (
-
-           
-                <Aux >
-                    <Modal
-                        modalClose={this.cancelModalHandler}
-                        show={this.state.showModal}
-                        update={this.updateByModal}>
-                        {userData}
-                    </Modal>
-                    <ListUsers
-                        spec={this.props.spec}
-                        modal={this.modalEditHandler} />
-                    <Button btnType="Success" clicked={this.modalAddHandler}>
-                        Créer un utilisateur
-                    </Button>
-                    <CSV sendJSON={this.loadData}/>
-                </Aux>
-            )
-        }
-
-        
     }
 }
 

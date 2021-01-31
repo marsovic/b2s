@@ -8,118 +8,67 @@ import ListGroup from 'react-bootstrap/ListGroup'
 import Colors from '../../../../../components/UI/colors'
 
 
-export default class DropDownColors extends Component{
+export default class DropDownColors extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-          selected: "Couleur",
-          highlightColor : this.props.highlightColor,
-          colors : Colors,
-          activeLine : this.props.activeLine,
-          items : null,
-        };
-       
-        this.handleChange = this.handleChange.bind(this);
+  constructor(props) {
+    super(props);
+    this.state = {
+      selected: "Couleur", //Nom des dropdown par défaut, modifié si une valeur est séléctionnée (à faire)
+      highlightColor: this.props.highlightColor, //Valeur utilisée pour pour sauvegarder la couleur a surligner car couleur actuelle de la ligne
+      colors: Colors, //Tableau JSON de toutes les couleurs
+      activeLine: this.props.activeLine, //Nom de la ligne correspondant au dropdown
+    };
+
+    //On bind la fonction handleChange pour qu'elle comprenne le contexte lorsqu'elle est passé en paramètres
+    this.handleChange = this.handleChange.bind(this);
+
+  }
+
+  //Fonction appellée lorsqu'un item est selectionné dans un dropdown
+  //Change le nom de la case (à faire) et appelle la fonction changeColor du composant LinearChart
+  handleChange(event) {
+    this.setState({
+      selected: event.target.id
+    });
+    this.props.changeColor(this.state.activeLine, event.target.id);
+  }
 
 
-        this.state.items = Object.keys(this.state.colors)
-                .map(key => { 
-                  if(this.state.colors[key].name !== null){
-                    //console.log("HIGHLIGHT COLOR", this.state.highlightColor)
-                    //console.log("COLORD CODE", this.state.colors[key].code)
-                        //Si la couleur qu'on ajoute est celle de la ligne, on la place comme active
-                        if(this.state.colors[key].code === this.state.highlightColor){
-                          //this.state.selected = this.state.colors[key].name;
-                          return (
-                            <Dropdown.Item key = {this.state.colors[key].name} id={this.state.colors[key].name} onClick={this.handleChange} active >
-                              {this.state.colors[key].name}
-                            </Dropdown.Item>    
-                          )
-                        }
-                        else{
-                          return (
-                            <Dropdown.Item key = {this.state.colors[key].name} id={this.state.colors[key].name} onClick={this.handleChange}>
-                              {this.state.colors[key].name}
-                            </Dropdown.Item>    
-                          )
-                        }
+  render() {
+    let items = null; //Liste des items du dropdown généré plus bas
 
-                  }
-                   
-                    
-                })
-  
-       
-    }
-  
-    handleChange(event){
-      console.log("EVENT",event.target.id)
-      this.setState({
-        selected: event.target.id
-      });
-      console.log("WTF",event.target.id)
+    //Génération des items du dropdown
+    items = Object.keys(this.state.colors)
+      .map(key => {
+        if (this.state.colors[key].name !== null) {
+          //Si la couleur qu'on ajoute est celle de la ligne, on la place comme active
+          if (this.state.colors[key].code === this.state.highlightColor) {
+            return (
+              <Dropdown.Item key={this.state.colors[key].name} id={this.state.colors[key].name} onClick={this.handleChange} active >
+                {this.state.colors[key].name}
+              </Dropdown.Item>
+            )
+          }
+          //Sinon, on retourne un item par nom de couleur
+          else {
+            return (
+              <Dropdown.Item key={this.state.colors[key].name} id={this.state.colors[key].name} onClick={this.handleChange}>
+                {this.state.colors[key].name}
+              </Dropdown.Item>
+            )
+          }
 
-      this.props.changeColor(this.state.activeLine,event.target.id);
+        }
 
-    }
 
-  /*  handleChangeCheckbox = (event) => {
-      console.log("TARGET NAME",event.target.id.toString())
-      this.props.updateLinesFuntion(event.target.id.toString(), event.target.checked)
-    
-    }*/
+      })
 
-    render(){
-      let lines = null;
-      let items = null;
-
-      items = Object.keys(this.state.colors)
-                .map(key => { 
-                  if(this.state.colors[key].name !== null){
-                    //console.log("HIGHLIGHT COLOR", this.state.highlightColor)
-                    //console.log("COLORD CODE", this.state.colors[key].code)
-                        //Si la couleur qu'on ajoute est celle de la ligne, on la place comme active
-                        if(this.state.colors[key].code === this.state.highlightColor){
-                          //this.state.selected = this.state.colors[key].name;
-                          return (
-                            <Dropdown.Item key = {this.state.colors[key].name} id={this.state.colors[key].name} onClick={this.handleChange} active >
-                              {this.state.colors[key].name}
-                            </Dropdown.Item>    
-                          )
-                        }
-                        else{
-                          return (
-                            <Dropdown.Item key = {this.state.colors[key].name} id={this.state.colors[key].name} onClick={this.handleChange}>
-                              {this.state.colors[key].name}
-                            </Dropdown.Item>    
-                          )
-                        }
-
-                  }
-                   
-                    
-                })
-      /*data = Object.keys(this.state.data)
-                .map(key => {
-
-                    if(this.state.data[key].name !== null){
-                        return (
-
-                          <Dropdown.Item id = {this.state.data[key].name} onClick={this.handleChange}>{this.state.data[key].name}</Dropdown.Item> 
-    
-                            )
-            
-                    }
-                    
-                })*/
-    
-        return(
-        <DropdownButton id="dropdown-basic-button" title={this.state.selected}>  
-           {this.state.items}
-          </DropdownButton>
-      );
-    }
+    return (
+      <DropdownButton id="dropdown-basic-button" title={this.state.selected}>
+        {items}
+      </DropdownButton>
+    );
+  }
 
 }
-  
+
