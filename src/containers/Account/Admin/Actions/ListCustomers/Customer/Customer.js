@@ -48,10 +48,22 @@ class Customer extends Component {
                             // Récupération des données pour la liste des colonnes
                             this.setState({ listColumns: JSON.parse(actualUser.columns) })
                         }
+                        
+                        if (actualUser.userSchema !== undefined && actualUser.userSchema.trim() !== "") {
+                            // Récupération des données pour la liste des colonnes
+                            this.setState({ userSchema:JSON.parse(actualUser.schema) })
+                        }
+
+                        if (actualUser.advices !== undefined && actualUser.advices.trim() !== "") {
+                            // Récupération des données pour la liste des colonnes
+                            this.setState({ userAdvices:JSON.parse(actualUser.advices) })
+                        }
                     }
                     return null;
                 });
-                // console.log(actualUser.data)
+
+
+                console.log(this.state.userAdvices)
                 this.setState({ userData: actualUser, loading: false })
             })
             .catch((err) => {
