@@ -9,11 +9,11 @@ import FormCircuit from "../../../../../../components/FormCircuits/FormCircuits"
 class Customer extends Component {
     state = {
         user: window.location.pathname.split("/").slice(-1)[0],
-        userData: null, // JSON contenant les infos de l'utilisateur séléctionné
+        userData: null,    // JSON contenant les infos de l'utilisateur séléctionné de BDD
         userAdvices: null, // JSON des conseils
-        userSchema: null, // JSON des circuits et des salles
-        listRooms: null,
-        listColumns: null,
+        userSchema: null,  // JSON des relations circuits/salles
+        listRooms: null,   // Liste des pieces venant du ProcessingCSV
+        listColumns: null, // Liste des colonnes venant du ProcessingCSV
         loading: true,
         message: null
     }
@@ -127,7 +127,7 @@ class Customer extends Component {
                             - calcul les conseils.
                             - sauvegarde les données en BDD.
                         */
-                        toShow = <p> Yes Louis c'est à toi de jouer.</p>
+                        toShow = <p> On calcule les advices</p>
                     }
                 }
             }

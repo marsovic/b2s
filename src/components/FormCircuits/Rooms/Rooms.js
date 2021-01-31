@@ -16,21 +16,6 @@ class Rooms extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
-        // Deleting Selectionned circuits from the list of rooms
-        var roomsWithoutCircuit = this.state.rooms;
-        var toDelete = [];
-
-        for (let room in this.state.rooms) {
-            for (let elem in this.state.circuits) {
-                if (this.state.circuits[elem] === roomsWithoutCircuit[room].name) {
-                    toDelete.push(room)
-                }
-            }
-        }
-
-        for (let roomToDelete in toDelete.reverse()) {
-            roomsWithoutCircuit.splice(toDelete[roomToDelete], 1);
-        }
 
         let circuitForRooms = [];
         const roomsOnPageCircuit = document.getElementsByName('roomForCircuits');
@@ -44,29 +29,13 @@ class Rooms extends Component {
             physicForRooms.push(roomsOnPageCPhysic[key].value.charAt(0))
         }
 
-        this.props.handleRooms(true, roomsWithoutCircuit, circuitForRooms, physicForRooms);
+        this.props.handleRooms(true, this.state.rooms, circuitForRooms, physicForRooms);
     }
 
     render() {
 
-        // Deleting Selectionned circuits from the list of rooms
-        var roomsWithoutCircuit = this.state.rooms;
-        var toDelete = [];
-
-        for (let room in this.state.rooms) {
-            for (let elem in this.state.circuits) {
-                if (this.state.circuits[elem] === roomsWithoutCircuit[room].name) {
-                    toDelete.push(room)
-                }
-            }
-        }
-
-        for (let roomToDelete in toDelete.reverse()) {
-            roomsWithoutCircuit.splice(toDelete[roomToDelete], 1);
-        }
-
         // Printing the list of rooms
-        const toShow = roomsWithoutCircuit.map(room => {
+        const toShow = this.state.rooms.map(room => {
             return (
                 <li>
                     <div className={styles.Label}>
