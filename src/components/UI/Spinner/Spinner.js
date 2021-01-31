@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styles from "./Spinner.module.css";
 
-const spinner = () => (
-    // <div className={styles.Loader}>Loading...</div>
-    <div className={styles.ldsHourglass}></div>
+class Spinner extends Component {
+    render() {
+        return(
+            <div className={styles.ldsHourglass}>{this.props.message}</div>
+        )
+    }
+}
 
-);
-
-export default spinner;
+export default Spinner;

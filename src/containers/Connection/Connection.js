@@ -1,9 +1,7 @@
 import React, { Component } from "react";
 import axios from 'axios';
 
-import AuthClient from "../../components/Auth/Client/Auth";
-import AuthOthers from "../../components/Auth/Others/Auth";
-import AccountClient from "../Account/Client/Account";
+import AuthOthers from "../../components/Auth/Auth";
 import AccountAdmin from "../Account/Admin/Account";
 import AccountBatisphere from "../Account/Batisphere/Account";
 import Spinner from "../../components/UI/Spinner/Spinner";
@@ -22,9 +20,10 @@ class Connection extends Component {
     }
 
     // Verification à chaque render du stockage de session
+
+    /* TODO */
     componentWillMount() {
         this.setState({ isUserLogged: Boolean(sessionStorage.getItem("isUserLogged")) });
-
     }
 
     loggedHandler = (loginState, userMode) => {
@@ -56,7 +55,6 @@ class Connection extends Component {
                     this.setState({ loading: false });;
                 });
         } else {
-            console.log("coucou");
             this.setState({mode:"", isUserLogged: false, loading: false})
         }
     }
@@ -70,15 +68,6 @@ class Connection extends Component {
             let containerShowed = null;
 
             if (this.state.isUserLogged === true) {
-                if (this.state.mode === "client" && secondLevelLocation === "home") {
-                    containerShowed =
-                        <AccountClient
-                            spec1={this.props.spec1}
-                            spec2={this.props.spec2}
-                            mode={this.state.mode}
-                            login={this.loggedHandler} />;
-                }
-
                 if (this.state.mode === "admin" && secondLevelLocation === "internal") {
                     containerShowed =
                         <AccountAdmin
@@ -98,13 +87,6 @@ class Connection extends Component {
                 }
             }
             else {
-                if (secondLevelLocation === "home") {
-                    containerShowed = <div>
-                        <AuthClient login={this.loggedHandler} mode="connection" />
-                        <AuthClient login={this.loggedHandler} mode="signIn" />
-                    </div>
-                }
-
                 if (secondLevelLocation === "internal") {
                     containerShowed = <div>
                         <AuthOthers login={this.loggedHandler} mode="connection" />

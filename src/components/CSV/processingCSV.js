@@ -6,9 +6,10 @@ import * as XLSX from 'xlsx';
 // HOW TO USE :
 /*
     - Function to declare to log data in the CSV :
-        consoleLogJSON(data1, data2) {
+        consoleLogJSON(data1, data2, file) {
             console.log(data1); // Show the names of the columns
             console.log(data2); // Show data on each row 
+            console.log(file); // Show file
         }
 
     - In render Method : 
@@ -20,7 +21,8 @@ import * as XLSX from 'xlsx';
 class ParseCSV extends Component {
     state = {
         columns: [],
-        data: []
+        data: [],
+        file: null
     }
 
     handleStateColumnsData(col, dat) {
@@ -33,7 +35,7 @@ class ParseCSV extends Component {
     }
 
     // process CSV data
-    processData = dataString => {
+    processData = (dataString, file) => {
         const dataStringLines = dataString.split(/\r\n|\n/);
         const headers = dataStringLines[0].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
 
@@ -52,7 +54,7 @@ class ParseCSV extends Component {
                     }
                     if (headers[j]) {
                         if (this.isNumber(d)) {
-                            obj[headers[j]] = parseInt(d)
+                            obj[headers[j]] = parseFloat(d.replace(',', '.'))
                         } else {
                             obj[headers[j]] = d
                         }
@@ -90,7 +92,8 @@ class ParseCSV extends Component {
             const ws = wb.Sheets[wsname];
             /* Convert array of arrays */
             const data = XLSX.utils.sheet_to_csv(ws, { header: 1 });
-            this.processData(data);
+            // console.log(data)
+            this.processData(data, file);
         };
         reader.readAsBinaryString(file);
     }
@@ -100,7 +103,7 @@ class ParseCSV extends Component {
             <div >
                 <input
                     type="file"
-                    accept=".csv,.xlsx,.xls"
+                    accept=".csv"
                     onChange={this.handleFileUpload}
                 />
             </div>

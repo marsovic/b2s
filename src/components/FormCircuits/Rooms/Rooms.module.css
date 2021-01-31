@@ -1,0 +1,152 @@
+.Rooms {
+  list-style: none;
+  margin: auto;
+  padding: 0;
+  text-indent: 10px;
+  box-sizing: border-box;
+  width: 50%;
+}
+
+.Rooms form {
+  flex-direction: column;
+  height: 300px;
+  overflow: scroll;
+  flex-direction: row;
+  list-style: none;
+  margin: auto;
+  padding: 0;
+  text-indent: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  overflow-y: scroll;
+  overflow-y: auto;
+  line-height: 1em;
+}
+
+.Rooms form::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+.Rooms form::-webkit-scrollbar:vertical {
+  width: 11px;
+}
+
+.Rooms form::-webkit-scrollbar:horizontal {
+  height: 11px;
+}
+
+.Rooms form::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  border: 2px solid white; /* should match background, can't be transparent */
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.Rooms li {
+  border-top: 1px solid gray;
+  text-align: left;
+  display: flex;
+  flex-direction: row;
+  height: 40px;
+  font-weight: bold;
+  flex: 1 1 auto;
+}
+
+.Rooms li:last-child {
+  border-bottom: 1px solid gray;
+}
+
+.Rooms input {
+  height: 20px;
+  width: 20px;
+}
+
+.Label {
+  flex: 1 1 auto;
+  text-align: right;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.Select1 {
+  padding: 0;
+  height: 85%;
+  margin-left: 10px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  margin-top: 2px;
+  width: 80%;
+  border-radius: 3px;
+  position: relative;
+}
+
+.Select1 select {
+  width: 100%;
+  height: 100%;
+  border: none;
+  box-shadow: none;
+  background-color: transparent;
+  background-image: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+.Select1:after {
+  top: 50%;
+  left: 85%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+  border-color: rgba(0, 0, 0, 0);
+  border-top-color: #000000;
+  border-width: 5px;
+  margin-top: -2px;
+  z-index: 100;
+}
+.Select1 select:focus {
+  outline: none;
+}
+
+.Rooms button {
+  padding-top: 40px;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: rgb(142, 192, 75);
+  font-weight: bold;
+  border: none;
+  color: #ffffff;
+  text-align: center;
+  font-size: 15px;
+  padding: 10px;
+  width: 200px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 20px;
+}
+
+.Rooms button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.Rooms button span:after {
+  content: "\00bb";
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  right: -20px;
+  transition: 0.5s;
+}
+
+.Rooms button:hover span {
+  padding-right: 25px;
+}
+
+.Rooms button:hover span:after {
+  opacity: 1;
+  right: 0;
+}

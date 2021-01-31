@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import ListUsers from "../../../../../components/Users/ListUsers/Admin/ListUsers"
+import ListUsers from "../../../../../components/Users/ListUsers/ListUsers"
 import Aux from "../../../../../hoc/Aux/Aux"
 import Modal from "../../../../../components/UI/Modal/Modal"
 import Button from "../../../../../components/UI/Button/Button"
@@ -37,10 +37,6 @@ class EditUsers extends Component {
         this.setState({ updated: !this.state.updated })
     }
 
-    consoleLogJSON(data1, data2) {
-        console.log(data1)
-        console.log(data2)
-    }
 
     render() {
         let userData = null;
@@ -52,8 +48,6 @@ class EditUsers extends Component {
         if (this.state.showModal && this.state.addUser === true) {
             userData = <AddUser modal={this.modalAddHandler} />
         }
-
-
 
         return (
             <Aux >

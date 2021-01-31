@@ -2,6 +2,7 @@
   "name": "b2s",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://127.0.0.1:5000",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -10,7 +11,9 @@
     "bootstrap": "^4.6.0",
     "csvtojson": "^2.0.10",
     "dotenv": "^8.2.0",
+    "file-saver": "^2.0.5",
     "package.json": "^2.0.1",
+    "pandas": "^0.0.3",
     "parse": "^2.19.0",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.3",
@@ -27,6 +30,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start-docker": "yarn build",
+    "start-api": "api/venv/bin/flask run",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
