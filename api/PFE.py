@@ -31,13 +31,13 @@ def analyse():
     
     #### Formatage
     # Read CSV file into DataFrame df
-    df = pd.read_csv('/Users/markoarsovic/Desktop/LCSC.csv', delimiter=";")
+    df = pd.read_csv('/Users/markoarsovic/Desktop/LCSC1.csv', delimiter=";")
     
     # Show dataframe
     name_capteur = df.columns.values.tolist()
     del name_capteur[0], name_capteur[0]
     
-    df[DATE_COLONNE] = pd.to_datetime(df[DATE_COLONNE], format='%d/%m/%Y %H:%M:%S')
+    df[DATE_COLONNE] = pd.to_datetime(df[DATE_COLONNE], format='%d/%m/%Y %H:%M')
     
     for name in name_capteur:
         df[name] = df[name].str.replace(',' , '.').astype(float)

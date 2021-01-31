@@ -58,15 +58,14 @@ class Customer extends Component {
                 console.log(err);
                 this.setState({ loading: false });
             });
-
-        if (this.state.userSchema !== null) {
+            console.log(this.state.userSchema)
+        if (this.state.userSchema === null) {
             this.handleDataUser();
         }
     }
 
     handleSchema = (newSchema) => {
         this.setState({ userSchema: newSchema });
-        console.log(newSchema);
 
         const options = {
             headers: {
@@ -93,14 +92,41 @@ class Customer extends Component {
     }
 
     handleDataUser = () => {
+        console.log(this.state.loading)
         this.setState({ loading: true, message: "Calcul des conseils" })
+
         fetch('/time')
-            .then(res => res)
+            .then(res => res.json())
             .then(data => {
-                console.log("yolo", data.time)
-                this.setState({ loading: false, message: null })
+                console.log("yolo", JSON.parse(data.time) )
+                this.setState({userAdvices: JSON.parse(data.time) })
+                // Enregistrement en BDD des infos
+                const options = {
+                    headers: {
+                        "X-Parse-Application-Id": process.env.REACT_APP_APP_ID,
+                        "X-Parse-REST-API-Key": process.env.REACT_APP_API_KEY,
+                        "X-Parse-Session-Token": sessionStorage.getItem("token")
+                    }
+                };
+                
+                let url = "https://parseapi.back4app.com/users/" + this.state.userData.objectId;
+        
+                const updatedUser = {
+                    "advices": data.time
+                }
+        
+                axios
+                    .put(url, updatedUser, options)
+                    .then((res) => {
+                        this.setState({ loading: false, message: null });
+                    })
+                    .catch((err) => {
+                        this.setState({ loading: false, message: null });
+                    });
             });
     }
+
+
 
     render() {
         let toShow = null;
