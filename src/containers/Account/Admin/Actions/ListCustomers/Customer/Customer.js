@@ -14,6 +14,7 @@ class Customer extends Component {
         userSchema: null,  // JSON des relations circuits/salles
         listRooms: null,   // Liste des pieces venant du ProcessingCSV
         listColumns: null, // Liste des colonnes venant du ProcessingCSV
+        rawFile: null,
         loading: true,
         message: null
     }
@@ -39,7 +40,7 @@ class Customer extends Component {
                     if (user.username === this.state.user) {
                         actualUser = user;
 
-                        if (actualUser.data !== undefined && actualUser.data.trim() !== ""  ) {
+                        if (actualUser.data !== undefined && actualUser.data.trim() !== "") {
                             // Récupération des données pour la liste des pièces
                             this.setState({ listRooms: JSON.parse(actualUser.data) })
                         }
@@ -48,36 +49,37 @@ class Customer extends Component {
                             // Récupération des données pour la liste des colonnes
                             this.setState({ listColumns: JSON.parse(actualUser.columns) })
                         }
-                        
+
                         if (actualUser.userSchema !== undefined && actualUser.userSchema.trim() !== "") {
                             // Récupération des données pour la liste des colonnes
-                            this.setState({ userSchema:JSON.parse(actualUser.schema) })
+                            this.setState({ userSchema: JSON.parse(actualUser.schema) })
                         }
 
                         if (actualUser.advices !== undefined && actualUser.advices.trim() !== "") {
                             // Récupération des données pour la liste des colonnes
-                            this.setState({ userAdvices:JSON.parse(actualUser.advices) })
+                            this.setState({ userAdvices: JSON.parse(actualUser.advices) })
                         }
                     }
                     return null;
                 });
 
-
-                console.log(this.state.userAdvices)
                 this.setState({ userData: actualUser, loading: false })
             })
             .catch((err) => {
                 console.log(err);
                 this.setState({ loading: false });
             });
-            console.log(this.state.userSchema)
+
         if (this.state.userSchema === null) {
-            this.handleDataUser();
+            this.handleDataUser(this.state.userSchema, this.state.rawFile);
         }
     }
 
-    handleSchema = (newSchema) => {
-        this.setState({ userSchema: newSchema });
+    handleSchema = (newSchema, dataFile) => {
+        this.setState({
+            userSchema: newSchema,
+            rawFile: dataFile
+        });
 
         const options = {
             headers: {
@@ -93,6 +95,8 @@ class Customer extends Component {
             "schema": JSON.stringify(newSchema)
         }
 
+        this.handleDataUser(newSchema, dataFile);
+
         axios
             .put(url, updatedUser, options)
             .then((res) => {
@@ -103,15 +107,20 @@ class Customer extends Component {
             });
     }
 
-    handleDataUser = () => {
-        console.log(this.state.loading)
+    handleDataUser = (schema, file) => {
         this.setState({ loading: true, message: "Calcul des conseils" })
 
-        fetch('/time')
-            .then(res => res.json())
-            .then(data => {
-                console.log("yolo", JSON.parse(data.time) )
-                this.setState({userAdvices: JSON.parse(data.time) })
+        const formData = new FormData();
+        
+        formData.append("dataSchema", JSON.stringify(schema));
+        formData.append("file", file);
+
+        axios
+            .post("/api/upload", formData)
+            .then(res => {
+                console.log(res.advice)
+                this.setState({ userAdvices: JSON.parse(res.advices) })
+
                 // Enregistrement en BDD des infos
                 const options = {
                     headers: {
@@ -120,65 +129,68 @@ class Customer extends Component {
                         "X-Parse-Session-Token": sessionStorage.getItem("token")
                     }
                 };
-                
+
                 let url = "https://parseapi.back4app.com/users/" + this.state.userData.objectId;
-        
+
                 const updatedUser = {
-                    "advices": data.time
+                    "advices": res.advices
                 }
-        
+
                 axios
                     .put(url, updatedUser, options)
                     .then((res) => {
+                        console.log(res)
                         this.setState({ loading: false, message: null });
                     })
                     .catch((err) => {
+                        console.log(err)
                         this.setState({ loading: false, message: null });
                     });
-            });
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
 
+render() {
+    let toShow = null;
+    let fileToShow = null;
 
-    render() {
-        let toShow = null;
-        let fileToShow = null;
-
-        if (this.state.loading) {
-            toShow = <Spinner message={this.state.message} />
-        } else {
-            if (this.state.userData !== null) // L'utilisateur possède déja des données, on affiche juste ce qui existe
-            {
-                if (this.state.userData.data !== undefined && this.state.userData.data.trim() !== "") 
-                { /* ----------------------------> LOUIS <---------------------------- */
-                    toShow =
-                        <div>
-                            <p>Yolo ! c'est le client {this.state.user}</p>
-                            <p>Un fichier trouvé: {this.state.userData.data.name} </p>
-                        </div>
-                }
-                else { // On demande de saisir des données puis on calcule
-                    if (this.state.userSchema === null) {
-                        toShow = <FormCircuit userId={this.state.userData.objectId} handleSchema={this.handleSchema} />
-                    } else {
-                        /* L'utilisateur a déjà rempli les infos concernant les circuits, on :
-                            - calcul les conseils.
-                            - sauvegarde les données en BDD.
-                        */
-                        toShow = <p> On calcule les advices</p>
-                    }
+    if (this.state.loading) {
+        toShow = <Spinner message={this.state.message} />
+    } else {
+        if (this.state.userData !== null) // L'utilisateur possède déja des données, on affiche juste ce qui existe
+        {
+            if (this.state.userData.data !== undefined && this.state.userData.data.trim() !== "") { /* ----------------------------> LOUIS <---------------------------- */
+                toShow =
+                    <div>
+                        <p>Yolo ! c'est le client {this.state.user}</p>
+                        <p>Un fichier trouvé: {this.state.userData.data.name} </p>
+                    </div>
+            }
+            else { // On demande de saisir des données puis on calcule
+                if (this.state.userSchema === null) {
+                    toShow = <FormCircuit userId={this.state.userData.objectId} handleSchema={this.handleSchema} />
+                } else {
+                    /* L'utilisateur a déjà rempli les infos concernant les circuits, on :
+                        - calcul les conseils.
+                        - sauvegarde les données en BDD.
+                    */
+                    toShow = <p> On calcule les advices</p>
                 }
             }
         }
-
-
-        return (
-            <Aux >
-                {toShow}
-                {fileToShow}
-            </Aux>
-        )
     }
+
+
+    return (
+        <Aux >
+            {toShow}
+            {fileToShow}
+        </Aux>
+    )
+}
 }
 
 export default Customer;

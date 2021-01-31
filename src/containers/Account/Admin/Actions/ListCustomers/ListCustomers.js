@@ -37,7 +37,7 @@ class EditCustomers extends Component {
                     {<p>coucou</p>}
                 </Modal>
                 <ListCustomers
-                    spec={this.props.spec}/>
+                    spec={this.props.spec} />
             </Aux>
         )
     }

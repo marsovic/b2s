@@ -20,11 +20,12 @@ class FormCircuits extends Component {
         circuits: null,
         physics: null,
         loading: false,
+        file: null,
         areCircuitsSelected: false,
         areRoomsSelected: false
     }
 
-    handleFile = (data1, data2) => {
+    handleFile = (data1, data2, file) => {
         var listRoom = data1;
 
         for (var key of Object.keys(listRoom)) {
@@ -32,7 +33,11 @@ class FormCircuits extends Component {
             listRoom[key]['isRoom'] = false;
         }
 
-        this.setState({ rooms: listRoom, loading: true });
+        this.setState({ 
+            rooms: listRoom, 
+            loading: true, 
+            file: file 
+        });
 
         const options = {
             headers: {
@@ -43,7 +48,6 @@ class FormCircuits extends Component {
         };
 
         let url = "https://parseapi.back4app.com/users/" + this.props.userId;
-        console.log(data1);
 
         const updatedUser = {
             "columns": JSON.stringify(data1),
@@ -107,7 +111,8 @@ class FormCircuits extends Component {
                         toPassToTheAlgorithm.push(tempItem);
                         toPassToLouis.push(tempItemLouis);
                     }
-                    this.props.handleSchema(toPassToLouis)
+
+                    this.props.handleSchema(toPassToLouis, this.state.file)
                     toShow = toPassToTheAlgorithm.map(items => {
                         return <p> {items} </p>
                     });

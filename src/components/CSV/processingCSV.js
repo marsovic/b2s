@@ -74,7 +74,7 @@ class ParseCSV extends Component {
         }));
 
         this.handleStateColumnsData(columns, list);
-        this.props.sendJSON(columns, list);
+        this.props.sendJSON(columns, list, file);
 
     }
 
