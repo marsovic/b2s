@@ -4,7 +4,7 @@ import axios from "axios";
 import Aux from "../../../../../../hoc/Aux/Aux"
 import Spinner from "../../../../../../components/UI/Spinner/Spinner"
 import FormCircuit from "../../../../../../components/FormCircuits/FormCircuits";
-
+import ListAdvices from "../../../Advices/ListAdvices"
 
 class Customer extends Component {
     state = {
@@ -39,7 +39,7 @@ class Customer extends Component {
                     if (user.username === this.state.user) {
                         actualUser = user;
 
-                        if (actualUser.data !== undefined && actualUser.data.trim() !== ""  ) {
+                        if (actualUser.data !== undefined && actualUser.data.trim() !== "") {
                             // Récupération des données pour la liste des pièces
                             this.setState({ listRooms: JSON.parse(actualUser.data) })
                         }
@@ -47,6 +47,16 @@ class Customer extends Component {
                         if (actualUser.columns !== undefined && actualUser.columns.trim() !== "") {
                             // Récupération des données pour la liste des colonnes
                             this.setState({ listColumns: JSON.parse(actualUser.columns) })
+                        }
+
+                        if (actualUser.schema !== undefined && actualUser.schema.trim() !== "") {
+                            // Récupération des données pour la liste des colonnes
+                            this.setState({ userSchema: JSON.parse(actualUser.schema) })
+                        }
+
+                        if (actualUser.advices !== undefined && actualUser.advices.trim() !== "") {
+                            // Récupération des données pour la liste des colonnes
+                            this.setState({ userAdvices: JSON.parse(actualUser.advices) })
                         }
                     }
                     return null;
@@ -58,7 +68,7 @@ class Customer extends Component {
                 console.log(err);
                 this.setState({ loading: false });
             });
-            console.log(this.state.userSchema)
+        console.log(this.state.userSchema)
         if (this.state.userSchema === null) {
             this.handleDataUser();
         }
@@ -98,8 +108,8 @@ class Customer extends Component {
         fetch('/time')
             .then(res => res.json())
             .then(data => {
-                console.log("yolo", JSON.parse(data.time) )
-                this.setState({userAdvices: JSON.parse(data.time) })
+                console.log("yolo", JSON.parse(data.time))
+                this.setState({ userAdvices: JSON.parse(data.time) })
                 // Enregistrement en BDD des infos
                 const options = {
                     headers: {
@@ -108,13 +118,13 @@ class Customer extends Component {
                         "X-Parse-Session-Token": sessionStorage.getItem("token")
                     }
                 };
-                
+
                 let url = "https://parseapi.back4app.com/users/" + this.state.userData.objectId;
-        
+
                 const updatedUser = {
                     "advices": data.time
                 }
-        
+
                 axios
                     .put(url, updatedUser, options)
                     .then((res) => {
@@ -137,13 +147,15 @@ class Customer extends Component {
         } else {
             if (this.state.userData !== null) // L'utilisateur possède déja des données, on affiche juste ce qui existe
             {
-                if (this.state.userData.data !== undefined && this.state.userData.data.trim() !== "") 
-                { /* ----------------------------> LOUIS <---------------------------- */
+                if (this.state.userData.data !== undefined && this.state.userData.data.trim() !== "")
+                //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+                {
+                    //console.log("schema in Customer", this.state.userSchema)
+                    //
+                    console.log("advices in Customer", this.state.userAdvices)
+
                     toShow =
-                        <div>
-                            <p>Yolo ! c'est le client {this.state.user}</p>
-                            <p>Un fichier trouvé: {this.state.userData.data.name} </p>
-                        </div>
+                        <ListAdvices advices={this.state.userAdvices} schema={this.state.userSchema} fullData={this.state.listRooms} listColumns={this.state.listColumns} />
                 }
                 else { // On demande de saisir des données puis on calcule
                     if (this.state.userSchema === null) {

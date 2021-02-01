@@ -19,9 +19,9 @@ import Nav from 'react-bootstrap/Nav';
 import Table from 'react-bootstrap/Table'
 
 //COMPOSANTS MAISON
-import Problems from "./Problems"
+import Advices from "./Advices"
 
-class Advices extends Component {
+class Problems extends Component {
 
     constructor(props) {
         super(props);
@@ -39,30 +39,36 @@ class Advices extends Component {
         console.log("columnsName", this.state.columnsName)*/
 
         return (
-            <Tab.Container id="left-tabs-example" activeKey={this.state.key} onSelect={key => this.setState({ key })}>
-                <Row>
-                    <Col sm={3}>
-                        <Nav variant="pills" className="flex-column">
-                            <Nav.Item>
-                                <Nav.Link eventKey="first">Tab 1</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="second">Tab 2</Nav.Link>
-                            </Nav.Item>
-                        </Nav>
-                    </Col>
-                    <Col sm={9}>
-                        <Tab.Content>
-                            <Tab.Pane eventKey="first">
-                                <Problems />
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="second">
-                                <Problems />
-                            </Tab.Pane>
-                        </Tab.Content>
-                    </Col>
-                </Row>
-            </Tab.Container>
+            <Table striped bordered hover size="sm">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Date</th>
+                        <th>Heure</th>
+                        <th>Voir</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>12/12/2020</td>
+                        <td>00:01</td>
+                        <td><Button /></td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>12/12/2020</td>
+                        <td>00:01</td>
+                        <td><Button /></td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>12/12/2020</td>
+                        <td>00:01</td>
+                        <td><Button /></td>
+                    </tr>
+                </tbody>
+            </Table>
         )
 
         /* return (
@@ -74,4 +80,5 @@ class Advices extends Component {
     }
 }
 
-export default Advices;
+export default Problems;
+

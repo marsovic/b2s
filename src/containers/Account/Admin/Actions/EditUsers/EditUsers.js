@@ -6,7 +6,6 @@ import Modal from "../../../../../components/UI/Modal/Modal"
 import Button from "../../../../../components/UI/Button/Button"
 import EditUser from "./EditUser/EditUser";
 import AddUser from "./AddUser/AddUser";
-import Advices from "../../Advices/Advices"
 
 
 class EditUsers extends Component {
@@ -63,7 +62,6 @@ class EditUsers extends Component {
                 <Button btnType="Success" clicked={this.modalAddHandler}>
                     Créer un utilisateur
                 </Button>
-                <Advices />
             </Aux>
         )
 

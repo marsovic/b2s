@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import {
-    LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
+    LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,ReferenceArea
 } from 'recharts';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import Settings from '../ChartSettings/LinearChartSettings';
 import Colors from '../../../../../components/UI/colors'
+
 
 //import Data from '../data'
 
@@ -52,7 +53,8 @@ class LinearChart extends Component {
             keys: [],
             maxLine: 150,
             colors: Colors,
-
+            refAreaLeft: (this.props.refAreaLeft === null) ? '' : this.props.refAreaLeft,
+            refAreaRight: (this.props.refAreaRight === null) ? '' : this.props.refAreaRight,
 
             //VARIBALES ZOOM
             /*left: 'dataMin',
@@ -194,14 +196,11 @@ class LinearChart extends Component {
     
     
          
-                        {
-                            (this.state.refAreaLeft && this.state.refAreaRight) ? (
-                            <ReferenceArea x1={this.state.refAreaLeft} x2={this.state.refAreaRight} strokeOpacity={0.3} />) : null
-                        }
+                        
     }*/
 
     deleteColor(name) {
-        let colorsCopy = this.state.colors; 
+        let colorsCopy = this.state.colors;
         let colorDeleted;
         let tabLines = this.state.lines;
         let secondLine = "";
@@ -215,7 +214,7 @@ class LinearChart extends Component {
         }
 
         for (let i in tabLines) {
-            if (typeof (tabLines[i]) !== 'undefined') {
+            if (typeof (tabLines[i]) !== 'undefined' && tabLines[i] !== null) {
 
                 if (tabLines[i].props.stroke === colorDeleted) {
                     secondLine = tabLines[i].key;
@@ -282,7 +281,7 @@ class LinearChart extends Component {
         //Suppression de la ligne entrain suppression de la couleur de cette ligne et réattribution de la couleur initiale de la ligne a une autre si elle est utilisée plusieurs fois 
         //On récrée une ligne avec la bonne couleur
         for (let i in tabLines) {
-            if (typeof (tabLines[i]) !== 'undefined') {
+            if (typeof (tabLines[i]) !== 'undefined' && tabLines[i] !== null) {
                 if (tabLines[i].key === lineName) {
                     //tabLines[i].props.stroke = color;
                     tabLines.splice(i, 1);
@@ -334,7 +333,7 @@ class LinearChart extends Component {
                 let lenghtLines = tabLines.length;
                 for (let j = 0; j < lenghtLines; j++) {
 
-                    if (typeof (tabLines[j]) !== 'undefined' && typeof (tab[i]) !== 'undefined') {
+                    if (typeof (tabLines[j]) !== 'undefined' && typeof (tab[i]) !== 'undefined' && tabLines[j] !== null && tab[i] !== null) {
                         if (tab[i].name === tabLines[j].props.dataKey) {
                             tabLines.splice(j, 1);
                             this.deleteColor(tab[i].name);
@@ -349,7 +348,7 @@ class LinearChart extends Component {
             //Si la ligne marquée pour l'affichage , on vérifie si si elle l'est déjà, sinon on l'ajoute aux lignes
             if (tab[i].displayed === true) {
                 for (let j = 0; j < tabLines.length; j++) {
-                    if (typeof (tabLines[j]) !== 'undefined' && typeof (tab[i]) !== 'undefined') {
+                    if (typeof (tabLines[j]) !== 'undefined' && typeof (tab[i]) !== 'undefined' && tabLines[j] !== null && tab[i] !== null) {
 
                         if (tab[i].name === tabLines[j].props.dataKey) {
                             toDisplay = false;
@@ -384,6 +383,9 @@ class LinearChart extends Component {
 
     render() {
 
+        console.log("left",this.state.refAreaLeft)
+        console.log("right",this.state.refAreaRight)
+
         return (
 
             <>
@@ -405,6 +407,10 @@ class LinearChart extends Component {
                             {this.state.lines}
                             <Tooltip />
                             <Legend height={60} />
+                            {
+                                (this.state.refAreaLeft && this.state.refAreaRight) ? (
+                                    <ReferenceArea x1={this.state.refAreaLeft} strokeOpacity={0.3} />) : null
+                            }
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
