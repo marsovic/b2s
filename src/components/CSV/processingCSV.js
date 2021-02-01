@@ -54,6 +54,20 @@ class ParseCSV extends Component {
             })
     }
 
+    handleFileUpload2 = e => {
+        e.preventDefault();
+        const file = e.target.files[0];
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        axios
+            .post("/api/test", formData)
+            .then(res => {
+                console.log(res)
+            })
+    }
+
     render() {
         return (
             <div >

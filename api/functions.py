@@ -171,27 +171,15 @@ def moving_average(data: pd.core.frame.DataFrame, period: int):
 
 #%% Analyse
 
-def analyse_temperature_point(full_data: pd.core.frame.DataFrame, data: pd.core.frame.DataFrame, confort_temp: dict, gap: dict, function, Temp_Ext_Name: str, Date_Colonne: str, association: dict):
-    column_display = list(data.columns)
-    
-    if Temp_Ext_Name in column_display: column_display.remove(Temp_Ext_Name)
-    if Date_Colonne in column_display: column_display.remove(Date_Colonne)
-    
+def analyse_temperature_point(full_data: pd.core.frame.DataFrame, data: pd.core.frame.DataFrame, column_display, confort_temp: dict, gap: dict, function, Temp_Ext_Name: str, Date_Colonne: str, association: dict):    
     #On crée un dict de dict
     tache = {name : [] for name in column_display}
     
-    a = 0
-    
     for name in column_display:
-        a = 0
         for index in range(len(data)):
             conseil = function(data[Temp_Ext_Name][index], data[name][index], confort_temp[name], gap[name], is_heater_on(full_data, association, data[Date_Colonne][index], name, Date_Colonne))
             if conseil is not None:
                 tache[name].append([data[Date_Colonne][index], conseil])
-            else:
-                a += 1
-    
-        #print(name, a)
             
     return tache
 
@@ -200,16 +188,16 @@ def is_heater_on(full_data: pd.core.frame.DataFrame, association: dict, date_obs
     
     if name in association.keys():
         relation_circuit = association[name]
-    else:
-        relation_circuit = name
-      
-    if index > 0:
-        if full_data[relation_circuit][index-1:index].mean() > 30 :
-            return True
+          
+        if index > 0:
+            if full_data[relation_circuit][index-1:index].mean() > 30 :
+                return True
+            else:
+                return False
         else:
-            return False
+            return full_data[relation_circuit][index] > 30
     else:
-        return full_data[relation_circuit][index] > 30
+        return False
         
 def conseil_open(data_ext: float, data_room: float, data_confort: float, data_gap: float, heater: bool):
     borne_inf = data_confort * (1-data_gap)
@@ -317,7 +305,7 @@ def conseil_closed(data_ext: float, data_room: float, data_confort: float, data_
     
     return None
 
-def formatage_conseil(data: dict, data_freq: datetime.datetime, data_std: datetime.datetime):
+def formatage_probleme(data: dict, data_freq: datetime.datetime, data_std: datetime.datetime):
     """ data doit être strcuturé comme ci dessous
     nom_piece : [[date1, conseil1], [date2, conseil1], [date3, conseil2] ... ]
     """
@@ -350,12 +338,79 @@ def formatage_conseil(data: dict, data_freq: datetime.datetime, data_std: dateti
         
     """
     Format du tableau de sortie
-    piece : date début du conseil - date de fin du conseil - conseil
+    piece : date début du probleme - date de fin du probleme - probleme
     
     """        
     return analyse
 
-         
+def index_to_display(full_data, start, end): 
+    if not end - start > 4:
+        if start == 0:
+            end = 7
+
+        elif start == 1:
+            start = 0
+            end += 3
+   
+        elif start ==  2:
+            start = 0
+            end += 3
+
+        elif end == (len(full_data)-1):
+            start -= 7
+
+        elif end == (len(full_data)-2):
+            end = (len(full_data)-1)
+            start -= 3
+
+        elif end == (len(full_data)-3):
+            end = (len(full_data)-1)
+            start -= 3
+
+        else:
+            start -= 3
+            end += 3 
+          
+    return start, end
+    
+def remodelage_analyse(full_data: pd.core.frame.DataFrame, analyse_conseil: dict, freq, colonne_date: str):
+    freq_conseil = {name: {} for name in analyse_conseil.keys()}
+    
+    for name in analyse_conseil.keys():
+        if len(analyse_conseil[name]) > 0:
+            
+            index_start = full_data.loc[full_data[colonne_date] == analyse_conseil[name][0][0]].index[0]
+            index_end = full_data.loc[full_data[colonne_date] == analyse_conseil[name][0][1]].index[0]
+                    
+            index_start, index_end = index_to_display(full_data, index_start, index_end)
+            
+            freq_conseil[name] = {analyse_conseil[name][0][2] : [[full_data[colonne_date][index_start], full_data[colonne_date][index_end], analyse_conseil[name][0][0], analyse_conseil[name][0][1]]]}
+            
+            for index in range(1, len(analyse_conseil[name])):
+                
+                name_conseil = analyse_conseil[name][index][2]
+                index_start = full_data.loc[full_data[colonne_date] == analyse_conseil[name][index][0]].index[0]
+                index_end = full_data.loc[full_data[colonne_date] == analyse_conseil[name][index][1]].index[0]
+                    
+      
+                index_start, index_end = index_to_display(full_data, index_start, index_end)
+                
+                if name_conseil in freq_conseil[name].keys():
+                    freq_conseil[name][name_conseil].append([full_data[colonne_date][index_start], full_data[colonne_date][index_end], analyse_conseil[name][index][0], analyse_conseil[name][index][1]])
+                    
+                else:
+                    freq_conseil[name][name_conseil] = [[full_data[colonne_date][index_start], full_data[colonne_date][index_end], analyse_conseil[name][index][0], analyse_conseil[name][index][1]]]
+    
+
+    #convert in dataframe
+    for name in freq_conseil.keys():
+        for conseil in freq_conseil[name].keys():
+            freq_conseil[name][conseil] = pd.DataFrame( data = freq_conseil[name][conseil],  
+                                                        index = [i for i in range(len(freq_conseil[name][conseil]))],  
+                                                        columns = ["Display_Debut", "Display_Fin", "Debut", "Fin"])
+                    
+    return freq_conseil
+      
     
 
 #%%Retourne Error + Display
@@ -464,3 +519,40 @@ def format_to_send_csv(data: pd.core.frame.DataFrame, full_data: pd.core.frame.D
     
     
     return data
+
+def format_to_send_json(analyse_format:list, analyse_open: dict, analyse_close: dict):
+    #On convertit nos dataframe en dict
+    for name in analyse_open.keys():
+        for conseil in analyse_open[name].keys():
+            analyse_open[name][conseil] = analyse_open[name][conseil].astype(str).to_dict(orient='index')
+        
+        for conseil in analyse_close[name].keys():
+            analyse_close[name][conseil] = analyse_close[name][conseil].astype(str).to_dict(orient='index')
+
+    #On convertit notre dict dans le format souhaité par le site
+    for name in analyse_open.keys():
+        conseil_info = list()
+        for conseil in analyse_open[name].keys():
+            date_observation = list()
+            for indice in analyse_open[name][conseil].keys():
+                date_observation.append({"display_Debut": analyse_open[name][conseil][indice]["Display_Debut"],
+                                        "display_Fin": analyse_open[name][conseil][indice]["Display_Fin"],
+                                        "debut": analyse_open[name][conseil][indice]["Debut"],
+                                        "fin": analyse_open[name][conseil][indice]["Fin"]})
+    
+            conseil_info.append({"nom": conseil, "liste": date_observation})
+            
+        for conseil in analyse_close[name].keys():
+            date_observation = list()
+            for indice in analyse_close[name][conseil].keys():
+                date_observation.append({"display_Debut": analyse_close[name][conseil][indice]["Display_Debut"],
+                                        "display_Fin": analyse_close[name][conseil][indice]["Display_Fin"],
+                                        "debut": analyse_close[name][conseil][indice]["Debut"],
+                                        "fin": analyse_close[name][conseil][indice]["Fin"]})
+    
+            conseil_info.append({"nom": conseil, "liste": date_observation})
+            
+        analyse_format.append({"salle": name, "conseil": conseil_info})
+  
+    
+    return analyse_format

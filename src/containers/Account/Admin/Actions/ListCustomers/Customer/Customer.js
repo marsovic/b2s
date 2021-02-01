@@ -14,6 +14,8 @@ class Customer extends Component {
         userSchema: null,  // JSON des relations circuits/salles
         listRooms: null,   // Liste des pieces venant du ProcessingCSV
         listColumns: null, // Liste des colonnes venant du ProcessingCSV
+        openDays: null,
+        workingHours: null,
         rawFile: null,
         loading: true,
         message: null
@@ -75,10 +77,12 @@ class Customer extends Component {
         }
     }
 
-    handleSchema = (newSchema, dataFile) => {
+    handleSchema = (newSchema, dataFile, days, hours) => {
         this.setState({
             userSchema: newSchema,
-            rawFile: dataFile
+            rawFile: dataFile,
+            openDays: days,
+            workingHours: hours
         });
 
         const options = {
@@ -95,7 +99,7 @@ class Customer extends Component {
             "schema": JSON.stringify(newSchema)
         }
 
-        this.handleDataUser(newSchema, dataFile);
+        this.handleDataUser(newSchema, dataFile, days, hours);
 
         axios
             .put(url, updatedUser, options)
@@ -107,12 +111,14 @@ class Customer extends Component {
             });
     }
 
-    handleDataUser = (schema, file) => {
+    handleDataUser = (schema, file, days, hours) => {
         this.setState({ loading: true, message: "Calcul des conseils" })
 
         const formData = new FormData();
         
         formData.append("dataSchema", JSON.stringify(schema));
+        formData.append("openDays", JSON.stringify(days));
+        formData.append("workingHours", JSON.stringify(hours));
         formData.append("file", file);
 
         axios
