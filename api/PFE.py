@@ -6,12 +6,13 @@ Created on Tue Jan  5 12:49:40 2021
 @author: elias
 """
 
-def analyse():
+def analyse(originalCSV, schemaJSON):
 
     ####
     import pandas as pd
     import datetime
     import numpy as np
+    import json
 #    import matplotlib.pyplot as plt
     
     import functions as fct
@@ -20,24 +21,45 @@ def analyse():
     TEMP_EXT = "T°C ext"
     
     ####
-    f = open('api/association_circuit_salle.txt', 'r')
+    '''
+    f = open('association_circuit_salle.txt', 'r')
     file = f.read()
     lines = file.splitlines()
     for index in range(len(lines)):
         lines[index] = lines[index].split(' @#@ ')
+    '''
+    association = json.loads(schemaJSON)
     
-    map_association = {line[0]:line[1] for line in lines}
-    map_unite = {line[0]:line[2] for line in lines}
+    map_association =   {elem['Room']:elem['Circuit'] for elem in association}
+    map_unite =         {elem['Room']:elem['Physic'] for elem in association}
+#    temp_confort =      {elem['Room']:elem['Ideal'] for elem in association}
+#    gap_to_confort =    {elem['Room']:0.01 for elem in association}
+    
+#    map_association = {line[0]:line[1] for line in lines}
+#    map_unite = {line[0]:line[2] for line in lines}
     
     #### Formatage
     # Read CSV file into DataFrame df
-    df = pd.read_csv('/Users/markoarsovic/Desktop/LCSC1.csv', delimiter=";")
+    #df = pd.read_csv('/Users/elias/Desktop/PFE/GitHub/PFE2021/LCSC-03_12_2020 08_00_00.csv', delimiter=";")
+    
+    df = list()
+    
+    for line_encode in originalCSV:
+        line = line_encode
+        temp = line.split('"')[0]
+        df.append(temp.split(";"))
+    
+    df = pd.DataFrame( data = df[1:],  
+                      index = [i for i in range(df)],  
+                      columns = df[0])
+                        
+    
     
     # Show dataframe
     name_capteur = df.columns.values.tolist()
     del name_capteur[0], name_capteur[0]
     
-    df[DATE_COLONNE] = pd.to_datetime(df[DATE_COLONNE], format='%d/%m/%Y %H:%M')
+    df[DATE_COLONNE] = pd.to_datetime(df[DATE_COLONNE], format='%d/%m/%Y %H:%M:%S')
     
     for name in name_capteur:
         df[name] = df[name].str.replace(',' , '.').astype(float)
@@ -47,9 +69,11 @@ def analyse():
     ####
     
     #plt.plot( df[DATE_COLONNE][34:106], df['Salle A.1.1'][34:106])
-    df = df[:3000]
+    df = df[:100]
     df = df.reset_index(drop=True)
     
+    temp_confort = {name:20 for name in df.columns}
+    gap_to_confort = {name:0.01 for name in df.columns}
     ####
     
     frequence, standard_deviation = fct.frequency_std_database(df[DATE_COLONNE])
@@ -70,7 +94,7 @@ def analyse():
     ####Personnalisation des datas
     
     horaire_ouverture = datetime.datetime.strptime("07:00:00", '%H:%M:%S')
-    horaire_fermeture = datetime.datetime.strptime("18:00:00", '%H:%M:%S')
+    horaire_fermeture = datetime.datetime.strptime("19:00:00", '%H:%M:%S')
     
     vacance_debut = datetime.datetime.strptime("21/12/2019", '%d/%m/%Y')
     vacance_fin = datetime.datetime.strptime("05/01/2020", '%d/%m/%Y')
@@ -133,10 +157,7 @@ def analyse():
     #### Analyse des donées avec consels
     """Ouverture"""
     
-    #Provisoire
-    temp_confort = {name:20 for name in df.columns}
-    gap_to_confort = {name:0.1 for name in df.columns}
-    
+        
     analyse_data_by_point_open = fct.analyse_temperature_point(df, data_open_hours[[DATE_COLONNE] + temp_room+ [TEMP_EXT]], temp_confort, gap_to_confort, fct.conseil_open, TEMP_EXT, DATE_COLONNE, map_association)
     analyse_data_by_point_holidays = fct.analyse_temperature_point(df, data_closed_hours[[DATE_COLONNE] + temp_room+ [TEMP_EXT]], temp_confort, gap_to_confort, fct.conseil_closed, TEMP_EXT, DATE_COLONNE, map_association)
     
@@ -147,24 +168,67 @@ def analyse():
     #plt.plot( df[DATE_COLONNE], df['Salle A.1.1'])
     
     ####
-    """Closed"""                 
+    """Closed"""   
+
+    def index_to_display(full_data, start, end): 
+        if not end - start > 4:
+            if start == 0:
+                end = 7
+
+            elif start == 1:
+                start = 0
+                end += 3
+   
+            elif start ==  2:
+                start = 0
+                end += 3
+
+            elif end == (len(full_data)-1):
+                start -= 7
+
+            elif end == (len(full_data)-2):
+                end = (len(full_data)-1)
+                start -= 3
+
+            elif end == (len(full_data)-3):
+                end = (len(full_data)-1)
+                start -= 3
+
+            else:
+                start -= 3
+                end += 3 
+              
+        return start, end
     
-    def frequence_conseil(analyse_conseil: dict):
+    def frequence_conseil(full_data: pd.core.frame.DataFrame, analyse_conseil: dict, freq, colonne_date: str):
         freq_conseil = {name: {} for name in analyse_conseil.keys()}
         
         for name in analyse_conseil.keys():
             if len(analyse_conseil[name]) > 0:
-                freq_conseil[name] = {analyse_conseil[name][0][2] : [[analyse_conseil[name][0][0], analyse_conseil[name][0][1]]]}
+                
+                index_start = full_data.loc[full_data[colonne_date] == analyse_conseil[name][0][0]].index[0]
+                index_end = full_data.loc[full_data[colonne_date] == analyse_conseil[name][0][1]].index[0]
+                        
+                index_start, index_end = index_to_display(full_data, index_start, index_end)
+                
+                freq_conseil[name] = {analyse_conseil[name][0][2] : [[full_data[colonne_date][index_start], full_data[colonne_date][index_end], analyse_conseil[name][0][0], analyse_conseil[name][0][1]]]}
                 
                 for index in range(1, len(analyse_conseil[name])):
                     
                     name_conseil = analyse_conseil[name][index][2]
+                    index_start = full_data.loc[full_data[colonne_date] == analyse_conseil[name][index][0]].index[0]
+                    index_end = full_data.loc[full_data[colonne_date] == analyse_conseil[name][index][1]].index[0]
+                        
+          
+                    index_start, index_end = index_to_display(full_data, index_start, index_end)
                     
                     if name_conseil in freq_conseil[name].keys():
-                        freq_conseil[name][name_conseil].append([analyse_conseil[name][index][0], analyse_conseil[name][index][1]])
+                        freq_conseil[name][name_conseil].append([full_data[colonne_date][index_start], full_data[colonne_date][index_end], analyse_conseil[name][index][0], analyse_conseil[name][index][1]])
+                        
                     else:
-                        freq_conseil[name][name_conseil] = [[analyse_conseil[name][index][0], analyse_conseil[name][index][1]]]
-            
+                        freq_conseil[name][name_conseil] = [[full_data[colonne_date][index_start], full_data[colonne_date][index_end], analyse_conseil[name][index][0], analyse_conseil[name][index][1]]]
+        
+        #print(freq_conseil)  
         #b = list()
         #convert in dataframe
         for name in freq_conseil.keys():
@@ -172,33 +236,8 @@ def analyse():
             for conseil in freq_conseil[name].keys():
                 freq_conseil[name][conseil] = [pd.DataFrame( data = freq_conseil[name][conseil],  
                                                             index = [i for i in range(len(freq_conseil[name][conseil]))],  
-                                                            columns = ["Debut", "Fin"])] 
-                
-#                print(conseil, "-->")
-#                print(freq_conseil[name][conseil][0]["Debut"].diff().mean(), "....", freq_conseil[name][conseil][0]["Debut"].diff().std())
-#                print('Fin :', freq_conseil[name][conseil][0]["Fin"].diff().mean(), "....", freq_conseil[name][conseil][0]["Fin"].diff().std())
-                
-                #print((freq_conseil[name][conseil][0]["Fin"] - freq_conseil[name][conseil][0]["Debut"]).mean(),"-----" ,(freq_conseil[name][conseil][0]["Fin"] - freq_conseil[name][conseil][0]["Debut"]).std())
-#                print()
-                
-                if not freq_conseil[name][conseil][0]["Debut"].diff().std() > datetime.timedelta(days=10):
-                    freq_conseil[name][conseil].append(freq_conseil[name][conseil][0]["Debut"].diff().mean().round('H'))
-                    
-                
-    #            if freq_conseil[name][conseil][0]["Debut"].diff().mean() < datetime.timedelta(days=2):
-    #                freq_conseil[name][conseil].append("Daily")
-    #            
-    #            elif freq_conseil[name][conseil][0]["Debut"].diff().mean() < datetime.timedelta(days=8):
-    #                freq_conseil[name][conseil].append("Weekly")
-    #                
-    #            elif freq_conseil[name][conseil][0]["Debut"].diff().mean() < datetime.timedelta(days=32):
-    #                freq_conseil[name][conseil].append("Monthly")
-    #            else:
-    #                freq_conseil[name][conseil].append("Ponctuel")
-            #print()
-            
-        #b.append(freq_conseil["Salle A.1.1"]["Le chauffage est trop fort"][0]["Debut"].diff())
-    #    print(b)
+                                                            columns = ["Display_Debut", "Display_Fin", "Debut", "Fin"])] 
+                        
         return freq_conseil
     
         """il faut regarder l'ecart l'ecart entre nos dates 1 et 2 
@@ -207,8 +246,16 @@ def analyse():
         
         
         """
-    analyse_conseil_data_open = frequence_conseil(analyse_data_open) 
-    analyse_conseil_data_holidays = frequence_conseil(analyse_data_holidyas) 
+        
+    def format_to_send_json(analyse):
+        for name in analyse.keys():
+            for conseil in analyse[name].keys():
+                analyse[name][conseil][0] = analyse[name][conseil][0].astype(str).to_dict(orient='index')
+                
+        return analyse    
+    
+    analyse_conseil_data_open = frequence_conseil(df, analyse_data_open, frequence, DATE_COLONNE) 
+    analyse_conseil_data_holidays = frequence_conseil(df, analyse_data_holidyas, frequence, DATE_COLONNE) 
     
     ####
     
@@ -220,12 +267,14 @@ def analyse():
     ####
     df_to_send = pd.DataFrame(columns = ["Start", "End"] + df.columns[2:].to_list())
     
-    df_to_send = fct.format_to_send_csv(df_to_send, df, analyse_conseil_data_open, analyse_data_by_point_open, DATE_COLONNE)
-    df_to_send = fct.format_to_send_csv(df_to_send, df, analyse_conseil_data_holidays, analyse_data_by_point_holidays, DATE_COLONNE)
+    #df_to_send = fct.format_to_send_csv(df_to_send, df, analyse_conseil_data_open, analyse_data_by_point_open, DATE_COLONNE)
+    #df_to_send = fct.format_to_send_csv(df_to_send, df, analyse_conseil_data_holidays, analyse_data_by_point_holidays, DATE_COLONNE)
     
-    #df_to_send.to_csv('Analyse.csv', sep=';', index=False) 
+    df_to_send.to_csv('Analyse.csv', sep=';', index=False) 
     
     #df_to_send.loc[((datetime.datetime(2019,12,4) < df_to_send[DATE_COLONNE]) & (datetime.datetime(2019,12,7) > df_to_send[DATE_COLONNE])), 'Salle A.1.1'] = 3
     
     ####
-    return df_to_send.to_json(orient='index')
+    #return df_to_send.to_json(orient='index')
+    
+    return format_to_send_json(analyse_conseil_data_open)

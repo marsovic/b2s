@@ -14,6 +14,7 @@ class Customer extends Component {
         userSchema: null,  // JSON des relations circuits/salles
         listRooms: null,   // Liste des pieces venant du ProcessingCSV
         listColumns: null, // Liste des colonnes venant du ProcessingCSV
+        rawFile: null,
         loading: true,
         message: null
     }
@@ -61,21 +62,24 @@ class Customer extends Component {
                     }
                     return null;
                 });
-                // console.log(actualUser.data)
+
                 this.setState({ userData: actualUser, loading: false })
             })
             .catch((err) => {
                 console.log(err);
                 this.setState({ loading: false });
             });
-        console.log(this.state.userSchema)
+
         if (this.state.userSchema === null) {
-            this.handleDataUser();
+            this.handleDataUser(this.state.userSchema, this.state.rawFile);
         }
     }
 
-    handleSchema = (newSchema) => {
-        this.setState({ userSchema: newSchema });
+    handleSchema = (newSchema, dataFile) => {
+        this.setState({
+            userSchema: newSchema,
+            rawFile: dataFile
+        });
 
         const options = {
             headers: {
@@ -91,6 +95,8 @@ class Customer extends Component {
             "schema": JSON.stringify(newSchema)
         }
 
+        this.handleDataUser(newSchema, dataFile);
+
         axios
             .put(url, updatedUser, options)
             .then((res) => {
@@ -101,15 +107,20 @@ class Customer extends Component {
             });
     }
 
-    handleDataUser = () => {
-        console.log(this.state.loading)
+    handleDataUser = (schema, file) => {
         this.setState({ loading: true, message: "Calcul des conseils" })
 
-        fetch('/time')
-            .then(res => res.json())
-            .then(data => {
-                console.log("yolo", JSON.parse(data.time))
-                this.setState({ userAdvices: JSON.parse(data.time) })
+        const formData = new FormData();
+        
+        formData.append("dataSchema", JSON.stringify(schema));
+        formData.append("file", file);
+
+        axios
+            .post("/api/upload", formData)
+            .then(res => {
+                console.log(res.advice)
+                this.setState({ userAdvices: JSON.parse(res.advices) })
+
                 // Enregistrement en BDD des infos
                 const options = {
                     headers: {
@@ -122,63 +133,65 @@ class Customer extends Component {
                 let url = "https://parseapi.back4app.com/users/" + this.state.userData.objectId;
 
                 const updatedUser = {
-                    "advices": data.time
+                    "advices": res.advices
                 }
 
                 axios
                     .put(url, updatedUser, options)
                     .then((res) => {
+                        console.log(res)
                         this.setState({ loading: false, message: null });
                     })
                     .catch((err) => {
+                        console.log(err)
                         this.setState({ loading: false, message: null });
                     });
-            });
+            })
+            .catch(err => {
+                console.log(err)
+            })
     }
 
 
+render() {
+    let toShow = null;
+    let fileToShow = null;
 
-    render() {
-        let toShow = null;
-        let fileToShow = null;
-
-        if (this.state.loading) {
-            toShow = <Spinner message={this.state.message} />
-        } else {
-            if (this.state.userData !== null) // L'utilisateur possède déja des données, on affiche juste ce qui existe
-            {
-                if (this.state.userData.data !== undefined && this.state.userData.data.trim() !== "")
-                //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-                {
-                    //console.log("schema in Customer", this.state.userSchema)
-                    //
-                    console.log("advices in Customer", this.state.userAdvices)
-
+    if (this.state.loading) {
+        toShow = <Spinner message={this.state.message} />
+    } else {
+        if (this.state.userData !== null) // L'utilisateur possède déja des données, on affiche juste ce qui existe
+        {
+            if (this.state.userData.data !== undefined && this.state.userData.data.trim() !== "") { /* ----------------------------> LOUIS <---------------------------- */
+                toShow =
+                    <div>
+                        <p>Yolo ! c'est le client {this.state.user}</p>
+                        <p>Un fichier trouvé: {this.state.userData.data.name} </p>
+                    </div>
+            }
+            else { // On demande de saisir des données puis on calcule
+                if (this.state.userSchema === null) {
+                    toShow = <FormCircuit userId={this.state.userData.objectId} handleSchema={this.handleSchema} />
+                } else {
+                    /* L'utilisateur a déjà rempli les infos concernant les circuits, on :
+                        - calcul les conseils.
+                        - sauvegarde les données en BDD.
+                    */
                     toShow =
                         <ListAdvices advices={this.state.userAdvices} schema={this.state.userSchema} fullData={this.state.listRooms} listColumns={this.state.listColumns} />
                 }
-                else { // On demande de saisir des données puis on calcule
-                    if (this.state.userSchema === null) {
-                        toShow = <FormCircuit userId={this.state.userData.objectId} handleSchema={this.handleSchema} />
-                    } else {
-                        /* L'utilisateur a déjà rempli les infos concernant les circuits, on :
-                            - calcul les conseils.
-                            - sauvegarde les données en BDD.
-                        */
-                        toShow = <p> On calcule les advices</p>
-                    }
-                }
             }
         }
-
-
-        return (
-            <Aux >
-                {toShow}
-                {fileToShow}
-            </Aux>
-        )
     }
+
+
+    return (
+        <Aux >
+            {toShow}
+            {fileToShow}
+        </Aux>
+    )
+}
 }
 
 export default Customer;

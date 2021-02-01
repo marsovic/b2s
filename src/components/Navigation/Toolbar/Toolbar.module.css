@@ -37,8 +37,13 @@
 }
 
 .Logo {
-    padding-top: 11px;
     height: 100%;
+}
+
+.Logo img{
+    background-color: white;
+    height: 80%;
+    margin-top: 1.5%
 }
 
 @media (max-width:499px) {
