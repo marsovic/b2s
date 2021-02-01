@@ -53,8 +53,8 @@ class LinearChart extends Component {
             keys: [],
             maxLine: 150,
             colors: Colors,
-            refAreaLeft: (this.props.refAreaLeft === null) ? '' : this.props.refAreaLeft,
-            refAreaRight: (this.props.refAreaRight === null) ? '' : this.props.refAreaRight,
+            refAreaLeft: (this.props.refAreaLeft === null) ? '' : new Date(this.props.refAreaLeft).getTime() ,
+            refAreaRight: (this.props.refAreaRight === null) ? '' : new Date(this.props.refAreaRight).getTime(),
 
             //VARIBALES ZOOM
             /*left: 'dataMin',
@@ -215,6 +215,13 @@ class LinearChart extends Component {
          
                         
     }*/
+    formatTooltipLablel(label){
+        //console.log("FORMATER",label )
+        let date = new Date(label);
+        let returnValue = date.getDate() + "/" + date.getMonth() + "/" +date.getFullYear();
+        return returnValue;
+        
+    }
 
     formatXAxis = (tickItem) => {
 //console.log("FORMATER",tickItem )
@@ -439,10 +446,10 @@ class LinearChart extends Component {
                             height={this.state.graphHeight}
                             data={this.state.data}>
                             <CartesianGrid strokeDasharray={this.state.dashArray} />
-                            <XAxis dataKey={this.state.XAxisName} tickFormatter={this.formatXAxis}/>
+                            <XAxis dataKey={this.state.XAxisName} tickFormatter={this.formatXAxis} type = "number"/>
                             <YAxis dataKey={this.state.YAxisName} />
                             {this.state.lines}
-                            <Tooltip />
+                            <Tooltip labelFormatter = {this.formatTooltipLablel}/>
                             <ReferenceArea x1={this.state.refAreaLeft} x2={this.state.refAreaRight} strokeOpacity={0.3} />
                             <Legend height={60} />
                             {
