@@ -451,7 +451,7 @@ def format_to_send_csv(data: pd.core.frame.DataFrame, full_data: pd.core.frame.D
                 ratio = ratio_error_between_date(full_data, analyse_point, name, conseil, analyse[name][conseil][0]['Debut'][index], analyse[name][conseil][0]['Fin'][index], colonne_date)
                 
                 if (str(analyse[name][conseil][0]['Debut'][index]) == data['Start']).any() and (str(analyse[name][conseil][0]['Fin'][index]) == data['End']).any():
-                    truth_table = (analyse[name][conseil][0]['Debut'][index] == data['Start']) & (analyse[name][conseil][0]['Fin'][index] == data['End'])
+                    truth_table = ((str(analyse[name][conseil][0]['Debut'][index]) == data['Start']) & (str(analyse[name][conseil][0]['Fin'][index]) == data['End']))
                     data.loc[truth_table, name] = conseil + '\n' + "{0:.1%}".format(ratio)
                 else:
                     data = data.append({ name   : conseil + '\n' + "{0:.1%}".format(ratio),
