@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-    LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer,ReferenceArea
+    LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, ReferenceArea
 } from 'recharts';
 
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -383,8 +383,9 @@ class LinearChart extends Component {
 
     render() {
 
-        console.log("left",this.state.refAreaLeft)
-        console.log("right",this.state.refAreaRight)
+        console.log("left", this.state.refAreaLeft)
+        console.log("right", this.state.refAreaRight)
+        console.log("data", this.state.data)
 
         return (
 
@@ -406,10 +407,11 @@ class LinearChart extends Component {
                             <YAxis dataKey={this.state.YAxisName} />
                             {this.state.lines}
                             <Tooltip />
+                            <ReferenceArea x1={this.state.refAreaLeft} x2={this.state.refAreaRight} strokeOpacity={0.3} />
                             <Legend height={60} />
                             {
                                 (this.state.refAreaLeft && this.state.refAreaRight) ? (
-                                    <ReferenceArea x1={this.state.refAreaLeft} strokeOpacity={0.3} />) : null
+                                    <ReferenceArea x1={this.state.refAreaLeft} x2={this.state.refAreaRight} strokeOpacity={0.3} />) : null
                             }
                         </LineChart>
                     </ResponsiveContainer>

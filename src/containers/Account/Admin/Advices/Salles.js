@@ -41,16 +41,37 @@ class Salles extends Component {
                 //console.log("this.state.rooms[key]",this.state.rooms[key])
                 return (
                     <Nav.Item>
-                        <Nav.Link eventKey={this.state.rooms[key]}>{this.state.rooms[key]}</Nav.Link>
+                        <Nav.Link key={this.state.rooms[key] + 1} eventKey={this.state.rooms[key]}>{this.state.rooms[key]}</Nav.Link>
                     </Nav.Item>
                 )
             })
 
         this.state.content = Object.keys(this.state.rooms)
             .map(key => {
+                let advicesList = [];
+
+               /* for (let i in this.state.advices) {
+                    if (this.state.advices[i]) {
+                        console.log("this.state.advices[i]",this.state.advices[i])
+                        console.log("GOT THE ROOM", this.state.advices[i].salle)
+                        console.log("GOT THE ADVICE", this.state.advices[i].conseil)
+                        advicesList.push(this.state.advices[i].conseil)
+
+                    }
+
+                }
+                for(let i in advicesList){
+                    console.log("GOT THE ADVICE NAME", advicesList[i].nom)
+                    for(let j in advicesList[i].liste){
+                        console.log("GOT THE ADVICE DEBUT", advicesList[i].liste[j].display_Debut)
+
+                        
+                    }
+                }*/
+
                 return (
                     <Tab.Pane eventKey={this.state.rooms[key]}>
-                        <Advices />
+                        <Advices key={this.state.rooms[key] + 2} currentRoom={this.state.rooms[key]} data={this.state.data} advices={this.props.advices} />
                     </Tab.Pane>
                 )
             })

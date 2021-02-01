@@ -164,22 +164,12 @@ render() {
         {
             if (this.state.userData.data !== undefined && this.state.userData.data.trim() !== "") { /* ----------------------------> LOUIS <---------------------------- */
                 toShow =
-                    <div>
-                        <p>Yolo ! c'est le client {this.state.user}</p>
-                        <p>Un fichier trouvé: {this.state.userData.data.name} </p>
-                    </div>
+                <ListAdvices advices={this.state.userAdvices} schema={this.state.userSchema} fullData={this.state.listRooms} listColumns={this.state.listColumns} />
             }
             else { // On demande de saisir des données puis on calcule
                 if (this.state.userSchema === null) {
                     toShow = <FormCircuit userId={this.state.userData.objectId} handleSchema={this.handleSchema} />
-                } else {
-                    /* L'utilisateur a déjà rempli les infos concernant les circuits, on :
-                        - calcul les conseils.
-                        - sauvegarde les données en BDD.
-                    */
-                    toShow =
-                        <ListAdvices advices={this.state.userAdvices} schema={this.state.userSchema} fullData={this.state.listRooms} listColumns={this.state.listColumns} />
-                }
+                } 
             }
         }
     }

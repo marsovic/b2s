@@ -47,16 +47,17 @@ class ListAdvices extends Component {
     render() {
 
         //console.log("full data", this.state.data)
-        console.log("advices", this.state.advices)
-        //console.log("schema", this.state.schema)
+        //console.log("advices", this.state.advices)
+        console.log("schema", this.state.schema)
         //console.log("columnsName", this.state.columnsName)    
 
         return (
             <Aux >
-            <LinearChart data={this.state.data} columns={this.state.columnsName} refAreaLeft="12/2/20" refAreaRight="12/3/20"/>
+                <LinearChart data={this.state.data} columns={this.state.columnsName} refAreaLeft={"8/12/19"} refAreaRight={"10/12/19"}/>
             <Circuits columnsName = {this.state.columnsName} data = {this.state.data} schema = {this.state.schema} advices = {this.state.advices}/>
             </Aux>
         )
+//            <LinearChart data={this.state.data} columns={this.state.columnsName} refAreaLeft="12/2/20" refAreaRight="12/3/20"/>
 
         /* return (
              <Aux >

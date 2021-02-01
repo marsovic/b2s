@@ -27,6 +27,9 @@ class Advices extends Component {
         super(props);
         this.state = {
             activeTab: '',
+            currentRoom : this.props.currentRoom,
+            data : this.props.data,
+            advices : this.props.advices,
 
         }
     }
