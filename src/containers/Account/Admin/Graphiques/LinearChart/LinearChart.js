@@ -135,6 +135,23 @@ class LinearChart extends Component {
             })
         this.state.lines.splice(0, 1);
 
+        let formatedData = this.state.data;
+         
+       Object.keys(formatedData)
+            .map(key => {
+
+                formatedData[key]["Date (Europe/Paris)"] = new Date(formatedData[key]["Date (Europe/Paris)"]).getTime() 
+                
+            })
+
+        console.log("formated", formatedData)
+
+        this.state.data = formatedData;
+        /*let date = new Date("1/1/20").getTime();
+        let reverseDate = new Date(date)
+        console.log("TEST DATE EN NOMBRE", {date} )
+        console.log("TEST REVERSE", {reverseDate} )*/
+
         this.updateDisplayedLines = this.updateDisplayedLines.bind(this);
         this.changeColor = this.changeColor.bind(this);
 
@@ -198,6 +215,23 @@ class LinearChart extends Component {
          
                         
     }*/
+
+    formatXAxis = (tickItem) => {
+//console.log("FORMATER",tickItem )
+        let date = new Date(tickItem);
+        let returnValue = date.getDate() + "/" + date.getMonth() + "/" +date.getFullYear();
+        return returnValue;
+      }
+
+    /*renderCustomAxisTick = ({ x, y, payload }) => {
+      
+        let value = new Date(payload.value).toString();
+       
+        return (
+           {date: value} 
+        );
+      }*/
+      
 
     deleteColor(name) {
         let colorsCopy = this.state.colors;
@@ -387,6 +421,8 @@ class LinearChart extends Component {
         console.log("right", this.state.refAreaRight)
         console.log("data", this.state.data)
 
+        
+
         return (
 
             <>
@@ -403,7 +439,7 @@ class LinearChart extends Component {
                             height={this.state.graphHeight}
                             data={this.state.data}>
                             <CartesianGrid strokeDasharray={this.state.dashArray} />
-                            <XAxis dataKey={this.state.XAxisName} />
+                            <XAxis dataKey={this.state.XAxisName} tickFormatter={this.formatXAxis}/>
                             <YAxis dataKey={this.state.YAxisName} />
                             {this.state.lines}
                             <Tooltip />
