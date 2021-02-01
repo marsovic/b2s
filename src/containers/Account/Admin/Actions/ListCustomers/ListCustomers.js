@@ -29,11 +29,13 @@ class EditCustomers extends Component {
         this.setState({ updated: !this.state.updated })
     }
 
-    sendJSON = (data1, data2) => {
+    sendJSON = (data1, data2, file) => {
         console.log(data1)
         console.log(data2)
+        console.log(file)
 
     }
+    
     render() {
         return (
             <Aux >

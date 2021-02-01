@@ -26,8 +26,7 @@ class FormCircuits extends Component {
     }
 
     handleFile = (data1, data2, file) => {
-        var listRoom = data1;
-
+        var listRoom = data2;
         for (var key of Object.keys(listRoom)) {
             listRoom[key]['isCircuit'] = false;
             listRoom[key]['isRoom'] = false;

@@ -67,7 +67,7 @@ def analyse(originalCSV, schemaJSON):
     name_capteur = df.columns.values.tolist()
     del name_capteur[0], name_capteur[0]
     
-    df[DATE_COLONNE] = pd.to_datetime(df[DATE_COLONNE], format='%d/%m/%Y %H:%M')
+    df[DATE_COLONNE] = pd.to_datetime(df[DATE_COLONNE], format='%d/%m/%Y %H:%M:%S')
     
     for name in name_capteur:
         df[name] = df[name].str.replace(',' , '.').astype(float)
@@ -296,10 +296,6 @@ def analyse(originalCSV, schemaJSON):
     ####
     df_to_send = pd.DataFrame(columns = ["Start", "End"] + df.columns[2:].to_list())
     
-    #df_to_send = fct.format_to_send_csv(df_to_send, df, analyse_conseil_data_open, analyse_data_by_point_open, DATE_COLONNE)
-    #df_to_send = fct.format_to_send_csv(df_to_send, df, analyse_conseil_data_holidays, analyse_data_by_point_holidays, DATE_COLONNE)
-    
-    df_to_send.to_csv('Analyse.csv', sep=';', index=False) 
     
     #df_to_send.loc[((datetime.datetime(2019,12,4) < df_to_send[DATE_COLONNE]) & (datetime.datetime(2019,12,7) > df_to_send[DATE_COLONNE])), 'Salle A.1.1'] = 3
     
