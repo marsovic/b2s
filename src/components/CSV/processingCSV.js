@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import * as XLSX from 'xlsx';
+import iconv from "iconv-lite"
 
 
 
@@ -37,11 +38,28 @@ class ParseCSV extends Component {
     // process CSV data
     processData = (dataString, file) => {
         const dataStringLines = dataString.split(/\r\n|\n/);
-        const headers = dataStringLines[0].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
+        let headers = dataStringLines[0].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
+
+        // Decoding special characters
+        headers = headers.map(strings => {
+            let decodedFile = iconv.decode(strings, 'utf-8');
+            console.log(decodedFile)
+            return (decodedFile)
+        })
+
+        console.log(headers)
+
 
         const list = [];
         for (let i = 1; i < dataStringLines.length; i++) {
-            const row = dataStringLines[i].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
+            let row = dataStringLines[i].split(/,(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)/);
+            
+            // Decoding special characters
+            row = row.map(strings => {
+                let decodedFile = iconv.decode(strings, 'utf-8');
+                return (decodedFile)
+            })
+
             if (headers && row.length === headers.length) {
                 const obj = {};
                 for (let j = 0; j < headers.length; j++) {

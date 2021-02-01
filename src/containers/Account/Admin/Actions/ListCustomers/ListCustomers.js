@@ -4,6 +4,8 @@ import ListCustomers from "../../../../../components/Users/ListCustomers/ListCus
 import Modal from "../../../../../components/UI/Modal/Modal"
 import Aux from "../../../../../hoc/Aux/Aux"
 
+import CSV from "../../../../../components/CSV/processingCSV"
+
 class EditCustomers extends Component {
     state = {
         userSelected: false,
@@ -27,6 +29,11 @@ class EditCustomers extends Component {
         this.setState({ updated: !this.state.updated })
     }
 
+    sendJSON = (data1, data2) => {
+        console.log(data1)
+        console.log(data2)
+
+    }
     render() {
         return (
             <Aux >
@@ -38,6 +45,8 @@ class EditCustomers extends Component {
                 </Modal>
                 <ListCustomers
                     spec={this.props.spec} />
+
+                <CSV sendJSON={this.sendJSON}/>
             </Aux>
         )
     }
