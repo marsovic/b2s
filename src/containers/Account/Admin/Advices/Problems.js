@@ -27,46 +27,70 @@ class Problems extends Component {
         super(props);
         this.state = {
             activeTab: '',
-
+            currentAdvice: this.props.currentAdvice,
+            data: this.props.data,
+            problems: this.props.problems,
+            problemsDisplayed: null,
         }
+
+        this.handleDisplay = this.handleDisplay.bind(this);
+
+        this.state.problemsDisplayed = Object.keys(this.state.problems)
+            .map(key => {
+                console.log("ADVICE -----------------------------", this.props.currentAdvice)
+                console.log("problem", this.state.problems[key])
+
+                return (
+
+                    <tr>
+                        <td>{this.state.problems[key].debut}</td>
+                        <td><Button id={this.state.problems[key].debut} onClick={this.handleDisplay} /></td>
+                    </tr>
+
+                )
+
+            })
+
+    }
+
+    handleDisplay(event) {
+        console.log("WTF", this.state.problems)
+        let problem;
+        for (let i in this.state.problems) {
+            if (this.state.problems[i].debut === event.target.id)
+                problem = this.state.problems[i];
+        }
+
+        let data;
+
+        for (let i in this.state.data) {
+//------------------------------------------------------------------------------------------------------
+        }
+
+        console.log("debut", problem.debut)
+        console.log("fin", problem.fin)
+
+
+
     }
 
     render() {
 
-        /*console.log("full data", this.state.data)
-        console.log("advices", this.state.advices)
+        console.log("full data", this.state.data)
+        /*console.log("advices", this.state.advices)
         console.log("schema", this.state.schema)
         console.log("columnsName", this.state.columnsName)*/
-
+        console.log("problems", this.state.problems)
         return (
             <Table striped bordered hover size="sm">
                 <thead>
                     <tr>
-                        <th>#</th>
                         <th>Date</th>
-                        <th>Heure</th>
                         <th>Voir</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>12/12/2020</td>
-                        <td>00:01</td>
-                        <td><Button /></td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>12/12/2020</td>
-                        <td>00:01</td>
-                        <td><Button /></td>
-                    </tr>
-                    <tr>
-                        <td>1</td>
-                        <td>12/12/2020</td>
-                        <td>00:01</td>
-                        <td><Button /></td>
-                    </tr>
+                    {this.state.problemsDisplayed}
                 </tbody>
             </Table>
         )

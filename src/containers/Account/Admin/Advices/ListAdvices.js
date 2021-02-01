@@ -53,7 +53,6 @@ class ListAdvices extends Component {
 
         return (
             <Aux >
-                <LinearChart data={this.state.data} columns={this.state.columnsName} refAreaLeft={"8/12/19"} refAreaRight={"10/12/19"}/>
             <Circuits columnsName = {this.state.columnsName} data = {this.state.data} schema = {this.state.schema} advices = {this.state.advices}/>
             </Aux>
         )

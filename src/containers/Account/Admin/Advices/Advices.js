@@ -27,41 +27,70 @@ class Advices extends Component {
         super(props);
         this.state = {
             activeTab: '',
-            currentRoom : this.props.currentRoom,
-            data : this.props.data,
-            advices : this.props.advices,
+            currentRoom: this.props.currentRoom,
+            data: this.props.data,
+            advices: this.props.advices,
+            nav: null,
+            content: null,
 
         }
+
+        this.state.nav = Object.keys(this.state.advices)
+            .map(key => {
+                console.log("salle ------------------------------------------ ", this.props.currentRoom)
+                //console.log("Advices", this.state.advices[key])
+                //console.log("key", key)
+
+
+                console.log("this.state.advices[key]", this.state.advices[key])
+                //console.log("i", i)
+                //console.log("conseil : " ,this.state.advices[key].nom)
+                return (
+                    <Nav.Item>
+                        <Nav.Link key={this.state.advices[key].nom + 1} eventKey={this.state.advices[key].nom}>{this.state.advices[key].nom}</Nav.Link>
+                    </Nav.Item>
+                )
+
+
+            })
+
+        this.state.content = Object.keys(this.state.advices)
+            .map(key => {
+
+
+                let problemsList = this.state.advices[key].liste;
+
+                return (
+                    <Tab.Pane eventKey={this.state.advices[key].nom}>
+                        <Problems key={this.state.advices[key].nom + 2} currentAdvice={this.state.advices[key].nom} data={this.state.data} problems={problemsList} />
+                    </Tab.Pane>
+                )
+
+
+            })
+
     }
 
-    render() {
 
-        /*console.log("full data", this.state.data)
+    render() {
+        //console.log("current room", this.state.currentRoom)
+
+        //console.log("full data", this.state.data)
         console.log("advices", this.state.advices)
-        console.log("schema", this.state.schema)
-        console.log("columnsName", this.state.columnsName)*/
+        //console.log("schema", this.state.schema)
+        //console.log("columnsName", this.state.columnsName)
 
         return (
             <Tab.Container id="left-tabs-example" activeKey={this.state.key} onSelect={key => this.setState({ key })}>
                 <Row>
                     <Col sm={3}>
                         <Nav variant="pills" className="flex-column">
-                            <Nav.Item>
-                                <Nav.Link eventKey="first">Tab 1</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                                <Nav.Link eventKey="second">Tab 2</Nav.Link>
-                            </Nav.Item>
+                            {this.state.nav}
                         </Nav>
                     </Col>
                     <Col sm={9}>
                         <Tab.Content>
-                            <Tab.Pane eventKey="first">
-                                <Problems />
-                            </Tab.Pane>
-                            <Tab.Pane eventKey="second">
-                                <Problems />
-                            </Tab.Pane>
+                            {this.state.content}
                         </Tab.Content>
                     </Col>
                 </Row>

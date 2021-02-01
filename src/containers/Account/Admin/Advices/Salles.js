@@ -38,7 +38,7 @@ class Salles extends Component {
 
         this.state.nav = Object.keys(this.state.rooms)
             .map(key => {
-                //console.log("this.state.rooms[key]",this.state.rooms[key])
+                //console.log("this.state.rooms[key]", this.state.rooms[key])
                 return (
                     <Nav.Item>
                         <Nav.Link key={this.state.rooms[key] + 1} eventKey={this.state.rooms[key]}>{this.state.rooms[key]}</Nav.Link>
@@ -50,28 +50,30 @@ class Salles extends Component {
             .map(key => {
                 let advicesList = [];
 
-               /* for (let i in this.state.advices) {
+                for (let i in this.state.advices) {
                     if (this.state.advices[i]) {
-                        console.log("this.state.advices[i]",this.state.advices[i])
-                        console.log("GOT THE ROOM", this.state.advices[i].salle)
-                        console.log("GOT THE ADVICE", this.state.advices[i].conseil)
-                        advicesList.push(this.state.advices[i].conseil)
+                        if (this.state.advices[i].salle === this.state.rooms[key]) {
+                            //console.log("this.state.advices[i]", this.state.advices[i])
+                            //console.log("GOT THE ROOM", this.state.advices[i].salle)
+                            console.log("GOT THE ADVICE", this.state.advices[i].conseil)
 
+                            advicesList = this.state.advices[i].conseil;
+                        }
                     }
 
                 }
-                for(let i in advicesList){
-                    console.log("GOT THE ADVICE NAME", advicesList[i].nom)
-                    for(let j in advicesList[i].liste){
-                        console.log("GOT THE ADVICE DEBUT", advicesList[i].liste[j].display_Debut)
-
-                        
-                    }
-                }*/
+                /* for(let i in advicesList){
+                     console.log("GOT THE ADVICE NAME", advicesList[i].nom)
+                     for(let j in advicesList[i].liste){
+                         console.log("GOT THE ADVICE DEBUT", advicesList[i].liste[j].display_Debut)
+ 
+                         
+                     }
+                 }*/
 
                 return (
                     <Tab.Pane eventKey={this.state.rooms[key]}>
-                        <Advices key={this.state.rooms[key] + 2} currentRoom={this.state.rooms[key]} data={this.state.data} advices={this.props.advices} />
+                        <Advices key={this.state.rooms[key] + 2} currentRoom={this.state.rooms[key]} data={this.state.data} advices={advicesList} />
                     </Tab.Pane>
                 )
             })
@@ -85,7 +87,7 @@ class Salles extends Component {
         console.log("schema", this.state.schema)
         console.log("columnsName", this.state.columnsName)*/
 
-        console.log("ROOMS", this.state.rooms)
+        //console.log("ROOMS", this.state.rooms)
         //console.log("circuit", this.state.circuit)
 
         //console.log("DATA", this.state.data)
