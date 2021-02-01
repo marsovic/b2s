@@ -10,4 +10,5 @@ def upload_file():
     file = request.files['file'].read().decode("utf-8")
     lines = file.splitlines()
     advices = analyse(lines, schema)
+    print(advices)
     return {"advices": advices}

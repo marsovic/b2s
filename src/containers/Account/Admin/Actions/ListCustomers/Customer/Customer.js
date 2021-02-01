@@ -118,8 +118,8 @@ class Customer extends Component {
         axios
             .post("/api/upload", formData)
             .then(res => {
-                console.log(res.advice)
-                this.setState({ userAdvices: JSON.parse(res.advices) })
+                console.log(res.data.advices)
+                this.setState({ userAdvices: JSON.parse(res.data.advices) })
 
                 // Enregistrement en BDD des infos
                 const options = {
@@ -133,8 +133,9 @@ class Customer extends Component {
                 let url = "https://parseapi.back4app.com/users/" + this.state.userData.objectId;
 
                 const updatedUser = {
-                    "advices": res.advices
+                    "advices": res.data.advices
                 }
+
 
                 axios
                     .put(url, updatedUser, options)
