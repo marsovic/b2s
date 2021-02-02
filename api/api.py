@@ -3,7 +3,7 @@ import pandas as pd
 from PFE import analyse 
 from flask import Flask, request
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../build', static_url_path='/internal')
 
 def num(s):
     try:
@@ -11,6 +11,18 @@ def num(s):
     except ValueError:
         return s
 
+@app.route('/internal')
+def index():
+    return app.send_static_file('index.html')
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', debug=False, port=os.environ.get('PORT', 80))
+
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
+
+    
 @app.route('/api/upload', methods = ['POST'])
 def upload_file():
     schema = request.form['dataSchema']
