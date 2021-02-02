@@ -3,7 +3,7 @@ import pandas as pd
 from PFE import analyse 
 from flask import Flask, request
 
-app = Flask(__name__, static_folder='./build', static_url_path='/internal')
+app = Flask(__name__, static_folder='./build', static_url_path='/')
 
 def num(s):
     try:
@@ -11,7 +11,7 @@ def num(s):
     except ValueError:
         return s
 
-@app.route('/internal')
+@app.route('/')
 def index():
     return app.send_static_file('index.html')
 
