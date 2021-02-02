@@ -18,11 +18,6 @@ def upload_file():
     workingHours = json.loads(request.form['workingHours'])
     file = request.files['file'].read().decode("utf-8")
     lines = file.splitlines()
-    
-    print(lines)
-    print(schema)
-    print(openDays)
-    print(workingHours)
 
     advices = analyse(lines, schema, openDays, workingHours)
     return {"advices": advices}
@@ -42,7 +37,3 @@ def json_parse():
         
     return {"json": df.to_json(orient='index')}
 
-@app.route('/api/test', methods=['POST'])
-def json_demerde(): 
-    
-    return "yolo"
