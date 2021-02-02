@@ -12,6 +12,7 @@ class Rooms extends Component {
         circuits: this.props.circuits,
         rooms: this.props.rooms,
         loading: true,
+        ideal: this.props.rooms.map( room => {return( 20 )})
     }
 
     handleSubmit = (e) => {
@@ -38,10 +39,16 @@ class Rooms extends Component {
         this.props.handleRooms(true, this.state.rooms, circuitForRooms, physicForRooms, idealForRooms);
     }
 
+    handleChange = (event, room) => {
+        let copyIdeal = this.state.ideal;
+        copyIdeal[room] = event.target.value;
+        this.setState({ideal: copyIdeal});
+    }
+
     render() {
 
         // Printing the list of rooms
-        const toShow = this.state.rooms.map(room => {
+        const toShow = this.state.rooms.map((room,index) => {
             return (
                 <li>
                     <div className={styles.Label}>
@@ -67,7 +74,7 @@ class Rooms extends Component {
                     <div className={styles.Select2}>
                         {/* INPUT FOR IDEAL PHYSICS*/}
                         <label for="roomForIdeal"> Grandeur idéale </label>
-                        <input type="number" id={room['name']} name="roomForIdeal" min="-10" max="30" step ="1"/>
+                        <input type="number" id={room['name']} name="roomForIdeal" value={this.state.ideal[index]} onChange={(e) => this.handleChange(e, index)}  min="-10" max="30" step ="1"/>
                     </div>
                 </li>
             )

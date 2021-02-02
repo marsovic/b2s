@@ -9,18 +9,20 @@
 .weekDays input[type="checkbox"] + label {
   display: inline-block;
   border-radius: 6px;
-  background: red;
+  background: rgb(170,170,170);
   height: 40px;
   width: 50px;
   margin-right: 3px;
   line-height: 40px;
   text-align: center;
   cursor: pointer;
+  font-weight: bolder;
 }
 
 .weekDays input[type="checkbox"]:checked + label {
-  background: #2ad705;
+  background:rgb(123, 169, 62);
   color: #ffffff;
+  font-weight: bolder;
 }
 
 .hours {
