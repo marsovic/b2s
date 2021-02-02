@@ -24,6 +24,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-api/venv/
+api/venv/bin/
+api/venv/include/
+api/venv/lib/
 api/__pycache__/
 .eslintcache
