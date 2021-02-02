@@ -14,6 +14,8 @@ class Customer extends Component {
         userSchema: null,  // JSON des relations circuits/salles
         listRooms: null,   // Liste des pieces venant du ProcessingCSV
         listColumns: null, // Liste des colonnes venant du ProcessingCSV
+        openDays: null,
+        workingHours: null,
         rawFile: null,
         loading: true,
         message: null
@@ -75,10 +77,12 @@ class Customer extends Component {
         }
     }
 
-    handleSchema = (newSchema, dataFile) => {
+    handleSchema = (newSchema, dataFile, days, hours) => {
         this.setState({
             userSchema: newSchema,
-            rawFile: dataFile
+            rawFile: dataFile,
+            openDays: days,
+            workingHours: hours
         });
 
         const options = {
@@ -95,7 +99,7 @@ class Customer extends Component {
             "schema": JSON.stringify(newSchema)
         }
 
-        this.handleDataUser(newSchema, dataFile);
+        this.handleDataUser(newSchema, dataFile, days, hours);
 
         axios
             .put(url, updatedUser, options)
@@ -107,19 +111,21 @@ class Customer extends Component {
             });
     }
 
-    handleDataUser = (schema, file) => {
+    handleDataUser = (schema, file, days, hours) => {
         this.setState({ loading: true, message: "Calcul des conseils" })
 
         const formData = new FormData();
-        
+
         formData.append("dataSchema", JSON.stringify(schema));
+        formData.append("openDays", JSON.stringify(days));
+        formData.append("workingHours", JSON.stringify(hours));
         formData.append("file", file);
 
         axios
             .post("/api/upload", formData)
             .then(res => {
-                console.log(res.advice)
-                this.setState({ userAdvices: JSON.parse(res.advices) })
+                console.log(res.data.advices)
+                this.setState({ userAdvices: JSON.parse(res.data.advices) })
 
                 // Enregistrement en BDD des infos
                 const options = {
@@ -133,8 +139,9 @@ class Customer extends Component {
                 let url = "https://parseapi.back4app.com/users/" + this.state.userData.objectId;
 
                 const updatedUser = {
-                    "advices": res.advices
+                    "advices": res.data.advices
                 }
+
 
                 axios
                     .put(url, updatedUser, options)
@@ -152,36 +159,92 @@ class Customer extends Component {
             })
     }
 
+    handleErasingData = () => {
+        this.setState({ loading: true });
 
-render() {
-    let toShow = null;
-    let fileToShow = null;
+        // Enregistrement en BDD des infos
+        const options = {
+            headers: {
+                "X-Parse-Application-Id": process.env.REACT_APP_APP_ID,
+                "X-Parse-REST-API-Key": process.env.REACT_APP_API_KEY,
+                "X-Parse-Session-Token": sessionStorage.getItem("token")
+            }
+        };
 
-    if (this.state.loading) {
-        toShow = <Spinner message={this.state.message} />
-    } else {
-        if (this.state.userData !== null) // L'utilisateur possède déja des données, on affiche juste ce qui existe
-        {
-            if (this.state.userData.data !== undefined && this.state.userData.data.trim() !== "") { /* ----------------------------> LOUIS <---------------------------- */
-                toShow =
-                <ListAdvices advices={this.state.userAdvices} schema={this.state.userSchema} fullData={this.state.listRooms} listColumns={this.state.listColumns} />
-            }
-            else { // On demande de saisir des données puis on calcule
-                if (this.state.userSchema === null) {
-                    toShow = <FormCircuit userId={this.state.userData.objectId} handleSchema={this.handleSchema} />
-                } 
-            }
+        let url = "https://parseapi.back4app.com/users/" + this.state.userData.objectId;
+
+        const updatedUser = {
+            "advices": "",
+            "schema": "",
+            "data": "",
+            "columns": ""
         }
+
+
+        axios
+            .put(url, updatedUser, options)
+            .then((res) => {
+                console.log(res)
+                alert("Données Client CSV supprimées. \n Veuillez actualiser la page.")
+                this.setState({
+                    loading: false,
+                    userAdvices: null,
+                    userSchema: null,
+                    listColumns: null,
+                    listRooms: null,
+                    message: null,
+                    openDays: null,
+                    workingHours: null,
+                    rawFile: null
+                });
+            })
+            .catch((err) => {
+                console.log(err)
+                this.setState({ loading: false, message: null });
+            });
+
+
     }
 
 
-    return (
-        <Aux >
-            {toShow}
-            {fileToShow}
-        </Aux>
-    )
-}
+    render() {
+        let toShow = null;
+        let fileToShow = null;
+
+        if (this.state.loading) {
+            toShow = <Spinner message={this.state.message} />
+        } else {
+            if (this.state.userData !== null) // L'utilisateur possède déja des données, on affiche juste ce qui existe
+            {
+                if (this.state.userData.data !== undefined && this.state.userData.data.trim() !== "") {
+                    console.log(this.state.userData.data)
+                    toShow =
+                        <div>
+                            <button onClick={this.handleErasingData}>Suppression des données en mémoire</button>
+                        </div>
+                }
+                else { // On demande de saisir des données puis on calcule
+                    if (this.state.userSchema === null) {
+                        toShow = <FormCircuit userId={this.state.userData.objectId} handleSchema={this.handleSchema} />
+                    } else {
+                        /* L'utilisateur a déjà rempli les infos concernant les circuits, on :
+                            - calcul les conseils.
+                            - sauvegarde les données en BDD.
+                        */
+                        toShow = <p> On calcule les advices</p>
+                    }
+                }
+            }
+        }
+
+
+        return (
+            <Aux >
+                {toShow}
+                {fileToShow}
+            </Aux>
+        )
+    }
 }
 
 export default Customer;

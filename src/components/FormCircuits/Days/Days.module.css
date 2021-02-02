@@ -1,0 +1,38 @@
+.weekDays {
+  margin: 40px;
+}
+
+.weekDays input {
+  display: none !important;
+}
+
+.weekDays input[type="checkbox"] + label {
+  display: inline-block;
+  border-radius: 6px;
+  background: rgb(170,170,170);
+  height: 40px;
+  width: 50px;
+  margin-right: 3px;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: bolder;
+}
+
+.weekDays input[type="checkbox"]:checked + label {
+  background:rgb(123, 169, 62);
+  color: #ffffff;
+  font-weight: bolder;
+}
+
+.hours {
+  margin: 40px;
+}
+
+.clocks {
+    margin: 10px;
+}
+
+.clocks label {
+    margin-right: 5px;
+}
