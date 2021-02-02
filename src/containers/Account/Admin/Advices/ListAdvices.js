@@ -46,9 +46,9 @@ class ListAdvices extends Component {
 
     render() {
 
-        //console.log("full data", this.state.data)
+        console.log("full data", this.state.data)
         //console.log("advices", this.state.advices)
-        console.log("schema", this.state.schema)
+        //console.log("schema", this.state.schema)
         //console.log("columnsName", this.state.columnsName)    
 
         return (

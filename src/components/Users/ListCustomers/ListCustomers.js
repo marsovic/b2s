@@ -52,7 +52,7 @@ class ListCustomers extends Component {
                             var temp = null;
                             if (this.state.users[key].right === "client") {
                                 temp = (
-                                    <NavLink tag="li" to={window.location.pathname + "/" + this.state.users[key].username}>
+                                    <NavLink tag="li" to={window.location.pathname + "/" + this.state.users[key].username.replaceAll(" ","")}>
                                         <li key={key + 1} >
                                             <p>{this.state.users[key].username}</p>
                                             <p> {this.state.users[key].right}</p>

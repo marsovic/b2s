@@ -39,7 +39,7 @@ class Customer extends Component {
             .get(url, options)
             .then((res) => {
                 res.data.results.map(user => {
-                    if (user.username === this.state.user) {
+                    if (user.username.replaceAll(" ","") === this.state.user) {
                         actualUser = user;
 
                         if (actualUser.data !== undefined && actualUser.data.trim() !== "") {
@@ -60,6 +60,16 @@ class Customer extends Component {
                         if (actualUser.advices !== undefined && actualUser.advices.trim() !== "") {
                             // Récupération des données pour la liste des colonnes
                             this.setState({ userAdvices: JSON.parse(actualUser.advices) })
+                        }
+
+                        if (actualUser.hours !== undefined && actualUser.hours.trim() !== "") {
+                            // Récupération des données pour la liste des colonnes
+                            this.setState({ workingHours: JSON.parse(actualUser.hours) })
+                        }
+
+                        if (actualUser.days !== undefined && actualUser.days.trim() !== "") {
+                            // Récupération des données pour la liste des colonnes
+                            this.setState({ openDays: JSON.parse(actualUser.days) })
                         }
                     }
                     return null;
@@ -221,6 +231,8 @@ class Customer extends Component {
                     toShow =
                         <div>
                             <button onClick={this.handleErasingData}>Suppression des données en mémoire</button>
+                            <ListAdvices advices={this.state.userAdvices} schema={this.state.userSchema} fullData={this.state.listColumns} listColumns={this.state.listRooms} />
+
                         </div>
                 }
                 else { // On demande de saisir des données puis on calcule
@@ -231,7 +243,12 @@ class Customer extends Component {
                             - calcul les conseils.
                             - sauvegarde les données en BDD.
                         */
-                        toShow = <p> On calcule les advices</p>
+
+
+
+                        toShow =
+                            <ListAdvices advices={this.state.userAdvices} schema={this.state.userSchema} fullData={this.state.listColumns} listColumns={this.state.listRooms} />
+
                     }
                 }
             }

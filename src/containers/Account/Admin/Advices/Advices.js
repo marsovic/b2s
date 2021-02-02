@@ -28,6 +28,7 @@ class Advices extends Component {
         this.state = {
             activeTab: '',
             currentRoom: this.props.currentRoom,
+            columnsName: this.props.columnsName,
             data: this.props.data,
             advices: this.props.advices,
             nav: null,
@@ -62,7 +63,7 @@ class Advices extends Component {
 
                 return (
                     <Tab.Pane eventKey={this.state.advices[key].nom}>
-                        <Problems key={this.state.advices[key].nom + 2} currentAdvice={this.state.advices[key].nom} data={this.state.data} problems={problemsList} />
+                        <Problems key={this.state.advices[key].nom + 2} currentAdvice={this.state.advices[key].nom} data={this.state.data} problems={problemsList} currentRoom={this.state.currentRoom} columnsName = {this.state.columnsName}/>
                     </Tab.Pane>
                 )
 

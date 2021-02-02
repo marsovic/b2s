@@ -87,7 +87,8 @@ class Cicruits extends Component {
                             }
                         }
                         //console.log("rooms in circuits", rooms)
-                        return (<Tab eventKey={currentCircuit} title={currentCircuit}> <Salles circuit={currentCircuit} rooms={rooms} data={this.state.data} advices={this.state.advices} /> </Tab>)
+                        if (rooms.length !== 0)
+                            return (<Tab eventKey={currentCircuit} title={currentCircuit}> <Salles circuit={currentCircuit} rooms={rooms} data={this.state.data} advices={this.state.advices} columnsName={this.state.columnsName} /> </Tab>)
 
                     }
 
@@ -117,8 +118,8 @@ class Cicruits extends Component {
 
                         }
                     }
-
-                    return (<Tab eventKey={currentCircuit} title={currentCircuit}> <Salles circuit={currentCircuit} rooms={rooms} data={this.state.data} advices={this.state.advices} /> </Tab>)
+                    if (rooms.length !== 0)
+                        return (<Tab eventKey={currentCircuit} title={currentCircuit}> <Salles circuit={currentCircuit} rooms={rooms} data={this.state.data} advices={this.state.advices} columnsName={this.state.columnsName} /> </Tab>)
 
 
                 }
@@ -149,7 +150,7 @@ class Cicruits extends Component {
         //console.log("CIRCUITS AFFICHES",this.state.circuitsDisplayed);
 
 
-        //console.log("full data", this.state.data)
+        console.log("full data", this.state.data)
         //console.log("advices", this.state.advices)
         //console.log("schema", this.state.schema)
         //console.log("columnsName", this.state.columnsName)

@@ -28,6 +28,7 @@ class Salles extends Component {
         this.state = {
             activeTab: '',
             circuit: this.props.circuit,
+            columnsName: this.props.columnsName,
             rooms: this.props.rooms,
             data: this.props.data,
             advices: this.props.advices,
@@ -73,7 +74,7 @@ class Salles extends Component {
 
                 return (
                     <Tab.Pane eventKey={this.state.rooms[key]}>
-                        <Advices key={this.state.rooms[key] + 2} currentRoom={this.state.rooms[key]} data={this.state.data} advices={advicesList} />
+                        <Advices key={this.state.rooms[key] + 2} currentRoom={this.state.rooms[key]} data={this.state.data} advices={advicesList} columnsName = {this.state.columnsName}/>
                     </Tab.Pane>
                 )
             })

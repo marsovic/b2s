@@ -53,9 +53,7 @@ class LinearChart extends Component {
             keys: [],
             maxLine: 150,
             colors: Colors,
-            refAreaLeft: (this.props.refAreaLeft === null) ? '' : this.props.refAreaLeft,
-            refAreaRight: (this.props.refAreaRight === null) ? '' : this.props.refAreaRight,
-
+           
             //VARIBALES ZOOM
             /*left: 'dataMin',
             right: 'dataMax',
@@ -99,8 +97,8 @@ class LinearChart extends Component {
 
                         break;
 
-                    case 1:
-                        break;
+                    //case 1:
+                    //    break;
 
                     default:
                         if (this.state.columns[key].name !== null) {
@@ -386,6 +384,8 @@ class LinearChart extends Component {
         console.log("left", this.state.refAreaLeft)
         console.log("right", this.state.refAreaRight)
         console.log("data", this.state.data)
+        console.log("columns", this.state.columns)
+        console.log("colors",this.state.colors)
 
         return (
 
