@@ -11,7 +11,7 @@ def analyse(originalCSV: list, schemaJSON: list, DaysOPEN: list, HoursOPEN: list
     assert len(originalCSV) > 1, "originalCSV attend une ligne avec les headers(titre des colonnes) et une ligne de données au minimum"
     assert len(schemaJSON) > 0, "schemaJSON ne doit pas être vide"
     assert len(DaysOPEN) == 7, "Taille DaysOPEN doit être égale à 7" 
-    assert len(HoursOPEN) == 2, "Taille HoursOPEN doit être égale à 2 [Horaire ouverture, Horaire Fermeture]"
+    assert len(HoursOPEN) == 2, "Taille HoursOPEN doit être égale à 2 [Horaire ouverture, Horaire Fermeture]"   
     
     #### Bibliotheque
     import pandas as pd
@@ -22,8 +22,8 @@ def analyse(originalCSV: list, schemaJSON: list, DaysOPEN: list, HoursOPEN: list
     import functions as fct
     
     DATE_COLONNE = "Date (Europe/Paris)"
+    TEMP_EXT = "T°C ext"  
     CHGT_HORAIRE = "Heure d'été / Heure d'hiver"
-    TEMP_EXT = "T°C ext"    
     
     #### Formatage
     df = list()
@@ -43,7 +43,8 @@ def analyse(originalCSV: list, schemaJSON: list, DaysOPEN: list, HoursOPEN: list
     map_association =   {elem['Room']:elem['Circuit'] for elem in association}
     map_unite       =   {elem['Room']:elem['Physic'] for elem in association}
     map_confort    =   {elem['Room']:float(elem['IdealPhysic']) for elem in association}
-    gap_to_confort  =   {elem['Room']:0.01 for elem in association}
+    # map_confort    =   {elem['Room']:20 for elem in association}
+    gap_to_confort  =   {elem['Room']:0.1 for elem in association}
        
                  
     #### On cast nos données afin de pouvoir les utiliser
@@ -57,6 +58,7 @@ def analyse(originalCSV: list, schemaJSON: list, DaysOPEN: list, HoursOPEN: list
     
     del name, name_capteur
     
+    
     ####On recupere la liste des salles
     ListeSalle = list()
 
@@ -68,10 +70,9 @@ def analyse(originalCSV: list, schemaJSON: list, DaysOPEN: list, HoursOPEN: list
                 break
         if add:
             if not elem['Room'] in [DATE_COLONNE, CHGT_HORAIRE, TEMP_EXT]:
-                ListeSalle.append(elem['Room'])
-
-    print(ListeSalle)
-    #### On fixe notre ecart type afin de liser nos conseils plus tard
+                ListeSalle.append(elem['Room'])   
+        
+    #### On fixe notre ecart type afin de liser nos anomalies plus tard
     frequence, standard_deviation = fct.frequency_std_database(df[DATE_COLONNE])
     standard_deviation = datetime.timedelta(days=8)
     
@@ -101,17 +102,18 @@ def analyse(originalCSV: list, schemaJSON: list, DaysOPEN: list, HoursOPEN: list
     del days, days_open, days_closed, data_pre_open_post_closed
 
     ####Analyse chaque donée en detectant le probleme
-    analyse_data_by_point_open = fct.analyse_temperature_point(df, data_open_hours[[DATE_COLONNE] + ListeSalle + [TEMP_EXT]], ListeSalle, map_confort, gap_to_confort, fct.conseil_open, TEMP_EXT, DATE_COLONNE, map_association)
-    analyse_data_by_point_holidays = fct.analyse_temperature_point(df, data_closed_days[[DATE_COLONNE] + ListeSalle+ [TEMP_EXT]], ListeSalle, map_confort, gap_to_confort, fct.conseil_closed, TEMP_EXT, DATE_COLONNE, map_association)
+    analyse_data_by_point_open = fct.analyse_temperature_point(df, data_open_hours[[DATE_COLONNE] + ListeSalle + [TEMP_EXT]], ListeSalle, map_confort, gap_to_confort, fct.anomalie_open, TEMP_EXT, DATE_COLONNE, map_association)
+    analyse_data_by_point_holidays = fct.analyse_temperature_point(df, data_closed_days[[DATE_COLONNE] + ListeSalle+ [TEMP_EXT]], ListeSalle, map_confort, gap_to_confort, fct.anomalie_closed, TEMP_EXT, DATE_COLONNE, map_association)
     
     ####Restructuration des problemes releves afin de donner une période
     analyse_data_open = fct.formatage_probleme(analyse_data_by_point_open, frequence, standard_deviation)
     analyse_data_holidyas = fct.formatage_probleme(analyse_data_by_point_holidays, frequence, standard_deviation)
     
     ####
-    analyse_conseil_data_open = fct.remodelage_analyse(df, analyse_data_open, frequence, DATE_COLONNE) 
-    analyse_conseil_data_holidays = fct.remodelage_analyse(df, analyse_data_holidyas, frequence, DATE_COLONNE) 
+    analyse_anomalie_data_open = fct.remodelage_analyse(df, analyse_data_open, frequence, DATE_COLONNE) 
+    analyse_anomalie_data_holidays = fct.remodelage_analyse(df, analyse_data_holidyas, frequence, DATE_COLONNE) 
     
-    full_analyse = fct.format_to_send_json(list(), analyse_conseil_data_open, analyse_conseil_data_holidays)
+    full_analyse = fct.format_to_send_json(list(), analyse_anomalie_data_open, analyse_anomalie_data_holidays)
     
     return json.dumps(full_analyse)
+

@@ -39,35 +39,45 @@ class Customer extends Component {
             .get(url, options)
             .then((res) => {
                 res.data.results.map(user => {
-                    if (user.username.replaceAll(" ", "") === this.state.user) {
-                        actualUser = user;
+                    actualUser = user;
 
-                        if (actualUser.data !== undefined && actualUser.data.trim() !== "") {
+                    if (actualUser.data !== null && actualUser.data !== undefined) {
+                        if (actualUser.data.trim() !== "") {
                             // Récupération des données pour la liste des pièces
                             this.setState({ listRooms: JSON.parse(actualUser.data) })
                         }
+                    }
 
-                        if (actualUser.columns !== undefined && actualUser.columns.trim() !== "") {
+                    if (actualUser.columns !== null && actualUser.columns !== undefined) {
+                        if (actualUser.columns.trim() !== "") {
                             // Récupération des données pour la liste des colonnes
                             this.setState({ listColumns: JSON.parse(actualUser.columns) })
                         }
+                    }
 
-                        if (actualUser.schema !== undefined && actualUser.schema.trim() !== "") {
+                    if (actualUser.schema !== null && actualUser.schema !== undefined) {
+                        if (actualUser.schema.trim() !== "") {
                             // Récupération des données pour la liste des colonnes
                             this.setState({ userSchema: JSON.parse(actualUser.schema) })
                         }
+                    }
 
-                        if (actualUser.advices !== undefined && actualUser.advices.trim() !== "") {
+                    if (actualUser.advices !== null && actualUser.advices !== undefined) {
+                        if (actualUser.advices.trim() !== "") {
                             // Récupération des données pour la liste des colonnes
                             this.setState({ userAdvices: JSON.parse(actualUser.advices) })
                         }
+                    }
 
-                        if (actualUser.hours !== undefined && actualUser.hours.trim() !== "") {
+                    if (actualUser.hours !== null && actualUser.hours !== undefined) {
+                        if (actualUser.hours.trim() !== "") {
                             // Récupération des données pour la liste des colonnes
                             this.setState({ workingHours: JSON.parse(actualUser.hours) })
                         }
+                    }
 
-                        if (actualUser.days !== undefined && actualUser.days.trim() !== "") {
+                    if (actualUser.days !== null && actualUser.days !== undefined) {
+                        if (actualUser.days.trim() !== "") {
                             // Récupération des données pour la liste des colonnes
                             this.setState({ openDays: JSON.parse(actualUser.days) })
                         }
@@ -134,6 +144,8 @@ class Customer extends Component {
         axios
             .post("/api/upload", formData)
             .then(res => {
+                this.setState({ userAdvices: JSON.parse(res.data.advices) })
+
                 // Enregistrement en BDD des infos
                 const options = {
                     headers: {
@@ -156,11 +168,11 @@ class Customer extends Component {
                     .put(url, updatedUser, options)
                     .then((res) => {
                         console.log(res)
-                        this.setState({ userAdvices: JSON.parse(res.data.advices),  loading: false, message: null });
+                        this.setState({ loading: false, message: null });
                     })
                     .catch((err) => {
                         console.log(err)
-                        this.setState({ userAdvices: JSON.parse(res.data.advices),  loading: false, message: null });
+                        this.setState({ loading: false, message: null });
                     });
             })
             .catch(err => {
@@ -196,14 +208,14 @@ class Customer extends Component {
                 console.log(res)
                 this.setState({
                     loading: false,
-                    userAdvices: undefined,
-                    userSchema: undefined,
-                    listColumns: undefined,
-                    listRooms: undefined,
-                    message: undefined,
-                    openDays: undefined,
-                    workingHours: undefined,
-                    rawFile: undefined
+                    userAdvices: null,
+                    userSchema: null,
+                    listColumns: null,
+                    listRooms: null,
+                    message: null,
+                    openDays: null,
+                    workingHours: null,
+                    rawFile: null
                 });
             })
             .catch((err) => {
@@ -225,28 +237,30 @@ class Customer extends Component {
             if (this.state.userData !== null) // L'utilisateur possède déja des données, on affiche juste ce qui existe
             {
                 if (this.state.userData.data !== undefined && this.state.userData.data.trim() !== "") {
+
+                    toShow =
+                        <div>
+                            <button onClick={this.handleErasingData}>Suppression des données en mémoire</button>
+                            <ListAdvices advices={this.state.userAdvices} schema={this.state.userSchema} fullData={this.state.listColumns} listColumns={this.state.listRooms} />
+
+                        </div>
+                }
+                else { // On demande de saisir des données puis on calcule
                     if (this.state.userSchema === null) {
-                        toShow =
-                            <div>
-                                <FormCircuit userId={this.state.userData.objectId} handleSchema={this.handleSchema} />
-                            </div>
+                        toShow = <FormCircuit userId={this.state.userData.objectId} handleSchema={this.handleSchema} />
                     } else {
                         /* L'utilisateur a déjà rempli les infos concernant les circuits, on :
                             - calcul les conseils.
                             - sauvegarde les données en BDD.
                         */
+
+
+
                         toShow =
-                            <div>
-                                <button onClick={this.handleErasingData}>Suppression des données en mémoire</button>
-                                <ListAdvices advices={this.state.userAdvices} schema={this.state.userSchema} fullData={this.state.listColumns} listColumns={this.state.listRooms} />
-                            </div>
+                            <ListAdvices advices={this.state.userAdvices} schema={this.state.userSchema} fullData={this.state.listColumns} listColumns={this.state.listRooms} />
+
                     }
                 }
-                else {
-                    toShow = (<FormCircuit userId={this.state.userData.objectId} handleSchema={this.handleSchema} />)
-                }
-            } else {
-                toShow = <button onClick={this.handleErasingData}>Suppression des données en mémoire</button>
             }
         }
 

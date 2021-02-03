@@ -65,16 +65,6 @@ class AuthOthers extends Component {
             }
         }
 
-        if (this.props.mode === "signIn") {
-            url = "https://parseapi.back4app.com/users";
-            user = {
-                username: this.state.controls.userName.value.split("@")[0],
-                email: this.state.controls.userName.value,
-                password: crypto.createHash('sha1').update(this.state.controls.password.value).digest('hex'),
-                right: "admin"
-            }
-        }
-
         const options = {
             headers: {
                 "X-Parse-Application-Id": process.env.REACT_APP_APP_ID,
@@ -151,21 +141,13 @@ class AuthOthers extends Component {
                 touched={formElement.config.touched}
                 changed={(event) => this.inputChangedHandler(event, formElement.id)} />
         ))
-
-        let mode = "";
-
-        if(this.props.mode === "connection") {
-            mode = "Connexion"
-        } else {
-            mode = "Inscription"
-        }
-
+        
         return (
             <div className={styles.Auth}>
                 {
                     this.state.loading ? <Spinner /> :
                     <div>
-                        <p style={{textTransform: "capitalize"}}> {mode} </p>
+                        <p style={{textTransform: "capitalize"}}> Connexion </p>
                         <form onSubmit={this.getDataFire}>
                             {form}
                             <p style={{ color: "red" }}><strong>{this.state.errorMessage}</strong></p>

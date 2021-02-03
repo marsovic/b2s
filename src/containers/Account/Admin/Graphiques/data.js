@@ -47,7 +47,3 @@ export default function importCsv(pathname) {
 
 	return Data;
 }
-
-
-// Appel de la fonction
-console.log(importCsv("coucou"));

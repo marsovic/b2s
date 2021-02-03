@@ -5,7 +5,7 @@ import crypto from "crypto";
 import Input from "../../../../../../components/UI/Input/Input"
 import Button from "../../../../../../components/UI/Button/Button"
 
-class AddUser extends Component {
+class AddCustomer extends Component {
 
     state = {
         orderForm: {
@@ -52,9 +52,7 @@ class AddUser extends Component {
                 elementType: 'select',
                 elementConfig: {
                     options: [
-                        { value: 'client', displayValue: 'Client' },
-                        { value: 'batisphere', displayValue: 'Batisphere' },
-                        { value: 'admin', displayValue: 'Administrateur' }
+                        { value: 'client', displayValue: 'Client' }
                     ]
                 },
                 value: 'client',
@@ -296,4 +294,4 @@ class AddUser extends Component {
     }
 }
 
-export default AddUser;
+export default AddCustomer;

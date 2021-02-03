@@ -20,6 +20,7 @@ def upload_file():
     lines = file.splitlines()
 
     advices = analyse(lines, schema, openDays, workingHours)
+    print(advices)
     return {"advices": advices}
 
 @app.route('/api/json', methods=['POST'])

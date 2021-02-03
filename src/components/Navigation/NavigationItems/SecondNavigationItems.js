@@ -13,8 +13,7 @@ class NavigationItems extends Component {
             items =
                 <ul className={styles.NavigationItems}>
                     <NavigationItem link={"/internal/customers/list"}>Liste des clients</NavigationItem>
-                    <NavigationItem link={"/internal/users/list" }>Liste des utilisateurs</NavigationItem>
-                    <NavigationItem link={"/internal/users/edit" }>Gestion des utilisateurs</NavigationItem>
+                    <NavigationItem link={"/internal/users/edit" }>Édition des utilisateurs</NavigationItem>
                 </ul>
         }
 
@@ -22,6 +21,7 @@ class NavigationItems extends Component {
             items =
                 <ul className={styles.NavigationItems}>
                     <NavigationItem link={"/internal/customers/list"}>Liste des clients</NavigationItem>
+                    <NavigationItem link={"/internal/customers/edit"}>Édition des clients</NavigationItem>
                 </ul>
         }
 

@@ -13,7 +13,7 @@ let secondLevelLocation = pathArray[1];
 const toolbar = (props) => (
     <header className={styles.Toolbar}>
         <div className={styles.Logo}>
-        <NavLink to={"/" + secondLevelLocation} exact> 
+        <NavLink to={"/internal"} exact> 
             <img src={logoBatisphere} alt={"b2s"} />
             <img src={logoOptisphere} alt={"b2s"} />
         </NavLink>

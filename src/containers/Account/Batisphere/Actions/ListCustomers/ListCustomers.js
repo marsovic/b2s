@@ -4,7 +4,7 @@ import ListCustomers from "../../../../../components/Users/ListCustomers/ListCus
 import Modal from "../../../../../components/UI/Modal/Modal"
 import Aux from "../../../../../hoc/Aux/Aux"
 
-class EditCustomers extends Component {
+class ListCustomer extends Component {
     state = {
         userSelected: false,
         addUser: false,
@@ -36,10 +36,11 @@ class EditCustomers extends Component {
                     update={this.updateByModal}>
                 </Modal>
                 <ListCustomers
-                    spec={this.props.spec} />
+                    spec={this.props.spec} 
+                    modal= {this.modalEditHandler}/>
             </Aux>
         )
     }
 }
 
-export default EditCustomers;
+export default ListCustomer;

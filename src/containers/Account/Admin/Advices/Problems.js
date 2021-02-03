@@ -1,25 +1,10 @@
 import React, { Component } from "react";
 
-import Aux from "../../../../hoc/Aux/Aux"
-
 //BOOTSTRAP
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal'
-import Tabs from 'react-bootstrap/Tabs'
-import Tab from 'react-bootstrap/Tab'
-import TabContainer from 'react-bootstrap/TabContainer'
-import TabContent from 'react-bootstrap/TabContent'
-import TabPane from 'react-bootstrap/TabPane'
 import LinearChart from '../Graphiques/LinearChart/LinearChart';
-import Line from "recharts";
-import Nav from 'react-bootstrap/Nav';
 import Table from 'react-bootstrap/Table'
-
-//COMPOSANTS MAISON
-import Advices from "./Advices"
 
 class Problems extends Component {
 
@@ -45,20 +30,18 @@ class Problems extends Component {
 
         this.state.problemsDisplayed = Object.keys(this.state.problems)
             .map(key => {
-                console.log("ADVICE -----------------------------", this.props.currentAdvice)
-                console.log("problem", this.state.problems[key])
+                let dateToShow = (<td>De {this.state.problems[key].debut} à {this.state.problems[key].fin}</td>);
+                if(this.state.problems[key].debut === this.state.problems[key].fin) {
+                    dateToShow = (<td>{this.state.problems[key].debut}</td>);
+                } 
 
                 return (
-
                     <tr>
-                        <td>{this.state.problems[key].debut}</td>
+                        {dateToShow}
                         <td><Button id={this.state.problems[key].debut} onClick={this.handleDisplay}>Voir</Button></td>
                     </tr>
-
                 )
-
             })
-
     }
 
 
@@ -70,14 +53,12 @@ class Problems extends Component {
     }
 
     handleDisplay(event) {
-        console.log("WTF", this.state.problems)
         let problem;
         for (let i in this.state.problems) {
             if (this.state.problems[i].debut === event.target.id)
                 problem = this.state.problems[i];
         }
 
-        let data;
         let tempGraphData = [];
         let tempGraphColumn = [];
 
@@ -88,7 +69,7 @@ class Problems extends Component {
         let endCollect = false;
 
         startDate = problem.display_Debut.slice(8, 10) + "/" + problem.display_Debut.slice(5, 7) + "/" + problem.display_Debut.slice(0, 4) + " " + problem.display_Debut.slice(11)
-        endDate = problem.display_Fin.slice(8, 10) + "/" + problem.display_Debut.slice(5, 7) + "/" + problem.display_Debut.slice(0, 4) + " " + problem.display_Debut.slice(11)
+        endDate = problem.display_Fin.slice(8, 10) + "/" + problem.display_Fin.slice(5, 7) + "/" + problem.display_Fin.slice(0, 4) + " " + problem.display_Fin.slice(11)
 
         for (let i in this.state.columnsName) {
             if (this.state.columnsName[i]) {
@@ -107,14 +88,36 @@ class Problems extends Component {
             }
 
             if (startCollect === true && endCollect !== true) {
-                tempGraphData.push({ [dateColumn]: this.state.data[i][dateColumn], [this.state.currentRoom]: this.state.data[i][this.state.currentRoom] });
+                let actualIdeal = null;
+
+                for(let i in this.props.schema) {
+                    if(this.props.schema[i]["Room"] === this.state.currentRoom) {
+                        actualIdeal = parseInt(this.props.schema[i]["IdealPhysic"])
+                    }
+                }
+
+
+                if(actualIdeal !== null) {
+                    tempGraphData.push({ 
+                        [dateColumn]: this.state.data[i][dateColumn], 
+                        [this.state.currentRoom]: this.state.data[i][this.state.currentRoom],
+                        "temperature de confort":  actualIdeal,
+                        "temperature de confort basse":  (actualIdeal*1.1),
+                        "temperature de confort haute":  (actualIdeal*0.9)
+                    });
+                } else {
+                    tempGraphData.push({ 
+                        [dateColumn]: this.state.data[i][dateColumn], 
+                        [this.state.currentRoom]: this.state.data[i][this.state.currentRoom],
+                    });
+                }
             }
+
             if (this.state.data[i][dateColumn] === endDate && startCollect === true) {
                 endCollect = true;
             }
         }
-        //console.log("temp data",tempGraphData)
-        //console.log("columns temp", tempGraphColumn)
+
         let tempGraph = <LinearChart data={tempGraphData} columns={tempGraphColumn} refAreaLeft="12/2/20" refAreaRight="12/3/20"/>
 
     
@@ -129,18 +132,13 @@ class Problems extends Component {
 
     render() {
 
-        //console.log("full data", this.state.data)
-        //console.log("advices", this.state.advices)
-        //console.log("schema", this.state.schema)
-        //console.log("columnsName", this.state.columnsName)
-        //console.log("problems", this.state.problems)
         return (
             <>
                 <Table striped bordered hover size="sm">
                     <thead>
                         <tr>
-                            <th>Date</th>
-                            <th>Voir</th>
+                            <th>Période de l'anomalie</th>
+                            <th>Afficher</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -160,21 +158,12 @@ class Problems extends Component {
 
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button onClick={() => this.hideModal()}>Close</Button>
+                        <Button onClick={() => this.hideModal()}>Fermer</Button>
                     </Modal.Footer>
                 </Modal>
             </>
 
         )
-
-        //<LinearChart data={this.state.graphData} columns={this.state.graphColumn} refAreaLeft="12/2/20" refAreaRight="12/3/20"/>
-
-
-        /* return (
-             <Aux >
-                 <LinearChart data={this.state.data} columns={this.state.columnsName} />
-             </Aux>
-         )*/
 
     }
 }

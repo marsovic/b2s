@@ -55,7 +55,9 @@ class FormCircuits extends Component {
 
         const updatedUser = {
             "columns": JSON.stringify(data1),
-            "data": JSON.stringify(data2)
+            "data": JSON.stringify(data2),
+            "days": this.state.daysOff,
+            "hours": this.state.openHours
         }
 
         axios
@@ -86,7 +88,7 @@ class FormCircuits extends Component {
     handleDays = (days, hours) => {
         this.setState({
             daysOff: days,
-            openHours: hours
+            openHours: hours,
         })
     }
 
@@ -119,7 +121,6 @@ class FormCircuits extends Component {
                                 toPassToLouis.push(tempItemLouis);
                             }
                         }
-                        console.log(toPassToLouis)
                         this.props.handleSchema(toPassToLouis, this.state.file, this.state.daysOff, this.state.openHours)
 
                     } else { // Days off or Hours where the building is open are not selectionned
