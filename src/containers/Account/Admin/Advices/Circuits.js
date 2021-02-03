@@ -24,6 +24,7 @@ class Cicruits extends Component {
 
         this.state.circuitsDisplayed = Object.keys(this.state.schema)
             .map(key => {
+                let toReturn = null;
                 if (this.state.circuits.length !== 0) {
 
                     let currentCircuit;
@@ -46,7 +47,7 @@ class Cicruits extends Component {
                         this.state.circuits.push(currentCircuit);
                         //On parcours ce même tableau et on récupère le nom des salles présentes dedans 
                         for (let iterator in this.state.schema) {
-                          
+
                             if (this.state.schema[iterator].Circuit === currentCircuit
                                 && this.state.schema[iterator].Room.toLowerCase().includes("circuit".toLowerCase()) !== true
                                 && this.state.schema[iterator].Room.toLowerCase().includes("date".toLowerCase()) !== true
@@ -57,7 +58,7 @@ class Cicruits extends Component {
                             }
                         }
                         if (rooms.length !== 0)
-                            return (
+                            toReturn = (
                                 <Tab eventKey={currentCircuit} title={currentCircuit}>
                                     <Salles
                                         circuit={currentCircuit}
@@ -93,24 +94,15 @@ class Cicruits extends Component {
 
                         }
                     }
-                    
+
                     if (rooms.length !== 0)
-                        return (<Tab eventKey={currentCircuit} title={currentCircuit}> <Salles circuit={currentCircuit} rooms={rooms} data={this.state.data} advices={this.state.advices} columnsName={this.state.columnsName} /> </Tab>)
-
-
+                        toReturn = (<Tab eventKey={currentCircuit} title={currentCircuit}> <Salles circuit={currentCircuit} rooms={rooms} data={this.state.data} advices={this.state.advices} columnsName={this.state.columnsName} /> </Tab>)
                 }
-
+                return toReturn;
             })
     }
 
-
-
-
-
     render() {
-
-        
-
         return (
             <Tabs
                 id="controlled-tab-example"
