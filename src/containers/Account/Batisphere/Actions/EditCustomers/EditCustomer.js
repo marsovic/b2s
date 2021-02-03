@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 
-import ListUsers from "../../../../../components/Users/ListUsers/ListUsers"
+import ListUsers from "../../../../../components/Users/ListUsers/ListCustomers"
 import Aux from "../../../../../hoc/Aux/Aux"
 import Modal from "../../../../../components/UI/Modal/Modal"
 import Button from "../../../../../components/UI/Button/Button"
-import EditUser from "./EditUser/EditUser";
-import AddUser from "./AddUser/AddUser";
+import EditCustomer from "./EditCustomer/EditCustomer";
+import AddCustomer from "./AddCustomer/AddCustomer";
 
 
 class EditUsers extends Component {
@@ -41,11 +41,11 @@ class EditUsers extends Component {
         let userData = null;
 
         if (this.state.showModal && this.state.user !== null) {
-            userData = <EditUser user={this.state.user} />
+            userData = <EditCustomer user={this.state.user} />
         }
 
         if (this.state.showModal && this.state.addUser === true) {
-            userData = <AddUser modal={this.modalAddHandler} />
+            userData = <AddCustomer modal={this.modalAddHandler} />
         }
 
         return (

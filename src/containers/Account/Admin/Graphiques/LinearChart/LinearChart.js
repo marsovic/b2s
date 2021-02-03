@@ -1,44 +1,11 @@
 import React, { Component } from "react";
 import {
-    LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
+    LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer, ReferenceArea
 } from 'recharts';
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import Settings from '../ChartSettings/LinearChartSettings';
 import Colors from '../../../../../components/UI/colors'
-
-//import Data from '../data'
-
-//const data = Data.importCsv("/Users/louiscauquelin/Downloads/data.csv");
-
-//const data = null;
-/*
-const data = [
-    { name: 1, cost: 4.11, impression: 100 },
-    { name: 2, cost: 2.39, impression: 120 },
-    { name: 3, cost: 1.37, impression: 150 },
-    { name: 4, cost: 1.16, impression: 180 },
-    { name: 5, cost: 2.29, impression: 200 },
-    { name: 6, cost: 3, impression: 499 },
-    { name: 7, cost: 0.53, impression: 50 },
-    { name: 8, cost: 2.52, impression: 100 },
-    { name: 9, cost: 1.79, impression: 200 },
-    { name: 10, cost: 2.94, impression: 222},
-    { name: 11, cost: 4.3, impression: 210 },
-    { name: 12, cost: 4.41, impression: 300 },
-    { name: 13, cost: 2.1, impression: 50 },
-    { name: 14, cost: 8, impression: 190 },
-    { name: 15, cost: 0, impression: 300 },
-    { name: 16, cost: 9, impression: 400 },
-    { name: 17, cost: 3, impression: 200 },
-    { name: 18, cost: 2, impression: 50 },
-    { name: 19, cost: 3, impression: 100 },
-    { name: 20, cost: 7, impression: 100 }
-];*/
-
-
-
-//fonction pour zoom
 
 class LinearChart extends Component {
     static jsfiddleUrl = 'https://jsfiddle.net/alidingling/nhpemhgs/';
@@ -52,21 +19,6 @@ class LinearChart extends Component {
             keys: [],
             maxLine: 150,
             colors: Colors,
-
-
-            //VARIBALES ZOOM
-            /*left: 'dataMin',
-            right: 'dataMax',
-            refAreaLeft: '',
-            refAreaRight: '',
-            top: 'dataMax+1',
-            bottom: 'dataMin-1',
-            top2: 'dataMax+20',
-            bottom2: 'dataMin-20',
-            animation: true,
-            dropDownLeft : "15 min",
-            dropDownRight : "1 mois",*/
-
 
             //Variables pour otpions des graphiques
 
@@ -94,10 +46,6 @@ class LinearChart extends Component {
                 switch (parseInt(key)) {
                     case 0:
                         this.state.XAxisName = this.state.columns[key].name.toString()
-
-                        break;
-
-                    case 1:
                         break;
 
                     default:
@@ -117,7 +65,6 @@ class LinearChart extends Component {
                                     found = true;
                                     color = colorsCopy[iterator].code;
                                 }
-
                                 iterator++;
                             }
 
@@ -125,12 +72,16 @@ class LinearChart extends Component {
                             toReturn = (
                                 <Line key={this.state.columns[key].name.toString()} type="natural" dataKey={this.state.columns[key].name.toString()} stroke={color} dot={false} />
                             )
-                            // this.state.colors = colorsCopy;
                         }
                         break;
                 }
                 return toReturn;
             })
+
+        this.state.displayedColumns.push({ "name": "temperature de confort", "displayed": true })
+        this.state.lines.push(<Line key="temperature de confort" type="natural" dataKey="temperature de confort" stroke="#005d5d" dot={false} />)
+        this.state.lines.push(<Line key="temperature de confort basse" type="natural" dataKey="temperature de confort basse" stroke="#002d9c" dot={false} />)
+        this.state.lines.push(<Line key="temperature de confort haute" type="natural" dataKey="temperature de confort haute" stroke="#fa4d56" dot={false} />)
         this.state.lines.splice(0, 1);
 
         this.updateDisplayedLines = this.updateDisplayedLines.bind(this);
@@ -138,70 +89,8 @@ class LinearChart extends Component {
 
     }
 
-
-    /*
-    zoom() {
-        let { refAreaLeft, refAreaRight, data } = this.state;
-    
-        if (refAreaLeft === refAreaRight || refAreaRight === '') {
-        this.setState(() => ({
-            refAreaLeft: '',
-            refAreaRight: '',
-        }));
-        return;
-        }
-    
-        // xAxis domain
-        if (refAreaLeft > refAreaRight) [refAreaLeft, refAreaRight] = [refAreaRight, refAreaLeft];
-    
-        // yAxis domain
-        const [bottom, top] = this.getAxisYDomain(refAreaLeft, refAreaRight, 'C', 1);
-        const [bottom2, top2] = this.getAxisYDomain(refAreaLeft, refAreaRight, 'D', 50);
-    
-        this.setState(() => ({
-        refAreaLeft: '',
-        refAreaRight: '',
-        data: data.slice(),
-        left: refAreaLeft,
-        right: refAreaRight,
-        bottom,
-        top,
-        bottom2,
-        top2,
-        }));
-    }
-    
-    zoomOut() {
-        const { data } = this.state;
-        this.setState(() => ({
-          data: data.slice(),
-          refAreaLeft: '',
-          refAreaRight: '',
-          left: 'dataMin',
-          right: 'dataMax',
-          top: 'dataMax+1',
-          bottom: 'dataMin',
-          top2: 'dataMax+50',
-          bottom2: 'dataMin+50',
-        }));
-    
-    
-        //A AJOUTER DANS LE RENDER
-    
-                        onMouseDown={e => this.setState({ refAreaLeft: e.activeTooltipIndex })}
-                    onMouseMove={e => this.state.refAreaLeft && this.setState({ refAreaRight: e.activeTooltipIndex })}
-                    onMouseUp={this.zoom.bind(this)}
-    
-    
-         
-                        {
-                            (this.state.refAreaLeft && this.state.refAreaRight) ? (
-                            <ReferenceArea x1={this.state.refAreaLeft} x2={this.state.refAreaRight} strokeOpacity={0.3} />) : null
-                        }
-    }*/
-
     deleteColor(name) {
-        let colorsCopy = this.state.colors; 
+        let colorsCopy = this.state.colors;
         let colorDeleted;
         let tabLines = this.state.lines;
         let secondLine = "";
@@ -215,7 +104,7 @@ class LinearChart extends Component {
         }
 
         for (let i in tabLines) {
-            if (typeof (tabLines[i]) !== 'undefined') {
+            if (typeof (tabLines[i]) !== 'undefined' && tabLines[i] !== null) {
 
                 if (tabLines[i].props.stroke === colorDeleted) {
                     secondLine = tabLines[i].key;
@@ -240,7 +129,6 @@ class LinearChart extends Component {
     }
 
     generateColor(name) {
-
         let color;
         let colorsCopy = this.state.colors;
         let iterator = 0;
@@ -274,15 +162,13 @@ class LinearChart extends Component {
             if (color === colorsCopy[iterator].name) {
                 colorCode = colorsCopy[iterator].code;
             }
-
-
         }
 
         //On cherche la ligne, on la supprime et recréée avec la bonne couleur (pas possible de modifier juste la variable stroke)
         //Suppression de la ligne entrain suppression de la couleur de cette ligne et réattribution de la couleur initiale de la ligne a une autre si elle est utilisée plusieurs fois 
         //On récrée une ligne avec la bonne couleur
         for (let i in tabLines) {
-            if (typeof (tabLines[i]) !== 'undefined') {
+            if (typeof (tabLines[i]) !== 'undefined' && tabLines[i] !== null) {
                 if (tabLines[i].key === lineName) {
                     //tabLines[i].props.stroke = color;
                     tabLines.splice(i, 1);
@@ -312,7 +198,6 @@ class LinearChart extends Component {
     }
 
     updateDisplayedLines(name, displayed) {
-
         //Variable pour savoir si une ligne marquée comme affichée est absente des lignes affichée (auquel cas on la créée)
         let toDisplay = true;
         let tab = this.state.displayedColumns;
@@ -334,11 +219,10 @@ class LinearChart extends Component {
                 let lenghtLines = tabLines.length;
                 for (let j = 0; j < lenghtLines; j++) {
 
-                    if (typeof (tabLines[j]) !== 'undefined' && typeof (tab[i]) !== 'undefined') {
+                    if (typeof (tabLines[j]) !== 'undefined' && typeof (tab[i]) !== 'undefined' && tabLines[j] !== null && tab[i] !== null) {
                         if (tab[i].name === tabLines[j].props.dataKey) {
                             tabLines.splice(j, 1);
                             this.deleteColor(tab[i].name);
-
                         }
                     }
 
@@ -349,7 +233,7 @@ class LinearChart extends Component {
             //Si la ligne marquée pour l'affichage , on vérifie si si elle l'est déjà, sinon on l'ajoute aux lignes
             if (tab[i].displayed === true) {
                 for (let j = 0; j < tabLines.length; j++) {
-                    if (typeof (tabLines[j]) !== 'undefined' && typeof (tab[i]) !== 'undefined') {
+                    if (typeof (tabLines[j]) !== 'undefined' && typeof (tab[i]) !== 'undefined' && tabLines[j] !== null && tab[i] !== null) {
 
                         if (tab[i].name === tabLines[j].props.dataKey) {
                             toDisplay = false;
@@ -376,14 +260,9 @@ class LinearChart extends Component {
             lines: tabLines,
             data: data.slice(),
         });
-
-
-
-
     }
 
     render() {
-
         return (
 
             <>
@@ -395,7 +274,6 @@ class LinearChart extends Component {
 
                     <ResponsiveContainer>
                         <LineChart
-
                             width={this.state.graphWidth}
                             height={this.state.graphHeight}
                             data={this.state.data}>
@@ -404,7 +282,12 @@ class LinearChart extends Component {
                             <YAxis dataKey={this.state.YAxisName} />
                             {this.state.lines}
                             <Tooltip />
+                            <ReferenceArea x1={this.state.refAreaLeft} x2={this.state.refAreaRight} strokeOpacity={0.3} />
                             <Legend height={60} />
+                            {
+                                (this.state.refAreaLeft && this.state.refAreaRight) ? (
+                                    <ReferenceArea x1={this.state.refAreaLeft} x2={this.state.refAreaRight} strokeOpacity={0.3} />) : null
+                            }
                         </LineChart>
                     </ResponsiveContainer>
                 </div>

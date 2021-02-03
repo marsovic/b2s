@@ -4,7 +4,7 @@ import styles from "./Rooms.module.css"
 
 
 const PhysicList = [
-    { "Temperature": "T" }
+    { "Température": "T" }
 ]
 
 class Rooms extends Component {
@@ -12,6 +12,7 @@ class Rooms extends Component {
         circuits: this.props.circuits,
         rooms: this.props.rooms,
         loading: true,
+        ideal: this.props.rooms.map( room => {return( 20 )})
     }
 
     handleSubmit = (e) => {
@@ -24,18 +25,30 @@ class Rooms extends Component {
         }
 
         let physicForRooms = [];
-        const roomsOnPageCPhysic = document.getElementsByName('roomForPhysic');
+        const roomsOnPagePhysic = document.getElementsByName('roomForPhysic');
         for (let key in this.state.rooms) {
-            physicForRooms.push(roomsOnPageCPhysic[key].value.charAt(0))
+            physicForRooms.push(roomsOnPagePhysic[key].value.charAt(0))
         }
 
-        this.props.handleRooms(true, this.state.rooms, circuitForRooms, physicForRooms);
+        let idealForRooms = [];
+        const roomForIdeal = document.getElementsByName('roomForIdeal');
+        for (let key in this.state.rooms) {
+            idealForRooms.push(roomForIdeal[key].value)
+        }
+
+        this.props.handleRooms(true, this.state.rooms, circuitForRooms, physicForRooms, idealForRooms);
+    }
+
+    handleChange = (event, room) => {
+        let copyIdeal = this.state.ideal;
+        copyIdeal[room] = event.target.value;
+        this.setState({ideal: copyIdeal});
     }
 
     render() {
 
         // Printing the list of rooms
-        const toShow = this.state.rooms.map(room => {
+        const toShow = this.state.rooms.map((room,index) => {
             return (
                 <li>
                     <div className={styles.Label}>
@@ -44,6 +57,7 @@ class Rooms extends Component {
                     {/* DROPDOWN FOR CIRCUITS*/}
                     <div className={styles.Select1}>
                         <select id={room['name']} name="roomForCircuits" >
+                            return <option value="none"> None </option>
                             {this.state.circuits.map(circuit => {
                                 return <option value={circuit}> {circuit} </option>
                             })}
@@ -56,6 +70,11 @@ class Rooms extends Component {
                                 return <option value={Object.keys(physic)[1]}> {Object.keys(physic)[0]} </option>
                             })}
                         </select>
+                    </div>
+                    <div className={styles.Select2}>
+                        {/* INPUT FOR IDEAL PHYSICS*/}
+                        <label for="roomForIdeal"> Grandeur idéale </label>
+                        <input type="number" id={room['name']} name="roomForIdeal" value={this.state.ideal[index]} onChange={(e) => this.handleChange(e, index)}  min="-10" max="30" step ="1"/>
                     </div>
                 </li>
             )

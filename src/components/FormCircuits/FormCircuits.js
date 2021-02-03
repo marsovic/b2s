@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+import axios from "axios";
 
 import CSV from "../CSV/processingCSV"
 import Rooms from "./Rooms/Rooms"
 import Circuits from "./Circuits/Circuits"
-import axios from "axios";
+import Days from "./Days/Days"
+
 
 /*
 
@@ -19,20 +21,27 @@ class FormCircuits extends Component {
         rooms: null,
         circuits: null,
         physics: null,
+        idealPhysic: null,
         loading: false,
+        daysOff: null,
+        openHours: null,
+        file: null,
         areCircuitsSelected: false,
         areRoomsSelected: false
     }
 
-    handleFile = (data1, data2) => {
-        var listRoom = data1;
-
+    handleFile = (data1, data2, file) => {
+        var listRoom = data2;
         for (var key of Object.keys(listRoom)) {
             listRoom[key]['isCircuit'] = false;
             listRoom[key]['isRoom'] = false;
         }
 
-        this.setState({ rooms: listRoom, loading: true });
+        this.setState({
+            rooms: listRoom,
+            loading: true,
+            file: file
+        });
 
         const options = {
             headers: {
@@ -43,11 +52,12 @@ class FormCircuits extends Component {
         };
 
         let url = "https://parseapi.back4app.com/users/" + this.props.userId;
-        console.log(data1);
 
         const updatedUser = {
             "columns": JSON.stringify(data1),
-            "data": JSON.stringify(data2)
+            "data": JSON.stringify(data2),
+            "days": this.state.daysOff,
+            "hours": this.state.openHours
         }
 
         axios
@@ -65,12 +75,20 @@ class FormCircuits extends Component {
         this.setState({ areCircuitsSelected: newState, circuits: circ })
     }
 
-    handleRooms = (newState, rooms, circuits, physics) => {
+    handleRooms = (newState, rooms, circuits, physics, ideal) => {
         this.setState({
             areRoomsSelected: newState,
             rooms: rooms,
             circuits: circuits,
-            physics: physics
+            physics: physics,
+            idealPhysic: ideal
+        })
+    }
+
+    handleDays = (days, hours) => {
+        this.setState({
+            daysOff: days,
+            openHours: hours,
         })
     }
 
@@ -81,36 +99,33 @@ class FormCircuits extends Component {
         if (this.state.rooms !== null) { // a file is already selected
             if (this.state.areCircuitsSelected === true) { // circuits are defined
                 if (this.state.areRoomsSelected === true) { // all rooms have a circuit
-                    const formElementsArray = [];
-                    for (let key in this.state.orderForm) {
-                        formElementsArray.push({
-                            id: key,
-                            config: this.state.orderForm[key]
-                        })
-                    }
-
-                    // Create the future text file with all data
-                    let toPassToTheAlgorithm = [];
-                    let toPassToLouis = [];
-                    for (let item in this.state.rooms) {
-                        let tempItem =
-                            this.state.rooms[item].name + " @#@ " +
-                            this.state.circuits[item] + " @#@ " +
-                            this.state.physics[item];
-
-                        let tempItemLouis = {
-                            "Circuit": this.state.circuits[item],
-                            "Room": this.state.rooms[item].name,
-                            "Physic": this.state.physics[item]
+                    if (this.state.daysOff !== null && this.state.openHours !== null) {
+                        const formElementsArray = [];
+                        for (let key in this.state.orderForm) {
+                            formElementsArray.push({
+                                id: key,
+                                config: this.state.orderForm[key]
+                            })
                         }
 
-                        toPassToTheAlgorithm.push(tempItem);
-                        toPassToLouis.push(tempItemLouis);
+                        let toPassToLouis = [];
+                        for (let item in this.state.rooms) {
+                            if (this.state.circuits[item] !== "none") {
+                                let tempItemLouis = {
+                                    "Circuit": this.state.circuits[item],
+                                    "Room": this.state.rooms[item].name,
+                                    "Physic": this.state.physics[item],
+                                    "IdealPhysic": this.state.idealPhysic[item]
+                                }
+
+                                toPassToLouis.push(tempItemLouis);
+                            }
+                        }
+                        this.props.handleSchema(toPassToLouis, this.state.file, this.state.daysOff, this.state.openHours)
+
+                    } else { // Days off or Hours where the building is open are not selectionned
+                        toShow = <Days handleDays={this.handleDays} />
                     }
-                    this.props.handleSchema(toPassToLouis)
-                    toShow = toPassToTheAlgorithm.map(items => {
-                        return <p> {items} </p>
-                    });
                 } else {
                     // Rooms does not all have a circuit
                     toShow = <Rooms rooms={this.state.rooms} circuits={this.state.circuits} handleRooms={this.handleRooms} />

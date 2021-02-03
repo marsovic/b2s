@@ -24,8 +24,7 @@ export default class SettingsTable extends Component {
   getHighlightedColor(name) {
     let color = "";
     for (let i in this.props.lines) {
-
-      if (typeof (this.props.lines[i]) !== 'undefined') {
+      if (typeof (this.props.lines[i]) !== 'undefined' && this.props.lines[i] !== null) {
         if (this.props.lines[i].key === name) {
           color = this.props.lines[i].props.stroke;
         }

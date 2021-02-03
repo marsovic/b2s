@@ -7,9 +7,6 @@ class MyAccount extends Component {
         return (
             <div>
                 <Toolbar mode={this.props.mode} />
-                <p>
-                    T'es connecté en <strong>{this.props.mode}</strong>  ! 
-                </p>
             </div>
         );
     }

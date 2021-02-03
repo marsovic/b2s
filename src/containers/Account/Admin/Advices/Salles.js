@@ -6,17 +6,19 @@ import Col from 'react-bootstrap/Col';
 import Tab from 'react-bootstrap/Tab'
 import Nav from 'react-bootstrap/Nav';
 
-//COMPOSANTS MAISON
-import Problems from "./Problems"
 
-class Advices extends Component {
+//COMPOSANTS MAISON
+import Advices from "./Advices"
+
+class Salles extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             activeTab: '',
-            currentRoom: this.props.currentRoom,
+            circuit: this.props.circuit,
             columnsName: this.props.columnsName,
+            rooms: this.props.rooms,
             data: this.props.data,
             advices: this.props.advices,
             nav: null,
@@ -24,37 +26,37 @@ class Advices extends Component {
 
         }
 
-        this.state.nav = Object.keys(this.state.advices)
+        this.state.nav = Object.keys(this.state.rooms)
             .map(key => {
                 return (
                     <Nav.Item>
-                        <Nav.Link key={this.state.advices[key].nom + 1} eventKey={this.state.advices[key].nom}>{this.state.advices[key].nom}</Nav.Link>
+                        <Nav.Link key={this.state.rooms[key] + 1} eventKey={this.state.rooms[key]}>{this.state.rooms[key]}</Nav.Link>
                     </Nav.Item>
                 )
-
-
             })
 
-        this.state.content = Object.keys(this.state.advices)
+        this.state.content = Object.keys(this.state.rooms)
             .map(key => {
+                let advicesList = [];
 
+                for (let i in this.state.advices) {
+                    if (this.state.advices[i]) {
+                        if (this.state.advices[i].salle === this.state.rooms[key]) {
+                            advicesList = this.state.advices[i].anomalie;
+                        }
+                    }
 
-                let problemsList = this.state.advices[key].liste;
-
+                }
                 return (
-                    <Tab.Pane eventKey={this.state.advices[key].nom}>
-                        <Problems schema={this.props.schema} key={this.state.advices[key].nom + 2} currentAdvice={this.state.advices[key].nom} data={this.state.data} problems={problemsList} currentRoom={this.state.currentRoom} columnsName = {this.state.columnsName}/>
+                    <Tab.Pane eventKey={this.state.rooms[key]}>
+                        <Advices key={this.state.rooms[key] + 2} currentRoom={this.state.rooms[key]} data={this.state.data} advices={advicesList} schema={this.props.schema} columnsName = {this.state.columnsName}/>
                     </Tab.Pane>
                 )
-
-
             })
 
     }
 
-
     render() {
-
         return (
             <Tab.Container id="left-tabs-example" activeKey={this.state.key} onSelect={key => this.setState({ key })}>
                 <Row>
@@ -71,14 +73,7 @@ class Advices extends Component {
                 </Row>
             </Tab.Container>
         )
-
-        /* return (
-             <Aux >
-                 <LinearChart data={this.state.data} columns={this.state.columnsName} />
-             </Aux>
-         )*/
-
     }
 }
 
-export default Advices;
+export default Salles;

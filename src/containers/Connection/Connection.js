@@ -84,7 +84,6 @@ class Connection extends Component {
                 if (secondLevelLocation === "internal") {
                     containerShowed = <div>
                         <AuthOthers login={this.loggedHandler} mode="connection" />
-                        <AuthOthers login={this.loggedHandler} mode="signIn" />
                     </div>
                 }
 
