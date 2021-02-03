@@ -51,11 +51,7 @@ class Customer extends Component {
                             // Récupération des données pour la liste des colonnes
                             this.setState({ listColumns: JSON.parse(actualUser.columns) })
                         }
-<<<<<<< HEAD
                         
-=======
-
->>>>>>> Advices
                         if (actualUser.schema !== undefined && actualUser.schema.trim() !== "") {
                             // Récupération des données pour la liste des colonnes
                             this.setState({ userSchema: JSON.parse(actualUser.schema) })
