@@ -1,6 +1,4 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# PFE 2021 - Batisphère Services
 
 ## Available Scripts
 
@@ -14,57 +12,52 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
-### `yarn test`
+### `yarn start-api`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Runs the backend Flask server. To run this application you have to run this command with the `yarn start`. 
 
-### `yarn build`
+## What can you do on our beautitul B2S app ?
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Managing accounts
+> 1. **Connect with a B2S consultant account and manage customers**
+> osdnvù
+> sùvdnqsklvoub
+> slvnksmv,
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+> 2. **Connect with an admin account, manage >> customers AND consultants accounts**
+> iosnv,msqnùlkqdsf
 
-### `yarn eject`
+#### Managing customers data
+> 1. **Set data from input file and show abnormalties with charts**
+> First of all, if the selected customer does not have a file you are invited to insert a CSV file which contain data.
+> ![alt text](./screenshots/1.png)
+> Then the list of the columns names in ths CSV file appears. You are invited to select main circuits in the customer's build architecture.
+> ![alt text](./screenshots/2.png)
+> ![alt text](./screenshots/2.5.png)
+> One you have selected circuits, all the rooms appears with 3 mores columns :
+>> The **first one** is the selection of the belonging to a circuit. If this room does not appear in any room or is a not a room (such as "Date", you can let the default "none" value).
+>
+>> The **second one** is the selection of the physical parameter. By default it is set to temperature and we are only using this one until now.
+>
+>> The **third one** is the selection of the physical comfort value. For example for a temperature it will be 20 Celsius degree for a customer for a specific room.
+>
+> ![alt text](./screenshots/3.png)
+> Finally, you have to select openings days and the hours where there is people in the building.
+>
+> ![alt text](./screenshots/4.png)
+>
+> After this, you have succesfuly set all parameters to calculate abnormalties with the algotihm. The algorithm will be call and the process will run in background for few seconds. You can refresh the window after this time and you will see a window such as below.
+> There is all circuits, which contain rooms, each room has a list of abnormalties and each abnormaltie has a list of period where it is catch. 
+> ![alt text](./screenshots/toohot_chart.png)
+>
+>You can click on a button "Voir" to show a specific chart in a modal.
+> ![alt text](./screenshots/toohot.png)
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## Authors
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+* [@marsovic](https://github.com/marsovic) ~ Marko ARSOVIC :construction: :man_technologist:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+* [@L0uwi](https://github.com/L0uwi) ~ Louis CAUQUELIN :chart_with_upwards_trend: :bar_chart:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+*  Elias ARRAS :nerd_face:

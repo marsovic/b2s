@@ -31,7 +31,6 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "start-docker": "yarn build",
     "start-api": "api/venv/bin/flask run",
     "build": "react-scripts build",
     "test": "react-scripts test",
